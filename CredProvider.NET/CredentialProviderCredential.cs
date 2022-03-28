@@ -230,8 +230,7 @@ namespace CredProvider.NET
                         ppszOptionalStatusText = string.Empty;
                         pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
 
-                        //Better to move the CLSID to a constant (but currently used in the .reg file)
-                        pcpcs.clsidCredentialProvider = Guid.Parse("00006d50-0000-0000-b090-00006b0b0000");
+                        pcpcs.clsidCredentialProvider = Guid.Parse(Constants.CredentialProvider_CLSID);
                         pcpcs.rgbSerialization = inCredBuffer;
                         pcpcs.cbSerialization = (uint)inCredSize;
                         pcpcs.ulAuthenticationPackage = authPackage;

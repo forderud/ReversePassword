@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace CredProvider.NET
 {
     [ComVisible(true)]
-    [Guid("00006d50-0000-0000-b090-00006b0b0000")]
+    [Guid(Constants.CredentialProvider_CLSID)]
     [ClassInterface(ClassInterfaceType.None)]
     [ProgId("CredProvider.NET")]
     public class CredentialProvider : CredentialProviderBase
