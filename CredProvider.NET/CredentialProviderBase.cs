@@ -44,8 +44,6 @@ namespace CredProvider.NET
             if (pcpe != null)
             {
                 events = pcpe;
-
-                Marshal.AddRef(Marshal.GetIUnknownForObject(pcpe));
             }
 
             return HRESULT.S_OK;
@@ -57,8 +55,11 @@ namespace CredProvider.NET
 
             if (events != null)
             {
-                //Marshal.Release(Marshal.GetIUnknownForObject(events));
                 events = null;
+
+                // release references to the host
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
 
             return HRESULT.S_OK;

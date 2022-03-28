@@ -29,11 +29,9 @@ namespace CredProvider.NET
             Logger.Write();
 
             if (pcpce is ICredentialProviderCredentialEvents2 ev2)
-            {
                 Logger.Write("pcpce is ICredentialProviderCredentialEvents2");
-            }
 
-            return HRESULT.S_OK;
+            return HRESULT.E_NOTIMPL;
         }
 
         public virtual int UnAdvise()
