@@ -73,9 +73,8 @@ namespace CredProvider.NET
 
         public virtual int GetStringValue(uint dwFieldID, out string ppsz)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}");
-
             ppsz = view.GetValue((int)dwFieldID);
+            Logger.Write($"dwFieldID:{dwFieldID}, ppsz={ppsz}");
             
             return HRESULT.S_OK;
         }
@@ -271,11 +270,9 @@ namespace CredProvider.NET
 
         public virtual int GetUserSid(out string sid)
         {
-            Logger.Write();
-
             sid = this.sid;
 
-            Console.WriteLine($"Returning username: {Common.GetNameFromSid(sid)}");
+            Logger.Write($"username: {Common.GetNameFromSid(sid)}");
             return HRESULT.S_OK;
         }
     }

@@ -145,8 +145,6 @@ namespace CredProvider.NET
 
         public virtual int GetFieldDescriptorCount(out uint pdwCount)
         {
-            Logger.Write();
-
             pdwCount = (uint)view.DescriptorCount;
 
             Logger.Write($"Returning field count: {pdwCount}");
@@ -170,14 +168,13 @@ namespace CredProvider.NET
             out int pbAutoLogonWithDefault
         )
         {
-            Logger.Write();
-
             pdwCount = (uint)providerUsers.Count;
 
             pdwDefault = CREDENTIAL_PROVIDER_NO_DEFAULT;
 
             pbAutoLogonWithDefault = 0;
 
+            Logger.Write($"pdwCount={pdwCount} pdwDefault={pdwDefault}");
             return HRESULT.S_OK;
         }
 
