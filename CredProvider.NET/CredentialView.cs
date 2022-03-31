@@ -29,10 +29,6 @@ namespace CredProvider.NET
 
         public int DescriptorCount { get { return fields.Count; } }
 
-        public int CredentialCount { get { return 1; } }
-
-        public int DefaultCredential { get { return 0; } }        
-
         public CredentialView(CredentialProviderBase provider) 
         {
             Provider = provider;

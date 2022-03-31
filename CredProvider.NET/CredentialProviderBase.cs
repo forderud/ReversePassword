@@ -93,9 +93,9 @@ namespace CredProvider.NET
         {
             Logger.Write();
 
-            pdwCount = (uint)view.CredentialCount;
+            pdwCount = (uint)providerUsers.Count;
 
-            pdwDefault = (uint)view.DefaultCredential;
+            pdwDefault = CREDENTIAL_PROVIDER_NO_DEFAULT;
 
             pbAutoLogonWithDefault = 0;
 
