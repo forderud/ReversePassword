@@ -34,8 +34,6 @@ namespace CredProvider.NET
 
         public static string GetNameFromSid(string value)
         {
-            Logger.Write();
-
             var sid = new SecurityIdentifier(value);
             var ntAccount = (NTAccount)sid.Translate(typeof(NTAccount));
 

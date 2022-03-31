@@ -18,7 +18,7 @@ namespace CredProvider.NET
 
         public CredentialProviderCredential(CredentialView view, string sid)
         {
-            Logger.Write();
+            Logger.Write($"username={Common.GetNameFromSid(sid)}");
 
             this.view = view;
             this.sid = sid;
@@ -209,7 +209,7 @@ namespace CredProvider.NET
                 var username = Common.GetNameFromSid(this.sid);
                 GetStringValue(2, out var password);
 
-                Logger.Write($"Preparing to serialise credential with password...");
+                Logger.Write($"Preparing to serialise credential with username={username} and password={password}");
                 pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
                 pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
 
@@ -275,7 +275,7 @@ namespace CredProvider.NET
 
             sid = this.sid;
 
-            Console.WriteLine($"Returning sid: {sid}");
+            Console.WriteLine($"Returning username: {Common.GetNameFromSid(sid)}");
             return HRESULT.S_OK;
         }
     }

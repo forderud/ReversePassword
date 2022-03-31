@@ -135,7 +135,7 @@ namespace CredProvider.NET
 
                 this.providerUsers.Add(user);
 
-                Logger.Write($"providerId: {providerId}; sid: {sid}");
+                Logger.Write($"providerId: {providerId}; username: {Common.GetNameFromSid(sid)}");
             }
 
             return HRESULT.S_OK;

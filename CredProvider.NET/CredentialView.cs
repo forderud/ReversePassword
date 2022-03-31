@@ -126,7 +126,7 @@ namespace CredProvider.NET
 
             credentials[dwIndex] = credential;
 
-            Logger.Write("Returning new credential.");
+            Logger.Write($"Returning new credential for username={Common.GetNameFromSid(sid)}");
             return credential;
         }
     }
