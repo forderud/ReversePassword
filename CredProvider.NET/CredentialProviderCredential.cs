@@ -55,7 +55,7 @@ namespace CredProvider.NET
         {
             Logger.Write();
 
-            return HRESULT.E_NOTIMPL;
+            return HRESULT.S_OK;
         }
 
         public virtual int GetFieldState(

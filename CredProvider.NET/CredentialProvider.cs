@@ -86,11 +86,13 @@ namespace CredProvider.NET
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_UNLOCK_WORKSTATION:
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_LOGON:
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD:
+                    Logger.Write($"cpus: {cpus} TRUE");
                     return true;
 
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_PLAP:
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_INVALID:
                 default:
+                    Logger.Write($"cpus: {cpus} FALSE");
                     return false;
             }
         }
@@ -102,9 +104,11 @@ namespace CredProvider.NET
 
             if (view.Active)
             {
+                Logger.Write($"cpus: {cpus} S_OK");
                 return HRESULT.S_OK;
             }
 
+            Logger.Write($"cpus: {cpus} E_NOTIMPL");
             return HRESULT.E_NOTIMPL;
         }
 
@@ -156,9 +160,11 @@ namespace CredProvider.NET
         {
             if (view.GetField((int)dwIndex, ppcpfd))
             {
+                Logger.Write($"dwIndex={dwIndex} S_OK");
                 return HRESULT.S_OK;
             }
 
+            Logger.Write($"dwIndex={dwIndex} E_INVALIDARG");
             return HRESULT.E_INVALIDARG;
         }
 
