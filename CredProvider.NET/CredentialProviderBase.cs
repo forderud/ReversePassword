@@ -142,12 +142,11 @@ namespace CredProvider.NET
         }
 
         //Lookup the user by index and return the sid
-        public virtual string GetUserSid(int dwIndex)
+        public string GetUserSidInternal(int dwIndex)
         {
-            Logger.Write();
-
             //CredUI does not provide user sids, so return null
-            if (this.providerUsers.Count < dwIndex + 1) return null;
+            if (this.providerUsers.Count < dwIndex + 1)
+                return null;
 
             this.providerUsers[dwIndex].GetSid(out string sid);
             return sid;

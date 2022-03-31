@@ -120,7 +120,7 @@ namespace CredProvider.NET
             }
 
             //Get the sid for this credential from the index
-            var sid = this.Provider.GetUserSid(dwIndex);
+            var sid = this.Provider.GetUserSidInternal(dwIndex);
 
             credential = new CredentialProviderCredential(this, sid);
 
