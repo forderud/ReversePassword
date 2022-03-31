@@ -14,7 +14,7 @@ namespace CredProvider.NET
     public class CredentialProviderCredential : ICredentialProviderCredential2
     {
         private readonly CredentialView view;
-        private string sid;
+        private readonly string sid;
 
         public CredentialProviderCredential(CredentialView view, string sid)
         {
