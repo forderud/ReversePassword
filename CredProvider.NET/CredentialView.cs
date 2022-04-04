@@ -19,7 +19,7 @@ namespace CredProvider.NET
         private readonly List<CredentialDescriptor> fields
             = new List<CredentialDescriptor>();
 
-        public CredentialProviderBase Provider { get; private set; }
+        public CredentialProvider Provider { get; private set; }
 
         public const string CPFG_LOGON_PASSWORD_GUID = "60624cfa-a477-47b1-8a8e-3a4a19981827";
         public const string CPFG_CREDENTIAL_PROVIDER_LOGO = "2d837775-f6cd-464e-a745-482fd0b47493";
@@ -29,7 +29,7 @@ namespace CredProvider.NET
 
         public int DescriptorCount { get { return fields.Count; } }
 
-        public CredentialView(CredentialProviderBase provider) 
+        public CredentialView(CredentialProvider provider) 
         {
             Provider = provider;
         }

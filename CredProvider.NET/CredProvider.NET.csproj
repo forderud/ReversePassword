@@ -54,7 +54,6 @@
     <Compile Include="Constants.cs" />
     <Compile Include="CredentialFlag.cs" />
     <Compile Include="CredentialProvider.cs" />
-    <Compile Include="CredentialProviderBase.cs" />
     <Compile Include="CredentialProviderCredential.cs" />
     <Compile Include="CredentialView.cs" />
     <Compile Include="Logger.cs" />
