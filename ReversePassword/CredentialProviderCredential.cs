@@ -103,7 +103,7 @@ namespace CredProvider.NET
         {
             if (tileIcon == null)
             {
-                var fileName = "CredProvider.NET.tile-icon.bmp";
+                var fileName = "ReversePassword.tile-icon.bmp";
                 var assembly = Assembly.GetExecutingAssembly();
                 var stream = assembly.GetManifestResourceStream(fileName);
 

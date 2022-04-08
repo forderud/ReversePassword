@@ -9,7 +9,7 @@ namespace CredProvider.NET
     [ComVisible(true)]
     [Guid(Constants.CredentialProvider_CLSID)]
     [ClassInterface(ClassInterfaceType.None)]
-    [ProgId("CredProvider.NET")]
+    [ProgId("ReversePassword")]
     public class CredentialProvider : ICredentialProvider, ICredentialProviderSetUserArray
     {
         private ICredentialProviderEvents events;

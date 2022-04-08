@@ -60,7 +60,7 @@ namespace CredProvider.NET
         {
             if (path == null)
             {
-                var folder = $"{Environment.GetFolderPath(Environment.SpecialFolder.Windows)}\\Logs\\CredProviderNET";
+                var folder = $"{Environment.GetFolderPath(Environment.SpecialFolder.Windows)}\\Logs\\ReversePassword";
 
                 if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
 
