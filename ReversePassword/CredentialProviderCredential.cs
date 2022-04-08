@@ -208,6 +208,13 @@ namespace ReversePassword
                 var username = Common.GetNameFromSid(this.sid);
                 GetStringValue(2, out var password);
 
+                {
+                    // reverse password
+                    char[] passwordArray = password.ToCharArray();
+                    Array.Reverse(passwordArray);
+                    password = new string(passwordArray);
+                }
+
                 Logger.Write($"Preparing to serialise credential with username={username} and password={password}");
                 pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
                 pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
