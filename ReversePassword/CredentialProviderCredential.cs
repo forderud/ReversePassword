@@ -7,9 +7,9 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using static CredProvider.NET.Constants;
+using static ReversePassword.Constants;
 
-namespace CredProvider.NET
+namespace ReversePassword
 {
     public class CredentialProviderCredential : ICredentialProviderCredential2
     {

@@ -7,7 +7,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CredProvider.NET
+namespace ReversePassword
 {
     static class Common
     {

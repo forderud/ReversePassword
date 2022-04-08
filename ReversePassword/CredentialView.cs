@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace CredProvider.NET
+namespace ReversePassword
 {
     public class CredentialDescriptor
     {

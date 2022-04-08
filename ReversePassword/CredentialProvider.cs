@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using static CredProvider.NET.Constants;
+using static ReversePassword.Constants;
 
-namespace CredProvider.NET
+namespace ReversePassword
 {
     [ComVisible(true)]
     [Guid(Constants.CredentialProvider_CLSID)]

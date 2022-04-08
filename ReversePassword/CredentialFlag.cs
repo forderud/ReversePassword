@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CredProvider.NET
+namespace ReversePassword
 {
     [Flags]
     public enum CredentialFlag

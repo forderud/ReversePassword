@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace CredProvider.NET
+namespace ReversePassword
 {
     internal static class Logger
     {

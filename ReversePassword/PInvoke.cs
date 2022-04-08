@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace CredProvider.NET
+namespace ReversePassword
 {
     static class PInvoke
     {

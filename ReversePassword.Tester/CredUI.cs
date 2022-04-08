@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace CredProvider.NET.Tester
+namespace ReversePassword.Tester
 {
     public static class CredUI
     {
