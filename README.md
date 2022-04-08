@@ -1,8 +1,6 @@
-# This isn't maintained anymore
-Feel free to fork the code but any contributions or questions are not guaranteed to be responded to in a timely manner.
-
 # ReversePassword
-A Windows Credential Provider written in C#
+A Windows Credential Provider that require the password to by typed in the revese order. It's written in C#.
 
-## Getting Started
-See this https://syfuhs.net/2017/10/15/creating-custom-windows-credential-providers-in-net/
+## Background
+The project is heavily based on the no longer maintained [CredProvider.NET](https://github.com/SteveSyfuhs/CredProvider.NET).
+
