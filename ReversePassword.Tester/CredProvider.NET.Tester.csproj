@@ -54,7 +54,7 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CredProvider.NET\CredProvider.NET.csproj">
+    <ProjectReference Include="..\ReversePassword\CredProvider.NET.csproj">
       <Project>{edd905a1-1c64-4db4-8e21-a66f70903fbd}</Project>
       <Name>CredProvider.NET</Name>
     </ProjectReference>
