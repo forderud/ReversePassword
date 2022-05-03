@@ -2,8 +2,6 @@
 setlocal enableextensions
 cd /d "%~dp0"
 
-set PATH=%PATH%;C:\Windows\Microsoft.NET\Framework64\v4.0.30319
-
-regasm /codebase /unregister ReversePassword.dll
+regsvr32.exe /u ReversePassword.comhost.dll
 
 uninstall.reg
