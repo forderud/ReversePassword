@@ -1,4 +1,4 @@
 Windows Registry Editor Version 5.00
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{00006d50-0000-0000-b090-00006b0b0000}]
-@="Credential Provider.NET"
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication\Credential Providers\{ACA40B06-9A9A-4B7B-A92C-F97FED8403B6}]
+@="ReversePassword"
