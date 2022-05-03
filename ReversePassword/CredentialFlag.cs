@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ReversePassword
+﻿namespace ReversePassword
 {
     [Flags]
     public enum CredentialFlag

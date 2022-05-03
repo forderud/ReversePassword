@@ -1,12 +1,7 @@
 ﻿using CredProvider.NET.Interop2;
-using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.Principal;
 using static ReversePassword.Constants;
 
 namespace ReversePassword

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ReversePassword
+﻿namespace ReversePassword
 {
     internal static class Constants
     {
