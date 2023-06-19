@@ -1,5 +1,5 @@
 # ReversePassword
-A Windows Credential Provider that require the password to by typed in the reverse order. It's written in C#.
+A Windows Credential Provider that require the password to by typed backwards. It's written in C#.
 
 ## How to test
 It's recommended to **test in a disposable Virtual Machine (VM)**, since credential provider problems might break the windows logon screen. You don't want to risk that on your main computer.
