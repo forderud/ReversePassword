@@ -83,5 +83,6 @@ int main() {
         return -1;
     }
 
-    // TODO: Check credentials
+    // TODO: Check credentials with LsaLogonUser
+    // REF: https://github.com/chromium/chromium/blob/main/chrome/browser/password_manager/password_manager_util_win.cc#L111
 }
