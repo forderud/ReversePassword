@@ -70,7 +70,7 @@ namespace ReversePassword
 
         private Bitmap tileIcon;
 
-        public virtual void GetBitmapValue(uint dwFieldID, out IntPtr phbmp)
+        public virtual void GetBitmapValue(uint dwFieldID, [Out][ComAliasName("CredProvider.Interop.wireHBITMAP")] IntPtr phbmp)
         {
             Logger.Write($"dwFieldID: {dwFieldID}");
 
