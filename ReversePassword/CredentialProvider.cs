@@ -103,7 +103,7 @@ namespace ReversePassword
                 return;
             }
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int SetSerialization(ref _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs)

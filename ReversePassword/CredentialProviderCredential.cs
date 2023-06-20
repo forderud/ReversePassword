@@ -26,14 +26,14 @@ namespace ReversePassword
             if (pcpce is ICredentialProviderCredentialEvents2 ev2)
                 Logger.Write("pcpce is ICredentialProviderCredentialEvents2");
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int UnAdvise()
         {
             Logger.Write();
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int SetSelected(out int pbAutoLogon)
@@ -50,7 +50,7 @@ namespace ReversePassword
         {
             Logger.Write();
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int GetFieldState(
@@ -113,7 +113,7 @@ namespace ReversePassword
             pbChecked = 0;
             ppszLabel = "";
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int GetSubmitButtonValue(uint dwFieldID, out uint pdwAdjacentTo)
@@ -122,7 +122,7 @@ namespace ReversePassword
 
             pdwAdjacentTo = 0;
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int GetComboBoxValueCount(uint dwFieldID, out uint pcItems, out uint pdwSelectedItem)
@@ -132,7 +132,7 @@ namespace ReversePassword
             pcItems = 0;
             pdwSelectedItem = 0;
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int GetComboBoxValueAt(uint dwFieldID, uint dwItem, out string ppszItem)
@@ -141,7 +141,7 @@ namespace ReversePassword
 
             ppszItem = "";
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int SetStringValue(uint dwFieldID, string psz)
@@ -157,21 +157,21 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {dwFieldID}; bChecked: {bChecked}");
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int SetComboBoxSelectedValue(uint dwFieldID, uint dwSelectedItem)
         {
             Logger.Write($"dwFieldID: {dwFieldID}; dwSelectedItem: {dwSelectedItem}");
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int CommandLinkClicked(uint dwFieldID)
         {
             Logger.Write($"dwFieldID: {dwFieldID}");
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
         public virtual int GetSerialization(
