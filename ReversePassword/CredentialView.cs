@@ -1,4 +1,4 @@
-﻿using CredProvider.NET.Interop2;
+﻿using CredProvider.Interop;
 using System.Runtime.InteropServices;
 
 namespace ReversePassword
