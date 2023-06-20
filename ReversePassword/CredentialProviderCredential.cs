@@ -239,7 +239,7 @@ namespace ReversePassword
 
                     ppszOptionalStatusText = "Failed to pack credentials";
                     pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_ERROR;
-                    return HRESULT.E_FAIL;
+                    throw new Exception();
                 }
             }
             //Implement code to change password here. This is not handled natively.
