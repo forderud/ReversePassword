@@ -93,27 +93,25 @@ namespace ReversePassword
             }
         }
 
-        public virtual int SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags)
+        public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags)
         {
             view = Initialize(cpus, dwFlags);
             usage = cpus;
 
             if (view.Active)
             {
-                return HRESULT.S_OK;
+                return;
             }
 
-            return HRESULT.E_NOTIMPL;
+            throw new NotImplementedException();
         }
 
-        public virtual int SetSerialization(ref _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs)
+        public virtual void SetSerialization(ref _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs)
         {
             Logger.Write($"ulAuthenticationPackage: {pcpcs.ulAuthenticationPackage}");
-
-            return HRESULT.S_OK;
         }
 
-        public virtual int Advise(ICredentialProviderEvents pcpe, ulong upAdviseContext)
+        public virtual void Advise(ICredentialProviderEvents pcpe, ulong upAdviseContext)
         {
             Logger.Write($"upAdviseContext: {upAdviseContext}");
 
@@ -121,11 +119,9 @@ namespace ReversePassword
             {
                 events = pcpe;
             }
-
-            return HRESULT.S_OK;
         }
 
-        public virtual int UnAdvise()
+        public virtual void UnAdvise()
         {
             Logger.Write();
 
@@ -137,30 +133,26 @@ namespace ReversePassword
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
-
-            return HRESULT.S_OK;
         }
 
-        public virtual int GetFieldDescriptorCount(out uint pdwCount)
+        public virtual void GetFieldDescriptorCount(out uint pdwCount)
         {
             pdwCount = (uint)view.DescriptorCount;
 
             Logger.Write($"Returning field count: {pdwCount}");
-
-            return HRESULT.S_OK;
         }
 
-        public virtual int GetFieldDescriptorAt(uint dwIndex, [Out] IntPtr ppcpfd)
+        public virtual void GetFieldDescriptorAt(uint dwIndex, [Out] IntPtr ppcpfd)
         {
             if (view.GetField((int)dwIndex, ppcpfd))
             {
-                return HRESULT.S_OK;
+                return;
             }
 
-            return HRESULT.E_INVALIDARG;
+            throw new ArgumentException();
         }
 
-        public virtual int GetCredentialCount(
+        public virtual void GetCredentialCount(
             out uint pdwCount,
             out uint pdwDefault,
             out int pbAutoLogonWithDefault
@@ -173,16 +165,13 @@ namespace ReversePassword
             pbAutoLogonWithDefault = 0;
 
             Logger.Write($"pdwCount={pdwCount} pdwDefault={pdwDefault}");
-            return HRESULT.S_OK;
         }
 
-        public virtual int GetCredentialAt(uint dwIndex, out ICredentialProviderCredential ppcpc)
+        public virtual void GetCredentialAt(uint dwIndex, out ICredentialProviderCredential ppcpc)
         {
             Logger.Write($"dwIndex: {dwIndex}");
 
             ppcpc = view.CreateCredential((int)dwIndex);
-
-            return HRESULT.S_OK;
         }
 
         public virtual _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
@@ -190,7 +179,7 @@ namespace ReversePassword
             return usage;
         }
 
-        public virtual int SetUserArray(ICredentialProviderUserArray users)
+        public virtual void SetUserArray(ICredentialProviderUserArray users)
         {
             this.providerUsers = new List<ICredentialProviderUser>();
 
@@ -210,8 +199,6 @@ namespace ReversePassword
 
                 Logger.Write($"providerId: {providerId}; username: {Common.GetNameFromSid(sid)}");
             }
-
-            return HRESULT.S_OK;
         }
 
         //Lookup the user by index and return the sid
