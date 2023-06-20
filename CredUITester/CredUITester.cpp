@@ -44,9 +44,10 @@ int main() {
     cred_info.pszCaptionText = L"Please sign in";
     cred_info.pszMessageText = L"Plase enter your credentials";
 
-    // flags to enable display of all credential providers
+    // Enable display of all credential providers.
+    // This will include Windows Hello and PIN athentication unless blocked by system policy.
+    // REF: https://github.com/chromium/chromium/blob/main/chrome/browser/password_manager/password_manager_util_win.cc#L318
     DWORD flags = CREDUIWIN_ENUMERATE_CURRENT_USER;
-    //flags |= 0x80000000; // Windows Hello credentials packed in a smart card auth buffer
 
     AuthInput input;
     ULONG authPackage = 0;
