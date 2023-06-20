@@ -93,7 +93,7 @@ namespace ReversePassword
             }
         }
 
-        public virtual int SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags)
+        public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags)
         {
             view = Initialize(cpus, dwFlags);
             usage = cpus;
@@ -106,14 +106,14 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual int SetSerialization(ref _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs)
+        public virtual void SetSerialization(ref _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs)
         {
             Logger.Write($"ulAuthenticationPackage: {pcpcs.ulAuthenticationPackage}");
 
             return;
         }
 
-        public virtual int Advise(ICredentialProviderEvents pcpe, ulong upAdviseContext)
+        public virtual void Advise(ICredentialProviderEvents pcpe, ulong upAdviseContext)
         {
             Logger.Write($"upAdviseContext: {upAdviseContext}");
 
@@ -125,7 +125,7 @@ namespace ReversePassword
             return;
         }
 
-        public virtual int UnAdvise()
+        public virtual void UnAdvise()
         {
             Logger.Write();
 
@@ -141,7 +141,7 @@ namespace ReversePassword
             return;
         }
 
-        public virtual int GetFieldDescriptorCount(out uint pdwCount)
+        public virtual void GetFieldDescriptorCount(out uint pdwCount)
         {
             pdwCount = (uint)view.DescriptorCount;
 
@@ -150,7 +150,7 @@ namespace ReversePassword
             return;
         }
 
-        public virtual int GetFieldDescriptorAt(uint dwIndex, [Out] IntPtr ppcpfd)
+        public virtual void GetFieldDescriptorAt(uint dwIndex, [Out] IntPtr ppcpfd)
         {
             if (view.GetField((int)dwIndex, ppcpfd))
             {
@@ -160,7 +160,7 @@ namespace ReversePassword
             throw new ArgumentException();
         }
 
-        public virtual int GetCredentialCount(
+        public virtual void GetCredentialCount(
             out uint pdwCount,
             out uint pdwDefault,
             out int pbAutoLogonWithDefault
@@ -176,7 +176,7 @@ namespace ReversePassword
             return;
         }
 
-        public virtual int GetCredentialAt(uint dwIndex, out ICredentialProviderCredential ppcpc)
+        public virtual void GetCredentialAt(uint dwIndex, out ICredentialProviderCredential ppcpc)
         {
             Logger.Write($"dwIndex: {dwIndex}");
 
@@ -190,7 +190,7 @@ namespace ReversePassword
             return usage;
         }
 
-        public virtual int SetUserArray(ICredentialProviderUserArray users)
+        public virtual void SetUserArray(ICredentialProviderUserArray users)
         {
             this.providerUsers = new List<ICredentialProviderUser>();
 

@@ -19,7 +19,7 @@ namespace ReversePassword
             this.sid = sid;
         }
 
-        public virtual int Advise(ICredentialProviderCredentialEvents pcpce)
+        public virtual void Advise(ICredentialProviderCredentialEvents pcpce)
         {
             Logger.Write();
 
@@ -29,14 +29,14 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual int UnAdvise()
+        public virtual void UnAdvise()
         {
             Logger.Write();
 
             throw new NotImplementedException();
         }
 
-        public virtual int SetSelected(out int pbAutoLogon)
+        public virtual void SetSelected(out int pbAutoLogon)
         {
             Logger.Write();
 
@@ -46,14 +46,14 @@ namespace ReversePassword
             return;
         }
 
-        public virtual int SetDeselected()
+        public virtual void SetDeselected()
         {
             Logger.Write();
 
             throw new NotImplementedException();
         }
 
-        public virtual int GetFieldState(
+        public virtual void GetFieldState(
             uint dwFieldID,
             out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs,
             out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis
@@ -66,7 +66,7 @@ namespace ReversePassword
             return;
         }
 
-        public virtual int GetStringValue(uint dwFieldID, out string ppsz)
+        public virtual void GetStringValue(uint dwFieldID, out string ppsz)
         {
             ppsz = view.GetValue((int)dwFieldID);
             Logger.Write($"dwFieldID:{dwFieldID}, ppsz={ppsz}");
@@ -76,7 +76,7 @@ namespace ReversePassword
 
         private Bitmap tileIcon;
 
-        public virtual int GetBitmapValue(uint dwFieldID, out IntPtr phbmp)
+        public virtual void GetBitmapValue(uint dwFieldID, out IntPtr phbmp)
         {
             Logger.Write($"dwFieldID: {dwFieldID}");
 
@@ -106,7 +106,7 @@ namespace ReversePassword
             }
         }
 
-        public virtual int GetCheckboxValue(uint dwFieldID, out int pbChecked, out string ppszLabel)
+        public virtual void GetCheckboxValue(uint dwFieldID, out int pbChecked, out string ppszLabel)
         {
             Logger.Write($"dwFieldID: {dwFieldID}");
 
@@ -116,7 +116,7 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual int GetSubmitButtonValue(uint dwFieldID, out uint pdwAdjacentTo)
+        public virtual void GetSubmitButtonValue(uint dwFieldID, out uint pdwAdjacentTo)
         {
             Logger.Write($"dwFieldID: {dwFieldID}");
 
@@ -125,7 +125,7 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual int GetComboBoxValueCount(uint dwFieldID, out uint pcItems, out uint pdwSelectedItem)
+        public virtual void GetComboBoxValueCount(uint dwFieldID, out uint pcItems, out uint pdwSelectedItem)
         {
             Logger.Write($"dwFieldID: {dwFieldID}");
 
@@ -135,7 +135,7 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual int GetComboBoxValueAt(uint dwFieldID, uint dwItem, out string ppszItem)
+        public virtual void GetComboBoxValueAt(uint dwFieldID, uint dwItem, out string ppszItem)
         {
             Logger.Write($"dwFieldID: {dwFieldID}; dwItem: {dwItem}");
 
@@ -144,7 +144,7 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual int SetStringValue(uint dwFieldID, string psz)
+        public virtual void SetStringValue(uint dwFieldID, string psz)
         {
             Logger.Write($"dwFieldID: {dwFieldID}; psz: {psz}");
 
@@ -153,28 +153,28 @@ namespace ReversePassword
             return;
         }
 
-        public virtual int SetCheckboxValue(uint dwFieldID, int bChecked)
+        public virtual void SetCheckboxValue(uint dwFieldID, int bChecked)
         {
             Logger.Write($"dwFieldID: {dwFieldID}; bChecked: {bChecked}");
 
             throw new NotImplementedException();
         }
 
-        public virtual int SetComboBoxSelectedValue(uint dwFieldID, uint dwSelectedItem)
+        public virtual void SetComboBoxSelectedValue(uint dwFieldID, uint dwSelectedItem)
         {
             Logger.Write($"dwFieldID: {dwFieldID}; dwSelectedItem: {dwSelectedItem}");
 
             throw new NotImplementedException();
         }
 
-        public virtual int CommandLinkClicked(uint dwFieldID)
+        public virtual void CommandLinkClicked(uint dwFieldID)
         {
             Logger.Write($"dwFieldID: {dwFieldID}");
 
             throw new NotImplementedException();
         }
 
-        public virtual int GetSerialization(
+        public virtual void GetSerialization(
             out _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE pcpgsr,
             out _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs,
             out string ppszOptionalStatusText,
@@ -255,7 +255,7 @@ namespace ReversePassword
             return;
         }
 
-        public virtual int ReportResult(
+        public virtual void ReportResult(
             int ntsStatus,
             int ntsSubstatus,
             out string ppszOptionalStatusText,
@@ -270,7 +270,7 @@ namespace ReversePassword
             return;
         }
 
-        public virtual int GetUserSid(out string sid)
+        public virtual void GetUserSid(out string sid)
         {
             sid = this.sid;
 
