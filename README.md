@@ -16,6 +16,8 @@ Installation steps:
 
 ![screenshot](Screenshot.png)
 
+NOTE: You might need to run `CredUITester.exe` with admin privileges if not installed to a folder where all users have read access.
+
 Uninstallation steps:
 * Right click on `UNREGISTER.bat` and select "Run as administrator".
 
