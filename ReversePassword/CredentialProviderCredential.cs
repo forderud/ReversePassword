@@ -43,7 +43,7 @@ namespace ReversePassword
             //Set this to 1 if you would like GetSerialization called immediately on selection
             pbAutoLogon = 0;
 
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int SetDeselected()
@@ -63,7 +63,7 @@ namespace ReversePassword
 
             view.GetFieldState((int)dwFieldID, out pcpfs, out pcpfis);
 
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int GetStringValue(uint dwFieldID, out string ppsz)
@@ -71,7 +71,7 @@ namespace ReversePassword
             ppsz = view.GetValue((int)dwFieldID);
             Logger.Write($"dwFieldID:{dwFieldID}, ppsz={ppsz}");
             
-            return HRESULT.S_OK;
+            return;
         }
 
         private Bitmap tileIcon;
@@ -91,7 +91,7 @@ namespace ReversePassword
 
             phbmp = tileIcon?.GetHbitmap() ?? IntPtr.Zero;
 
-            return HRESULT.S_OK;
+            return;
         }
 
         private void TryLoadUserIcon()
@@ -150,7 +150,7 @@ namespace ReversePassword
 
             view.SetValue((int) dwFieldID, psz);
 
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int SetCheckboxValue(uint dwFieldID, int bChecked)
@@ -234,7 +234,7 @@ namespace ReversePassword
                         pcpcs.cbSerialization = (uint)inCredSize;
                         pcpcs.ulAuthenticationPackage = authPackage;
 
-                        return HRESULT.S_OK;
+                        return;
                     }
 
                     ppszOptionalStatusText = "Failed to pack credentials";
@@ -252,7 +252,7 @@ namespace ReversePassword
             }
 
             Logger.Write("Returning S_OK");
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int ReportResult(
@@ -267,7 +267,7 @@ namespace ReversePassword
             ppszOptionalStatusText = "";
             pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
 
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int GetUserSid(out string sid)
@@ -275,7 +275,7 @@ namespace ReversePassword
             sid = this.sid;
 
             Logger.Write($"username: {Common.GetNameFromSid(sid)}");
-            return HRESULT.S_OK;
+            return;
         }
     }
 }

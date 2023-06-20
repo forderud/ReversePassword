@@ -100,7 +100,7 @@ namespace ReversePassword
 
             if (view.Active)
             {
-                return HRESULT.S_OK;
+                return;
             }
 
             return HRESULT.E_NOTIMPL;
@@ -110,7 +110,7 @@ namespace ReversePassword
         {
             Logger.Write($"ulAuthenticationPackage: {pcpcs.ulAuthenticationPackage}");
 
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int Advise(ICredentialProviderEvents pcpe, ulong upAdviseContext)
@@ -122,7 +122,7 @@ namespace ReversePassword
                 events = pcpe;
             }
 
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int UnAdvise()
@@ -138,7 +138,7 @@ namespace ReversePassword
                 GC.WaitForPendingFinalizers();
             }
 
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int GetFieldDescriptorCount(out uint pdwCount)
@@ -147,14 +147,14 @@ namespace ReversePassword
 
             Logger.Write($"Returning field count: {pdwCount}");
 
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int GetFieldDescriptorAt(uint dwIndex, [Out] IntPtr ppcpfd)
         {
             if (view.GetField((int)dwIndex, ppcpfd))
             {
-                return HRESULT.S_OK;
+                return;
             }
 
             return HRESULT.E_INVALIDARG;
@@ -173,7 +173,7 @@ namespace ReversePassword
             pbAutoLogonWithDefault = 0;
 
             Logger.Write($"pdwCount={pdwCount} pdwDefault={pdwDefault}");
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual int GetCredentialAt(uint dwIndex, out ICredentialProviderCredential ppcpc)
@@ -182,7 +182,7 @@ namespace ReversePassword
 
             ppcpc = view.CreateCredential((int)dwIndex);
 
-            return HRESULT.S_OK;
+            return;
         }
 
         public virtual _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
@@ -211,7 +211,7 @@ namespace ReversePassword
                 Logger.Write($"providerId: {providerId}; username: {Common.GetNameFromSid(sid)}");
             }
 
-            return HRESULT.S_OK;
+            return;
         }
 
         //Lookup the user by index and return the sid
