@@ -42,8 +42,6 @@ namespace ReversePassword
 
             //Set this to 1 if you would like GetSerialization called immediately on selection
             pbAutoLogon = 0;
-
-            return;
         }
 
         public virtual void SetDeselected()
@@ -62,16 +60,12 @@ namespace ReversePassword
             Logger.Write($"dwFieldID: {dwFieldID}");
 
             view.GetFieldState((int)dwFieldID, out pcpfs, out pcpfis);
-
-            return;
         }
 
         public virtual void GetStringValue(uint dwFieldID, out string ppsz)
         {
             ppsz = view.GetValue((int)dwFieldID);
             Logger.Write($"dwFieldID:{dwFieldID}, ppsz={ppsz}");
-            
-            return;
         }
 
         private Bitmap tileIcon;
@@ -90,8 +84,6 @@ namespace ReversePassword
             }
 
             phbmp = tileIcon?.GetHbitmap() ?? IntPtr.Zero;
-
-            return;
         }
 
         private void TryLoadUserIcon()
@@ -149,8 +141,6 @@ namespace ReversePassword
             Logger.Write($"dwFieldID: {dwFieldID}; psz: {psz}");
 
             view.SetValue((int) dwFieldID, psz);
-
-            return;
         }
 
         public virtual void SetCheckboxValue(uint dwFieldID, int bChecked)
@@ -252,7 +242,6 @@ namespace ReversePassword
             }
 
             Logger.Write("Returning S_OK");
-            return;
         }
 
         public virtual void ReportResult(
@@ -266,8 +255,6 @@ namespace ReversePassword
 
             ppszOptionalStatusText = "";
             pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
-
-            return;
         }
 
         public virtual void GetUserSid(out string sid)
@@ -275,7 +262,6 @@ namespace ReversePassword
             sid = this.sid;
 
             Logger.Write($"username: {Common.GetNameFromSid(sid)}");
-            return;
         }
     }
 }

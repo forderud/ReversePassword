@@ -109,8 +109,6 @@ namespace ReversePassword
         public virtual void SetSerialization(ref _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs)
         {
             Logger.Write($"ulAuthenticationPackage: {pcpcs.ulAuthenticationPackage}");
-
-            return;
         }
 
         public virtual void Advise(ICredentialProviderEvents pcpe, ulong upAdviseContext)
@@ -121,8 +119,6 @@ namespace ReversePassword
             {
                 events = pcpe;
             }
-
-            return;
         }
 
         public virtual void UnAdvise()
@@ -137,8 +133,6 @@ namespace ReversePassword
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
-
-            return;
         }
 
         public virtual void GetFieldDescriptorCount(out uint pdwCount)
@@ -146,8 +140,6 @@ namespace ReversePassword
             pdwCount = (uint)view.DescriptorCount;
 
             Logger.Write($"Returning field count: {pdwCount}");
-
-            return;
         }
 
         public virtual void GetFieldDescriptorAt(uint dwIndex, [Out] IntPtr ppcpfd)
@@ -173,7 +165,6 @@ namespace ReversePassword
             pbAutoLogonWithDefault = 0;
 
             Logger.Write($"pdwCount={pdwCount} pdwDefault={pdwDefault}");
-            return;
         }
 
         public virtual void GetCredentialAt(uint dwIndex, out ICredentialProviderCredential ppcpc)
@@ -181,8 +172,6 @@ namespace ReversePassword
             Logger.Write($"dwIndex: {dwIndex}");
 
             ppcpc = view.CreateCredential((int)dwIndex);
-
-            return;
         }
 
         public virtual _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
@@ -210,8 +199,6 @@ namespace ReversePassword
 
                 Logger.Write($"providerId: {providerId}; username: {Common.GetNameFromSid(sid)}");
             }
-
-            return;
         }
 
         //Lookup the user by index and return the sid
