@@ -22,12 +22,6 @@ namespace ReversePassword
             };
         }
 
-        public static TextWriter Out
-        {
-            get { return Console.Out; }
-            set { Console.SetOut(value); }
-        }
-
         public static void Write(string line = null, string caller = null)
         {
             if (string.IsNullOrWhiteSpace(caller))
