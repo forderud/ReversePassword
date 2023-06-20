@@ -16,8 +16,6 @@ Installation steps:
 
 ![screenshot](Screenshot.png)
 
-WARNING: It's not possible to register ReversePassword from the CredUITester output folder due to `ReversePassword.runtimeconfig.json` being missing from that folder. 
-
 Uninstallation steps:
 * Right click on `UNREGISTER.bat` and select "Run as administrator".
 
