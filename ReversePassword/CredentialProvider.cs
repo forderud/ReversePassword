@@ -157,7 +157,7 @@ namespace ReversePassword
                 return;
             }
 
-            return HRESULT.E_INVALIDARG;
+            throw new ArgumentException();
         }
 
         public virtual int GetCredentialCount(
