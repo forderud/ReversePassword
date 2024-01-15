@@ -9,7 +9,7 @@ Build steps:
 * Copy `install.reg`, `uninstall.reg`, `REGISTER.bat` and `UNREGISTER.bat` into the same folder as the generated `ReversePassword.comhost.dll`.
 
 Installation steps:
-* Install [.NET 6 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet/6.0)
+* Install [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet)
 * Right click on `REGISTER.bat` and select "Run as administrator".
 * Log screen, log out or restart the computer.
 * Observe that there's now a new "RP" sign-in option.
