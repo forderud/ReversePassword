@@ -1,4 +1,3 @@
-# ReversePassword
 A Windows Credential Provider that require the password to by typed backwards. It's written in C#.
 
 ## How to test
