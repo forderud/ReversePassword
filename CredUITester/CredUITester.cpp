@@ -41,8 +41,9 @@ int main() {
     CREDUI_INFOW cred_info = {};
     cred_info.cbSize = sizeof(cred_info);
     cred_info.hwndParent = GetDesktopWindow();
-    cred_info.pszCaptionText = L"Please sign in";
+    cred_info.pszCaptionText = L"Custom authentication";
     cred_info.pszMessageText = L"Plase enter your credentials";
+    cred_info.hbmBanner = 0; // custom bitmap (max 320x60 pixels)
 
     // Enable display of all credential providers.
     // This will include Windows Hello and PIN athentication unless blocked by system policy.
