@@ -13,7 +13,7 @@ Installation steps:
 * Log screen, log out or restart the computer.
 * Observe that there's now a new "RP" sign-in option.
 
-![screenshot](Screenshot.png)
+![screenshot](Screenshot.png)  
 
 NOTE: You might need to run `CredUITester.exe` with admin privileges if not installed to a folder where all users have read access.
 
@@ -22,10 +22,11 @@ Uninstallation steps:
 
 
 ## Authentication and logon APIs
-* Show logon dialog: [CredUIPromptForWindowsCredentials](https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-creduipromptforwindowscredentialsw)
+![CredUIPrompt](CredUIPrompt.png)  
+
+* Show authentication dialog: [CredUIPromptForWindowsCredentials](https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-creduipromptforwindowscredentialsw)
 * Logoff, shutdown or restart:  [ExitWindowsEx](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex)
 
-![CredUIPrompt](CredUIPrompt.png)
 
 ## Background
 The project is heavily based on the no longer maintained [CredProvider.NET](https://github.com/SteveSyfuhs/CredProvider.NET).
