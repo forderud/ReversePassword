@@ -47,7 +47,7 @@ int main() {
 
     // Enable display of all credential providers.
     // This will include Windows Hello and PIN athentication unless blocked by system policy.
-    // REF: https://github.com/chromium/chromium/blob/main/chrome/browser/password_manager/password_manager_util_win.cc#L318
+    // REF: https://github.com/chromium/chromium/blob/main/chrome/browser/password_manager/password_manager_util_win.cc
     DWORD flags = CREDUIWIN_ENUMERATE_CURRENT_USER;
 
     AuthInput input;
