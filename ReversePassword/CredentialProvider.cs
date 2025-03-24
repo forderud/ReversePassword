@@ -69,7 +69,7 @@ namespace ReversePassword
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT,
                 pszLabel: "Click Me!",
-                defaultValue: "Click Me!",
+                defaultValue: "Reverse Password",
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_DESELECTED_TILE
             );
 
