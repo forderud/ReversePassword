@@ -70,8 +70,6 @@ int main() {
         return -1;
     }
 
-    wprintf(L"Credentials entered.\n");
-
     TextString username, password, domain;
     BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
         result.ptr, result.size,
@@ -85,7 +83,7 @@ int main() {
         return -1;
     }
 
-    wprintf(L"Provided credentials:\n");
+    wprintf(L"Provided credentials (not checked):\n");
     wprintf(L"Username: %s\n", username.ptr);
     wprintf(L"Password: %s\n", password.ptr);
     wprintf(L"Domain: %s\n", domain.ptr);
