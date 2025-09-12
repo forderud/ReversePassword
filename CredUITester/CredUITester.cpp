@@ -66,7 +66,7 @@ int main() {
         flags);
     if (res != ERROR_SUCCESS) {
         if (res == ERROR_CANCELLED) {
-            std::wcout << L"User canceled." << std::endl;
+            wprintf(L"ERROR: User canceled.\n");
             return -1;
         } else {
             DWORD err = GetLastError();
