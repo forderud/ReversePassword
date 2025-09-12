@@ -50,7 +50,7 @@ int main() {
     // REF: https://github.com/chromium/chromium/blob/main/chrome/browser/password_manager/password_manager_util_win.cc
     DWORD flags = CREDUIWIN_ENUMERATE_CURRENT_USER;
 
-    AuthInput input;
+    AuthInput input; // empty
     ULONG authPackage = 0;
     AuthResult result;
 
