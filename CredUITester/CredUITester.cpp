@@ -80,7 +80,8 @@ int main() {
         domain.ptr, &domain.size,
         password.ptr, &password.size);
     if (!ok) {
-        std::wcout << L"Unable to unpack credentials" << std::endl;
+        DWORD err = GetLastError();
+        wprintf(L"Unable to unpack credentials (err=%u)\n", err);
         return -1;
     }
 
