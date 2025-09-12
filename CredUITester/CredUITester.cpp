@@ -64,10 +64,15 @@ int main() {
         &result.size,
         nullptr, // disable "save" check box
         flags);
-
-    if (res == ERROR_CANCELLED) {
-        std::wcout << L"User canceled." << std::endl;
-        return -1;
+    if (res != ERROR_SUCCESS) {
+        if (res == ERROR_CANCELLED) {
+            std::wcout << L"User canceled." << std::endl;
+            return -1;
+        } else {
+            DWORD err = GetLastError();
+            wprintf(L"CredUIPromptForWindowsCredentials failed (err=%u)\n", err);
+            return -1;
+        }
     }
 
     TextString username, password, domain;
@@ -78,7 +83,6 @@ int main() {
         password.ptr, &password.size);
     if (!ok) {
         DWORD err = GetLastError();
-        ERROR_NOT_CAPABLE;
         wprintf(L"Unable to unpack credentials (err=%u)\n", err);
         return -1;
     }
