@@ -33,7 +33,7 @@ struct TextString {
         RtlSecureZeroMemory(ptr, sizeof(ptr)); // deliberately NOT using size member
     }
 
-    wchar_t ptr[256] = {};
+    wchar_t ptr[1536] = {}; // encoded PIN-code passwords have been observed to be >1200 chars
     ULONG size = (ULONG)std::size(ptr);
 };
 
@@ -81,6 +81,7 @@ int main() {
         password.ptr, &password.size);
     if (!ok) {
         DWORD err = GetLastError();
+        ERROR_NOT_CAPABLE;
         wprintf(L"Unable to unpack credentials (err=%u)\n", err);
         return -1;
     }
