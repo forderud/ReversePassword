@@ -70,10 +70,9 @@ int main() {
         return -1;
     }
 
-    std::wcout << L"Credentials entered, but not checked." << std::endl;
+    wprintf(L"Credentials entered.\n");
 
     TextString username, password, domain;
-
     BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
         result.ptr, result.size,
         username.ptr, &username.size,
@@ -85,6 +84,12 @@ int main() {
         wprintf(L"Unable to unpack credentials (err=%u)\n", err);
         return -1;
     }
+
+    wprintf(L"Provided credentials:\n");
+    wprintf(L"Username: %s\n", username.ptr);
+    wprintf(L"Password: %s\n", password.ptr);
+    wprintf(L"Domain: %s\n", domain.ptr);
+
 
     // TODO: Check credentials with LsaLogonUser
     // REF: https://github.com/chromium/chromium/blob/main/chrome/browser/password_manager/password_manager_util_win.cc#L111
