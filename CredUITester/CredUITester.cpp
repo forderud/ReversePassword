@@ -97,8 +97,13 @@ int main() {
     ok = LogonUserW(username.ptr, domain.ptr, password.ptr, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
         DWORD err = GetLastError();
-        wprintf(L"LogonUser failed (err=%u)\n", err);
-        return -1;
+        if (err == 1326) {
+            wprintf(L"ERROR: The user name or password is incorrect.\n");
+            return -1;
+        } else {
+            wprintf(L"ERROR: LogonUser failed (err=%u)\n", err);
+            return -1;
+        }
     }
 
     wprintf(L"Authentication succeeded.\n");
