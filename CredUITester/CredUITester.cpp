@@ -92,7 +92,15 @@ int main() {
     wprintf(L"Password: %s\n", password.ptr);
     wprintf(L"Domain: %s\n", domain.ptr);
 
+    // check credentials
+    HANDLE token = 0;
+    ok = LogonUserW(username.ptr, domain.ptr, password.ptr, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
+    if (!ok) {
+        DWORD err = GetLastError();
+        wprintf(L"LogonUser failed (err=%u)\n", err);
+        return -1;
+    }
 
-    // TODO: Check credentials with LsaLogonUser
-    // REF: https://github.com/chromium/chromium/blob/main/chrome/browser/password_manager/password_manager_util_win.cc#L111
+    wprintf(L"Authentication succeeded.\n");
+    CloseHandle(token);
 }
