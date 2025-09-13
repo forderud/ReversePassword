@@ -97,12 +97,15 @@ int main() {
     ok = LogonUserW(username.ptr, domain.ptr, password.ptr, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
         DWORD err = GetLastError();
-        if (err == 1326) {
+        if (err == ERROR_LOGON_FAILURE) {
             wprintf(L"ERROR: The user name or password is incorrect.\n");
             return -1;
+        } else if (err == ERROR_BAD_NETPATH) {
+            wprintf(L"ERROR: The network path was not found.\n");
+            return -2;
         } else {
-            wprintf(L"ERROR: LogonUser failed (err=%u)\n", err);
-            return -1;
+            wprintf(L"ERROR: Other LogonUser error (err=%u)\n", err);
+            return -2;
         }
     }
 
