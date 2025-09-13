@@ -92,7 +92,8 @@ int main() {
     wprintf(L"Password: %s\n", password.ptr);
     wprintf(L"Domain: %s\n", domain.ptr);
 
-    // check credentials (confirmed to work for local accounts and PIN-codes)
+    // Check credentials (confirmed to work for local accounts and PIN-codes)
+    // Failures are logged in the Event Viewer "Security" log with "Logon" category
     HANDLE token = 0;
     ok = LogonUserW(username.ptr, domain.ptr, password.ptr, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
