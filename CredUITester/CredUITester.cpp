@@ -92,7 +92,7 @@ int main() {
     wprintf(L"Password: %s\n", password.ptr);
     wprintf(L"Domain: %s\n", domain.ptr);
 
-    // check credentials
+    // check credentials (confirmed to work for local accounts and PIN-codes)
     HANDLE token = 0;
     ok = LogonUserW(username.ptr, domain.ptr, password.ptr, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
