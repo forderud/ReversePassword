@@ -25,10 +25,10 @@ struct AuthResult {
     ULONG size = 0;        // [out]
 };
 
-struct TextString {
-    TextString() = default;
+struct StackString {
+    StackString() = default;
 
-    ~TextString() {
+    ~StackString() {
         // clear memory to avoid leaking secrets
         RtlSecureZeroMemory(ptr, sizeof(ptr)); // deliberately NOT using size member
     }
@@ -75,7 +75,7 @@ int main() {
         }
     }
 
-    TextString username, password, domain;
+    StackString username, password, domain;
     BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
         result.ptr, result.size,
         username.ptr, &username.size,
