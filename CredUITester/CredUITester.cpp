@@ -83,7 +83,7 @@ int main() {
         password.ptr, &password.size);
     if (!ok) {
         DWORD err = GetLastError();
-        wprintf(L"Unable to unpack credentials (err=%u)\n", err);
+        wprintf(L"ERROR: CredUnPackAuthenticationBuffer failed (err=%u)\n", err);
         return -1;
     }
 
