@@ -118,6 +118,7 @@ int main() {
 
     // Check credentials (confirmed to work for local accounts and PIN-codes)
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
+    // TODO: Test if LsaLogonUser works better for domain accounts
     HANDLE token = 0;
     BOOL ok = LogonUserW(username, domain, password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
