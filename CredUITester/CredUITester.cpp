@@ -38,6 +38,10 @@ struct SecureString {
         str.resize(size, L'\0');
     }
 
+    operator const wchar_t* () const {
+        return str.c_str();
+    }
+
     std::wstring str;
     ULONG size = 0;
 };
@@ -108,14 +112,14 @@ int main() {
     }
 
     wprintf(L"Provided credentials (not checked):\n");
-    wprintf(L"Username: %s\n", username.str.c_str());
-    wprintf(L"Password: %s\n", password.str.c_str());
-    wprintf(L"Domain: %s\n", domain.str.c_str());
+    wprintf(L"Username: %s\n", (const wchar_t*)username);
+    wprintf(L"Password: %s\n", (const wchar_t*)password);
+    wprintf(L"Domain: %s\n", (const wchar_t*)domain);
 
     // Check credentials (confirmed to work for local accounts and PIN-codes)
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
     HANDLE token = 0;
-    BOOL ok = LogonUserW(username.str.c_str(), domain.str.c_str(), password.str.c_str(), LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
+    BOOL ok = LogonUserW(username, domain, password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
         DWORD err = GetLastError();
         if (err == ERROR_LOGON_FAILURE) {
