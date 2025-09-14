@@ -1,3 +1,4 @@
+#include <cassert>
 #include <windows.h>
 #include <wincred.h> // for CredUIPromptForWindowsCredentialsW
 #include <iostream>
@@ -25,16 +26,20 @@ struct AuthResult {
     ULONG size = 0;        // [out]
 };
 
-struct StackString {
-    StackString() = default;
+struct SecureString {
+    SecureString() = default;
 
-    ~StackString() {
+    ~SecureString() {
         // clear memory to avoid leaking secrets
-        RtlSecureZeroMemory(ptr, sizeof(ptr)); // deliberately NOT using size member
+        RtlSecureZeroMemory(str.data(), str.size()); // deliberately NOT using size member
     }
 
-    wchar_t ptr[1536] = {}; // encoded PIN-code passwords have been observed to be >1200 chars
-    ULONG size = (ULONG)std::size(ptr);
+    void Resize() {
+        str.resize(size, L'\0');
+    }
+
+    std::wstring str;
+    ULONG size = 0;
 };
 
 int main() {
@@ -75,27 +80,42 @@ int main() {
         }
     }
 
-    StackString username, password, domain;
-    BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
-        result.ptr, result.size,
-        username.ptr, &username.size,
-        domain.ptr, &domain.size,
-        password.ptr, &password.size);
-    if (!ok) {
-        DWORD err = GetLastError();
-        wprintf(L"ERROR: CredUnPackAuthenticationBuffer failed (err=%u)\n", err);
-        return -1;
+    SecureString username, password, domain;
+    {
+        // determine buffer sizes
+        BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
+            result.ptr, result.size,
+            nullptr, &username.size,
+            nullptr, &domain.size,
+            nullptr, &password.size);
+        assert(!ok);
+
+        username.Resize();
+        password.Resize();
+        domain.Resize();
+
+        // get username, password & domain strings
+        ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
+            result.ptr, result.size,
+            username.str.data(), &username.size,
+            domain.str.data(), &domain.size,
+            password.str.data(), &password.size);
+        if (!ok) {
+            DWORD err = GetLastError();
+            wprintf(L"ERROR: CredUnPackAuthenticationBuffer failed (err=%u)\n", err);
+            return -1;
+        }
     }
 
     wprintf(L"Provided credentials (not checked):\n");
-    wprintf(L"Username: %s\n", username.ptr);
-    wprintf(L"Password: %s\n", password.ptr);
-    wprintf(L"Domain: %s\n", domain.ptr);
+    wprintf(L"Username: %s\n", username.str.c_str());
+    wprintf(L"Password: %s\n", password.str.c_str());
+    wprintf(L"Domain: %s\n", domain.str.c_str());
 
     // Check credentials (confirmed to work for local accounts and PIN-codes)
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
     HANDLE token = 0;
-    ok = LogonUserW(username.ptr, domain.ptr, password.ptr, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
+    BOOL ok = LogonUserW(username.str.c_str(), domain.str.c_str(), password.str.c_str(), LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
         DWORD err = GetLastError();
         if (err == ERROR_LOGON_FAILURE) {
