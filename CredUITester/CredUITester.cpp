@@ -84,7 +84,7 @@ int main() {
         }
     }
 
-    SecureString username, password, domain;
+    SecureString username, domain, password;
     {
         // determine buffer sizes
         BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
@@ -95,8 +95,8 @@ int main() {
         assert(!ok);
 
         username.Resize();
-        password.Resize();
         domain.Resize();
+        password.Resize();
 
         // get username, password & domain strings
         ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
@@ -113,8 +113,8 @@ int main() {
 
     wprintf(L"Provided credentials (not checked):\n");
     wprintf(L"Username: %s\n", (const wchar_t*)username);
+    wprintf(L"Domain:   %s\n", (const wchar_t*)domain);
     wprintf(L"Password: %s\n", (const wchar_t*)password);
-    wprintf(L"Domain: %s\n", (const wchar_t*)domain);
 
     // Check credentials (confirmed to work for local accounts and PIN-codes)
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
