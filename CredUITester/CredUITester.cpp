@@ -135,6 +135,6 @@ int main() {
         }
     }
 
-    wprintf(L"Authentication succeeded.\n");
+    wprintf(L"SUCCESS: Authentication succeeded.\n");
     CloseHandle(token);
 }
