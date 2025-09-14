@@ -70,7 +70,7 @@ int main() {
             return -1;
         } else {
             DWORD err = GetLastError();
-            wprintf(L"CredUIPromptForWindowsCredentials failed (err=%u)\n", err);
+            wprintf(L"ERROR: CredUIPromptForWindowsCredentials failed (err=%u)\n", err);
             return -1;
         }
     }
@@ -102,7 +102,7 @@ int main() {
             wprintf(L"ERROR: The user name or password is incorrect.\n");
             return -1;
         } else if (err == ERROR_BAD_NETPATH) {
-            wprintf(L"ERROR: The network path was not found.\n");
+            wprintf(L"ERROR: The network path was not found (seem to happen for domain accounts).\n");
             return -2;
         } else {
             wprintf(L"ERROR: Other LogonUser error (err=%u)\n", err);
