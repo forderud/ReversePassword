@@ -12,10 +12,10 @@ struct AuthInput {
     ULONG size = 0;
 };
 
-struct AuthResult {
-    AuthResult() = default;
+struct CredentialBlob {
+    CredentialBlob() = default;
 
-    ~AuthResult() {
+    ~CredentialBlob() {
         // clear memory to avoid leaking secrets
         RtlSecureZeroMemory(ptr, size);
         // delete allocation
@@ -37,7 +37,7 @@ struct SecureString : std::wstring {
 };
 
 int main() {
-    AuthResult result;
+    CredentialBlob result;
     {
         CREDUI_INFOW cred_info = {};
         cred_info.cbSize = sizeof(cred_info);
