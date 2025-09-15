@@ -37,7 +37,7 @@ struct SecureString : std::wstring {
 };
 
 int main() {
-    CredentialBlob result;
+    CredentialBlob authBuffer;
     {
         CREDUI_INFOW cred_info = {};
         cred_info.cbSize = sizeof(cred_info);
@@ -58,8 +58,8 @@ int main() {
             &authPackage, // [in,out]
             nullptr,      // credential BLOB
             0,
-            &result.ptr,
-            &result.size,
+            &authBuffer.ptr,
+            &authBuffer.size,
             nullptr, // disable "save" check box
             flags);
         if (res != ERROR_SUCCESS) {
@@ -80,7 +80,7 @@ int main() {
         // determine buffer sizes
         DWORD username_len = 0, password_len = 0;
         BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
-            result.ptr, result.size,
+            authBuffer.ptr, authBuffer.size,
             nullptr, &username_len,
             nullptr, nullptr,
             nullptr, &password_len);
@@ -91,7 +91,7 @@ int main() {
 
         // get username, password & domain strings
         ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
-            result.ptr, result.size,
+            authBuffer.ptr, authBuffer.size,
             username.data(), &username_len,
             nullptr, nullptr,
             password.data(), &password_len);
