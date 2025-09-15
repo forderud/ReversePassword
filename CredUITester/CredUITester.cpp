@@ -116,6 +116,14 @@ int main() {
     wprintf(L"Domain:   %s\n", (const wchar_t*)domain);
     wprintf(L"Password: %s\n", (const wchar_t*)password);
 
+    if (domain.str.empty()) {
+        if (size_t idx = username.str.find(L'\\'); idx != std::wstring::npos) {
+            // split usernae from domain
+            domain.str = username.str.substr(0, idx);
+            username.str = username.str.substr(idx + 1);
+        }
+    }
+
     // Check credentials (confirmed to work for local accounts and PIN-codes)
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
     // TODO: Test if LsaLogonUser works better for domain accounts
