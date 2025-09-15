@@ -26,24 +26,14 @@ struct AuthResult {
     ULONG size = 0;        // [out]
 };
 
-struct SecureString {
+/** std::wstring extension that clears the buffer before destruction. */
+struct SecureString : std::wstring {
     SecureString() = default;
 
     ~SecureString() {
         // clear memory to avoid leaking secrets
-        RtlSecureZeroMemory(str.data(), str.size()); // deliberately NOT using size member
+        RtlSecureZeroMemory(data(), size());
     }
-
-    void Resize() {
-        str.resize(size, L'\0');
-    }
-
-    operator const wchar_t* () const {
-        return str.c_str();
-    }
-
-    std::wstring str;
-    ULONG size = 0;
 };
 
 int main() {
@@ -84,25 +74,27 @@ int main() {
         }
     }
 
-    SecureString username, password;
+    std::wstring username;
+    SecureString password;
     {
         // determine buffer sizes
+        DWORD username_len = 0, password_len = 0;
         BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
             result.ptr, result.size,
-            nullptr, &username.size,
+            nullptr, &username_len,
             nullptr, nullptr,
-            nullptr, &password.size);
+            nullptr, &password_len);
         assert(!ok);
 
-        username.Resize();
-        password.Resize();
+        username.resize(username_len);
+        password.resize(password_len);
 
         // get username, password & domain strings
         ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
             result.ptr, result.size,
-            username.str.data(), &username.size,
+            username.data(), &username_len,
             nullptr, nullptr,
-            password.str.data(), &password.size);
+            password.data(), &password_len);
         if (!ok) {
             DWORD err = GetLastError();
             wprintf(L"ERROR: CredUnPackAuthenticationBuffer failed (err=%u)\n", err);
@@ -111,20 +103,20 @@ int main() {
     }
 
     wprintf(L"Provided credentials (not checked):\n");
-    wprintf(L"Username: %s\n", (const wchar_t*)username);
-    wprintf(L"Password: %s\n", (const wchar_t*)password);
+    wprintf(L"Username: %s\n", username.c_str());
+    wprintf(L"Password: %s\n", password.c_str());
 
     std::wstring domain;
-    if (size_t idx = username.str.find(L'\\'); idx != std::wstring::npos) {
+    if (size_t idx = username.find(L'\\'); idx != std::wstring::npos) {
         // split usernae from domain
-        domain = username.str.substr(0, idx);
-        username.str = username.str.substr(idx + 1);
+        domain = username.substr(0, idx);
+        username = username.substr(idx + 1);
     }
 
     // Check credentials (confirmed to work for local accounts, domain accounts and PIN-codes)
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
     HANDLE token = 0;
-    BOOL ok = LogonUserW(username, domain.c_str(), password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
+    BOOL ok = LogonUserW(username.c_str(), domain.c_str(), password.c_str(), LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
         DWORD err = GetLastError();
         if (err == ERROR_LOGON_FAILURE) {
