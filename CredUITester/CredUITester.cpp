@@ -84,25 +84,24 @@ int main() {
         }
     }
 
-    SecureString username, domain, password;
+    SecureString username, password;
     {
         // determine buffer sizes
         BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
             result.ptr, result.size,
             nullptr, &username.size,
-            nullptr, &domain.size,
+            nullptr, nullptr,
             nullptr, &password.size);
         assert(!ok);
 
         username.Resize();
-        domain.Resize();
         password.Resize();
 
         // get username, password & domain strings
         ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
             result.ptr, result.size,
             username.str.data(), &username.size,
-            domain.str.data(), &domain.size,
+            nullptr, nullptr,
             password.str.data(), &password.size);
         if (!ok) {
             DWORD err = GetLastError();
@@ -113,22 +112,20 @@ int main() {
 
     wprintf(L"Provided credentials (not checked):\n");
     wprintf(L"Username: %s\n", (const wchar_t*)username);
-    wprintf(L"Domain:   %s\n", (const wchar_t*)domain);
     wprintf(L"Password: %s\n", (const wchar_t*)password);
 
-    if (domain.str.empty()) {
-        if (size_t idx = username.str.find(L'\\'); idx != std::wstring::npos) {
-            // split usernae from domain
-            domain.str = username.str.substr(0, idx);
-            username.str = username.str.substr(idx + 1);
-        }
+    std::wstring domain;
+    if (size_t idx = username.str.find(L'\\'); idx != std::wstring::npos) {
+        // split usernae from domain
+        domain = username.str.substr(0, idx);
+        username.str = username.str.substr(idx + 1);
     }
 
     // Check credentials (confirmed to work for local accounts and PIN-codes)
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
     // TODO: Test if LsaLogonUser works better for domain accounts
     HANDLE token = 0;
-    BOOL ok = LogonUserW(username, domain, password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
+    BOOL ok = LogonUserW(username, domain.c_str(), password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
         DWORD err = GetLastError();
         if (err == ERROR_LOGON_FAILURE) {
