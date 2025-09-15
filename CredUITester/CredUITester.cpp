@@ -51,15 +51,13 @@ int main() {
         // REF: https://github.com/chromium/chromium/blob/main/chrome/browser/password_manager/password_manager_util_win.cc
         DWORD flags = CREDUIWIN_ENUMERATE_CURRENT_USER;
 
-        AuthInput input; // empty
         ULONG authPackage = 0;
-
         DWORD res = CredUIPromptForWindowsCredentialsW(
             &cred_info,
             0, // don't display any error message
             &authPackage, // [in,out]
-            input.ptr,
-            input.size,
+            nullptr,      // credential BLOB
+            0,
             &result.ptr,
             &result.size,
             nullptr, // disable "save" check box
@@ -68,8 +66,7 @@ int main() {
             if (res == ERROR_CANCELLED) {
                 wprintf(L"ERROR: User canceled.\n");
                 return -1;
-            }
-            else {
+            } else {
                 DWORD err = GetLastError();
                 wprintf(L"ERROR: CredUIPromptForWindowsCredentials failed (err=%u)\n", err);
                 return -1;
