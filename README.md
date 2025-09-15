@@ -32,4 +32,3 @@ Uninstallation steps:
 
 ## Background
 The project is heavily based on the no longer maintained [CredProvider.NET](https://github.com/SteveSyfuhs/CredProvider.NET).
-
