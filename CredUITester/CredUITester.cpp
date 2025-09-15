@@ -121,9 +121,8 @@ int main() {
         username.str = username.str.substr(idx + 1);
     }
 
-    // Check credentials (confirmed to work for local accounts and PIN-codes)
+    // Check credentials (confirmed to work for local accounts, domain accounts and PIN-codes)
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
-    // TODO: Test if LsaLogonUser works better for domain accounts
     HANDLE token = 0;
     BOOL ok = LogonUserW(username, domain.c_str(), password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
@@ -131,9 +130,6 @@ int main() {
         if (err == ERROR_LOGON_FAILURE) {
             wprintf(L"ERROR: The user name or password is incorrect.\n");
             return -1;
-        } else if (err == ERROR_BAD_NETPATH) {
-            wprintf(L"ERROR: The network path was not found (seem to happen for domain accounts).\n");
-            return -2;
         } else {
             wprintf(L"ERROR: Other LogonUser error (err=%u)\n", err);
             return -2;
