@@ -27,7 +27,8 @@ namespace ReversePassword
 
             if (!isSupported)
             {
-                if (NotActive == null) NotActive = new CredentialView(this) { Active = false };
+                if (NotActive == null)
+                    NotActive = new CredentialView(this) { Active = false };
                 return NotActive;
             }
 
