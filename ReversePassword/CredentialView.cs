@@ -39,8 +39,7 @@ namespace ReversePassword
             string pszLabel,
             _CREDENTIAL_PROVIDER_FIELD_STATE state,
             string defaultValue = null,
-            Guid guidFieldType = default(Guid)
-        )
+            Guid guidFieldType = default(Guid))
         {
             if (!Active)
                 throw new NotSupportedException();
@@ -88,11 +87,9 @@ namespace ReversePassword
             _fields[dwFieldId].Value = val;
         }
 
-        public void GetFieldState(
-            int dwFieldId,
+        public void GetFieldState(int dwFieldId,
             out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs,
-            out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis
-        )
+            out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis)
         {
             Logger.Write();
 
