@@ -167,7 +167,7 @@ namespace ReversePassword
             ppcpc = _view.GetCredential(idx);
         }
 
-        public virtual _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
+        public _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
         {
             return _usage;
         }
