@@ -15,8 +15,6 @@ namespace ReversePassword
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _usage;
         private List<ICredentialProviderUser> _providerUsers;
 
-        private CredentialView _disabledView; // special disabled view
-
         protected CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint flags_)
         {
             var flags = (CredentialFlag)flags_;
@@ -25,9 +23,7 @@ namespace ReversePassword
 
             if (!IsSupportedScenario(cpus))
             {
-                if (_disabledView == null)
-                    _disabledView = new CredentialView(this) { Active = false };
-                return _disabledView;
+                return new CredentialView(this) { Active = false };
             }
 
             var view = new CredentialView(this) { Active = true };
