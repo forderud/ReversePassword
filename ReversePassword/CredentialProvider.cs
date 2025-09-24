@@ -19,9 +19,9 @@ namespace ReversePassword
 
         public static CredentialView NotActive;
 
-        protected CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags)
+        protected CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint flags)
         {
-            var flags = (CredentialFlag)dwFlags;
+            var flags = (CredentialFlag)flags;
 
             Logger.Write($"cpus: {cpus}; dwFlags: {flags}");
 
@@ -93,9 +93,9 @@ namespace ReversePassword
             }
         }
 
-        public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags)
+        public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint flags)
         {
-            _view = Initialize(cpus, dwFlags);
+            _view = Initialize(cpus, flags);
             _usage = cpus;
 
             if (_view.Active)
