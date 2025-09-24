@@ -12,5 +12,4 @@
         CREDUIWIN_SECURE_PROMPT = 0x1000,
         CREDUIWIN_PACK_32_WOW = 0x10000000,
     }
-
 }
