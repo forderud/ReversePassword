@@ -34,3 +34,4 @@ Uninstallation steps:
 ## External links
 * [Credential providers in Windows](https://learn.microsoft.com/en-us/windows/win32/secauthn/credential-providers-in-windows)
 * The project is heavily based on the no longer maintained [CredProvider.NET](https://github.com/SteveSyfuhs/CredProvider.NET).
+* [Credential_Provider_Technical_Reference.pdf](https://github.com/user-attachments/files/22509252/Credential_Provider_Technical_Reference.pdf)
