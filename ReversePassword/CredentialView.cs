@@ -27,7 +27,7 @@ namespace ReversePassword
 
         public int DescriptorCount { get { return fields.Count; } }
 
-        private readonly Dictionary<int, ICredentialProviderCredential> credentials = new Dictionary<int, ICredentialProviderCredential>();
+        private readonly Dictionary<int, ICredentialProviderCredential> _credentials = new Dictionary<int, ICredentialProviderCredential>();
 
 
         public CredentialView(CredentialProvider provider) 
@@ -110,7 +110,7 @@ namespace ReversePassword
             Logger.Write();
 
             // cache lookup
-            if (credentials.TryGetValue(dwIndex, out ICredentialProviderCredential credential))
+            if (_credentials.TryGetValue(dwIndex, out ICredentialProviderCredential credential))
             {
                 Logger.Write("Returning existing credential.");
                 return credential;
@@ -119,7 +119,7 @@ namespace ReversePassword
             // add credential to dict
             var sid = Provider.GetUserSidInternal(dwIndex);
             credential = new CredentialProviderCredential(this, sid);
-            credentials[dwIndex] = credential;
+            _credentials[dwIndex] = credential;
 
             Logger.Write($"Returning new credential for username={Common.GetNameFromSid(sid)}");
             return credential;
