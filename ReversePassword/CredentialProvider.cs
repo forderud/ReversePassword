@@ -11,10 +11,8 @@ namespace ReversePassword
     public class CredentialProvider : ICredentialProvider, ICredentialProviderSetUserArray
     {
         private ICredentialProviderEvents _events;
-
         private CredentialView _view;
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _usage;
-
         private List<ICredentialProviderUser> _providerUsers;
 
         public static CredentialView NotActive;
