@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="250mm"
+   height="70mm"
+   viewBox="0 0 250 70"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="class_diagram.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.0467522"
+     inkscape:cx="474.80196"
+     inkscape:cy="255.55236"
+     inkscape:window-width="1682"
+     inkscape:window-height="1149"
+     inkscape:window-x="2906"
+     inkscape:window-y="112"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <marker
+       style="overflow:visible"
+       id="Triangle"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle-4"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-3" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle-41"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-1" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Triangle-41-2"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="Triangle arrow"
+       markerWidth="1"
+       markerHeight="1"
+       viewBox="0 0 1 1"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.5)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 5.77,0 -2.88,5 V -5 Z"
+         id="path135-1-7" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#ffffff;stroke-width:0.264999;stroke-dasharray:none"
+       x="10.110637"
+       y="48.531067"
+       id="text2"><tspan
+         sodipodi:role="line"
+         id="tspan2"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.64444px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.265"
+         x="10.110637"
+         y="48.531067" /></text>
+    <rect
+       style="fill:#9898ff;fill-opacity:1;stroke:#000000;stroke-width:0.321039;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2-2-5"
+       width="74.565956"
+       height="20.726809"
+       x="163.44307"
+       y="26.482594" />
+    <rect
+       style="fill:#9898ff;fill-opacity:1;stroke:#000000;stroke-width:0.308392;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2-2-5-1"
+       width="68.764984"
+       height="20.739454"
+       x="13.331073"
+       y="27.732885" />
+    <rect
+       style="fill:#9b9bff;fill-opacity:1;stroke:#000000;stroke-width:0.299273;stroke-dasharray:none;stroke-opacity:1"
+       id="rect2-2-5-7"
+       width="64.729851"
+       height="20.748575"
+       x="89.042107"
+       y="27.247055" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="47.52"
+       y="36.651066"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="47.52"
+         y="36.651066">CredentialProvider</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="47.52"
+         y="42.824677"
+         id="tspan3">&lt;ICredentialProvider&gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="84.118568"
+       y="11.765519"
+       id="text1-8"><tspan
+         sodipodi:role="line"
+         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="84.118568"
+         y="11.765519"
+         id="tspan3-5">_view</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="80.908821"
+       y="67.57309"
+       id="text1-8-6"><tspan
+         sodipodi:role="line"
+         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="80.908821"
+         y="67.57309"
+         id="tspan3-5-0">Provider</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="154.66934"
+       y="67.172562"
+       id="text1-8-6-1"><tspan
+         sodipodi:role="line"
+         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="154.66934"
+         y="67.172562"
+         id="tspan3-5-0-3">View</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
+       x="201.08031"
+       y="35.62006"
+       id="text1-1"><tspan
+         sodipodi:role="line"
+         id="tspan1-4"
+         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
+         x="201.08031"
+         y="35.62006">CredentialProviderCredential</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
+         x="201.08031"
+         y="41.793671"
+         id="tspan3-2">&lt;ICredentialProviderCredential2&gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
+       x="120.47159"
+       y="39.869812"
+       id="text1-5"><tspan
+         sodipodi:role="line"
+         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
+         x="120.47159"
+         y="39.869812"
+         id="tspan3-1">CredentialView</tspan></text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="m 61.674895,26.793192 c 0,0 21.232343,-26.03489447 43.981275,-1.769362"
+       id="path8"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-4)"
+       d="m 133.47241,24.79067 c 0,0 21.23234,-26.0348939 43.98128,-1.769362"
+       id="path8-2"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-41)"
+       d="m 104.45203,48.760034 c 0,0 -21.232333,26.034896 -43.98127,1.769362"
+       id="path8-8"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-41-2)"
+       d="m 178.08442,48.776453 c 0,0 -21.23233,26.034896 -43.98127,1.769362"
+       id="path8-8-9"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.9389px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="62.938725"
+       y="7.3302131"
+       id="text8"><tspan
+         sodipodi:role="line"
+         id="tspan8"
+         style="stroke-width:0.758"
+         x="62.938725"
+         y="7.3302131"></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="155.60875"
+       y="9.8144531"
+       id="text1-8-65"><tspan
+         sodipodi:role="line"
+         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="155.60875"
+         y="9.8144531"
+         id="tspan3-5-09">_credentials[idx]</tspan></text>
+  </g>
+</svg>
