@@ -29,7 +29,9 @@ namespace ReversePassword
                     var filePath = GetFilePath();
                     File.AppendAllText(filePath, log + Environment.NewLine);
                 }
-                catch (UnauthorizedAccessException) {/*ignore*/ }
+                catch (UnauthorizedAccessException) {
+                    // ignore log-file exceptions if running CredUITester.exe as non-admin
+                }
             }
         }
 
