@@ -10,7 +10,7 @@ namespace ReversePassword
     [ProgId("ReversePassword")]
     public class CredentialProvider : ICredentialProvider, ICredentialProviderSetUserArray
     {
-        private ICredentialProviderEvents events;
+        private ICredentialProviderEvents _events;
 
         private CredentialView view;
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO usage;
@@ -117,7 +117,7 @@ namespace ReversePassword
 
             if (pcpe != null)
             {
-                events = pcpe;
+                _events = pcpe;
             }
         }
 
@@ -125,9 +125,9 @@ namespace ReversePassword
         {
             Logger.Write();
 
-            if (events != null)
+            if (_events != null)
             {
-                events = null;
+                _events = null;
 
                 // release references to the host
                 GC.Collect();
