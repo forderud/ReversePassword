@@ -135,6 +135,8 @@ namespace ReversePassword
 
         public virtual void GetFieldDescriptorAt(uint idx, [Out] IntPtr ppcpfd)
         {
+            Logger.Write($"idx: {idx}");
+
             CredentialDescriptor field = _view.GetField(idx);
             if (field == null)
                 throw new ArgumentException();
@@ -147,8 +149,7 @@ namespace ReversePassword
         public virtual void GetCredentialCount(
             out uint count,
             out uint default_idx,
-            out int pbAutoLogonWithDefault
-        )
+            out int pbAutoLogonWithDefault)
         {
             count = (uint)_providerUsers.Count;
 
