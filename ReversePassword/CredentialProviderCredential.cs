@@ -52,27 +52,27 @@ namespace ReversePassword
         }
 
         public virtual void GetFieldState(
-            uint dwFieldID,
+            uint fieldID,
             out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs,
             out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis
         )
         {
-            Logger.Write($"dwFieldID: {dwFieldID}");
+            Logger.Write($"dwFieldID: {fieldID}");
 
-            _view.GetFieldState((int)dwFieldID, out pcpfs, out pcpfis);
+            _view.GetFieldState((int)fieldID, out pcpfs, out pcpfis);
         }
 
-        public virtual void GetStringValue(uint dwFieldID, out string ppsz)
+        public virtual void GetStringValue(uint fieldID, out string ppsz)
         {
-            ppsz = _view.GetValue((int)dwFieldID);
-            Logger.Write($"dwFieldID:{dwFieldID}, ppsz={ppsz}");
+            ppsz = _view.GetValue((int)fieldID);
+            Logger.Write($"dwFieldID:{fieldID}, ppsz={ppsz}");
         }
 
         private Bitmap tileIcon;
 
-        public virtual void GetBitmapValue(uint dwFieldID, out IntPtr phbmp)
+        public virtual void GetBitmapValue(uint fieldID, out IntPtr phbmp)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}");
+            Logger.Write($"dwFieldID: {fieldID}");
 
             try
             {
@@ -98,9 +98,9 @@ namespace ReversePassword
             }
         }
 
-        public virtual void GetCheckboxValue(uint dwFieldID, out int pbChecked, out string ppszLabel)
+        public virtual void GetCheckboxValue(uint fieldID, out int pbChecked, out string ppszLabel)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}");
+            Logger.Write($"dwFieldID: {fieldID}");
 
             pbChecked = 0;
             ppszLabel = "";
@@ -108,18 +108,18 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual void GetSubmitButtonValue(uint dwFieldID, out uint pdwAdjacentTo)
+        public virtual void GetSubmitButtonValue(uint fieldID, out uint pdwAdjacentTo)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}");
+            Logger.Write($"dwFieldID: {fieldID}");
 
             pdwAdjacentTo = 0;
 
             throw new NotImplementedException();
         }
 
-        public virtual void GetComboBoxValueCount(uint dwFieldID, out uint pcItems, out uint pdwSelectedItem)
+        public virtual void GetComboBoxValueCount(uint fieldID, out uint pcItems, out uint pdwSelectedItem)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}");
+            Logger.Write($"dwFieldID: {fieldID}");
 
             pcItems = 0;
             pdwSelectedItem = 0;
@@ -127,39 +127,39 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual void GetComboBoxValueAt(uint dwFieldID, uint dwItem, out string ppszItem)
+        public virtual void GetComboBoxValueAt(uint fieldID, uint dwItem, out string ppszItem)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}; dwItem: {dwItem}");
+            Logger.Write($"dwFieldID: {fieldID}; dwItem: {dwItem}");
 
             ppszItem = "";
 
             throw new NotImplementedException();
         }
 
-        public virtual void SetStringValue(uint dwFieldID, string psz)
+        public virtual void SetStringValue(uint fieldID, string psz)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}; psz: {psz}");
+            Logger.Write($"dwFieldID: {fieldID}; psz: {psz}");
 
-            _view.SetValue((int) dwFieldID, psz);
+            _view.SetValue((int) fieldID, psz);
         }
 
-        public virtual void SetCheckboxValue(uint dwFieldID, int bChecked)
+        public virtual void SetCheckboxValue(uint fieldID, int bChecked)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}; bChecked: {bChecked}");
+            Logger.Write($"dwFieldID: {fieldID}; bChecked: {bChecked}");
 
             throw new NotImplementedException();
         }
 
-        public virtual void SetComboBoxSelectedValue(uint dwFieldID, uint dwSelectedItem)
+        public virtual void SetComboBoxSelectedValue(uint fieldID, uint dwSelectedItem)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}; dwSelectedItem: {dwSelectedItem}");
+            Logger.Write($"dwFieldID: {fieldID}; dwSelectedItem: {dwSelectedItem}");
 
             throw new NotImplementedException();
         }
 
-        public virtual void CommandLinkClicked(uint dwFieldID)
+        public virtual void CommandLinkClicked(uint fieldID)
         {
-            Logger.Write($"dwFieldID: {dwFieldID}");
+            Logger.Write($"dwFieldID: {fieldID}");
 
             throw new NotImplementedException();
         }
