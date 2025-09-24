@@ -181,7 +181,9 @@ namespace ReversePassword
             pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
 
             //Serialization can be called before the user has entered any values. Only applies to logon usage scenarios
-            if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_LOGON || usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_UNLOCK_WORKSTATION)
+            if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_LOGON
+                || usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_UNLOCK_WORKSTATION
+                || usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI)
             {
                 //Determine the authentication package
                 Common.RetrieveNegotiateAuthPackage(out var authPackage);
