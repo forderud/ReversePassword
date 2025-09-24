@@ -193,7 +193,7 @@ namespace ReversePassword
 
                 //Get username and password
                 var username = Common.GetNameFromSid(_sid);
-                GetStringValue(2, out var password);
+                var password = (string)_view.GetField(2).Value;
 
                 {
                     // reverse password
