@@ -8,14 +8,14 @@ namespace ReversePassword
 {
     public class CredentialProviderCredential : ICredentialProviderCredential2
     {
-        private readonly CredentialView view;
+        private readonly CredentialView _view;
         private readonly string sid;
 
         public CredentialProviderCredential(CredentialView view, string sid)
         {
             Logger.Write($"username={Common.GetNameFromSid(sid)}");
 
-            this.view = view;
+            _view = view;
             this.sid = sid;
         }
 
@@ -59,12 +59,12 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {dwFieldID}");
 
-            view.GetFieldState((int)dwFieldID, out pcpfs, out pcpfis);
+            _view.GetFieldState((int)dwFieldID, out pcpfs, out pcpfis);
         }
 
         public virtual void GetStringValue(uint dwFieldID, out string ppsz)
         {
-            ppsz = view.GetValue((int)dwFieldID);
+            ppsz = _view.GetValue((int)dwFieldID);
             Logger.Write($"dwFieldID:{dwFieldID}, ppsz={ppsz}");
         }
 
@@ -140,7 +140,7 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {dwFieldID}; psz: {psz}");
 
-            view.SetValue((int) dwFieldID, psz);
+            _view.SetValue((int) dwFieldID, psz);
         }
 
         public virtual void SetCheckboxValue(uint dwFieldID, int bChecked)
@@ -173,7 +173,7 @@ namespace ReversePassword
         {
             Logger.Write();
 
-            var usage = this.view.Provider.GetUsage();
+            var usage = this._view.Provider.GetUsage();
 
             pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_NOT_FINISHED;
             pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
