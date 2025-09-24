@@ -14,8 +14,7 @@ namespace ReversePassword
 
     public class CredentialView
     {
-        private readonly List<CredentialDescriptor> _fields
-            = new List<CredentialDescriptor>();
+        private readonly List<CredentialDescriptor> _fields = new List<CredentialDescriptor>();
 
         public CredentialProvider Provider { get; private set; }
 
