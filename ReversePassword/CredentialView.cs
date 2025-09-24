@@ -66,20 +66,6 @@ namespace ReversePassword
             return _fields[idx];
         }
 
-        public void GetFieldState(int fieldId,
-            out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs,
-            out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis)
-        {
-            Logger.Write();
-
-            var field = _fields[fieldId];
-
-            Logger.Write($"Returning field state: {field.State}, interactiveState: None");
-
-            pcpfs = field.State;
-            pcpfis = _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE.CPFIS_NONE;
-        }
-
         public ICredentialProviderCredential GetCredential(int idx)
         {
             Logger.Write();
