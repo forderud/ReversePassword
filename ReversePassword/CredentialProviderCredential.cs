@@ -10,6 +10,7 @@ namespace ReversePassword
     {
         private readonly CredentialView _view;
         private readonly string _sid;
+        private Bitmap _tileIcon;
 
         public CredentialProviderCredential(CredentialView view, string sid)
         {
@@ -72,8 +73,6 @@ namespace ReversePassword
             Logger.Write($"dwFieldID:{fieldID}, ppsz={ppsz}");
         }
 
-        private Bitmap tileIcon;
-
         public virtual void GetBitmapValue(uint fieldID, out IntPtr phbmp)
         {
             Logger.Write($"dwFieldID: {fieldID}");
@@ -87,18 +86,18 @@ namespace ReversePassword
                 Logger.Write("Error: " + ex);
             }
 
-            phbmp = tileIcon?.GetHbitmap() ?? IntPtr.Zero;
+            phbmp = _tileIcon?.GetHbitmap() ?? IntPtr.Zero;
         }
 
         private void TryLoadUserIcon()
         {
-            if (tileIcon == null)
+            if (_tileIcon == null)
             {
                 var fileName = "ReversePassword.tile-icon.bmp";
                 var assembly = Assembly.GetExecutingAssembly();
                 var stream = assembly.GetManifestResourceStream(fileName);
 
-                tileIcon = (Bitmap)Image.FromStream(stream);
+                _tileIcon = (Bitmap)Image.FromStream(stream);
             }
         }
 
