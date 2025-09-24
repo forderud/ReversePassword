@@ -77,23 +77,23 @@ namespace ReversePassword
             return true;
         }
 
-        public string GetValue(int dwFieldId)
+        public string GetValue(int fieldId)
         {
-            return (string)_fields[dwFieldId].Value;
+            return (string)_fields[fieldId].Value;
         }
 
-        public void SetValue(int dwFieldId, string val)
+        public void SetValue(int fieldId, string val)
         {
-            _fields[dwFieldId].Value = val;
+            _fields[fieldId].Value = val;
         }
 
-        public void GetFieldState(int dwFieldId,
+        public void GetFieldState(int fieldId,
             out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs,
             out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis)
         {
             Logger.Write();
 
-            var field = _fields[dwFieldId];
+            var field = _fields[fieldId];
 
             Logger.Write($"Returning field state: {field.State}, interactiveState: None");
 
