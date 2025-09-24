@@ -3,8 +3,8 @@
 
 <svg
    width="250mm"
-   height="70mm"
-   viewBox="0 0 250 70"
+   height="60mm"
+   viewBox="0 0 250 60"
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (86a8ad7, 2024-10-11)"
@@ -25,11 +25,11 @@
      inkscape:document-units="mm"
      inkscape:zoom="1.0467522"
      inkscape:cx="474.80196"
-     inkscape:cy="255.55236"
+     inkscape:cy="178.64782"
      inkscape:window-width="1682"
-     inkscape:window-height="1149"
-     inkscape:window-x="2906"
-     inkscape:window-y="112"
+     inkscape:window-height="1138"
+     inkscape:window-x="3543"
+     inkscape:window-y="131"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1" />
   <defs
@@ -55,7 +55,7 @@
     </marker>
     <marker
        style="overflow:visible"
-       id="Triangle-4"
+       id="Triangle-2"
        refX="0"
        refY="0"
        orient="auto-start-reverse"
@@ -70,11 +70,11 @@
          transform="scale(0.5)"
          style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
          d="M 5.77,0 -2.88,5 V -5 Z"
-         id="path135-3" />
+         id="path135-2" />
     </marker>
     <marker
        style="overflow:visible"
-       id="Triangle-41"
+       id="Triangle-7"
        refX="0"
        refY="0"
        orient="auto-start-reverse"
@@ -89,11 +89,11 @@
          transform="scale(0.5)"
          style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
          d="M 5.77,0 -2.88,5 V -5 Z"
-         id="path135-1" />
+         id="path135-6" />
     </marker>
     <marker
        style="overflow:visible"
-       id="Triangle-41-2"
+       id="Triangle-79"
        refX="0"
        refY="0"
        orient="auto-start-reverse"
@@ -108,7 +108,7 @@
          transform="scale(0.5)"
          style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
          d="M 5.77,0 -2.88,5 V -5 Z"
-         id="path135-1-7" />
+         id="path135-5" />
     </marker>
   </defs>
   <g
@@ -131,117 +131,150 @@
        id="rect2-2-5"
        width="74.565956"
        height="20.726809"
-       x="163.44307"
-       y="26.482594" />
+       x="171.27881"
+       y="14.85536" />
     <rect
-       style="fill:#9898ff;fill-opacity:1;stroke:#000000;stroke-width:0.308392;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#9898ff;fill-opacity:1;stroke:#000000;stroke-width:0.32532;stroke-dasharray:none;stroke-opacity:1"
        id="rect2-2-5-1"
-       width="68.764984"
-       height="20.739454"
-       x="13.331073"
-       y="27.732885" />
+       width="76.583801"
+       height="20.722527"
+       x="5.5037918"
+       y="16.114117" />
     <rect
-       style="fill:#9b9bff;fill-opacity:1;stroke:#000000;stroke-width:0.299273;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#9b9bff;fill-opacity:1;stroke:#000000;stroke-width:0.316152;stroke-dasharray:none;stroke-opacity:1"
        id="rect2-2-5-7"
-       width="64.729851"
-       height="20.748575"
-       x="89.042107"
-       y="27.247055" />
+       width="72.295952"
+       height="20.731697"
+       x="89.050545"
+       y="15.628262" />
     <text
        xml:space="preserve"
        style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        x="47.52"
-       y="36.651066"
+       y="25.023832"
        id="text1"><tspan
          sodipodi:role="line"
          id="tspan1"
          style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          x="47.52"
-         y="36.651066">CredentialProvider</tspan><tspan
+         y="25.023832">CredentialProvider</tspan><tspan
          sodipodi:role="line"
          style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          x="47.52"
-         y="42.824677"
+         y="31.197445"
          id="tspan3">&lt;ICredentialProvider&gt;</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="84.118568"
-       y="11.765519"
+       style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="4.7683072"
+       y="48.536743"
+       id="text1-88"><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="4.7683072"
+         y="48.536743"
+         id="tspan3-4">_events : ICredentialProviderEvents</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="4.7683072"
+         y="52.946468"
+         id="tspan4">_providerUsers : List&lt;ICredentialProviderUser&gt;</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="96.579781"
+       y="49.990437"
+       id="text1-88-7"><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="96.579781"
+         y="49.990437"
+         id="tspan4-1">_fields : List&lt;CredentialDescriptor&gt;</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="96.579781"
+         y="54.400162"
+         id="tspan5">Active : bool</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="192.46007"
+       y="42.31292"
+       id="text1-88-7-6"><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="192.46007"
+         y="42.31292"
+         id="tspan5-4">_sid : string</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="85.382401"
+       y="10.754456"
        id="text1-8"><tspan
          sodipodi:role="line"
-         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="84.118568"
-         y="11.765519"
+         style="font-size:4.23333px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="85.382401"
+         y="10.754456"
          id="tspan3-5">_view</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="80.908821"
-       y="67.57309"
+       style="font-size:4.23333px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="84.70031"
+       y="44.065853"
        id="text1-8-6"><tspan
          sodipodi:role="line"
-         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="80.908821"
-         y="67.57309"
+         style="font-size:4.23333px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="84.70031"
+         y="44.065853"
          id="tspan3-5-0">Provider</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="154.66934"
-       y="67.172562"
+       style="font-size:4.23333px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="168.06593"
+       y="42.401493"
        id="text1-8-6-1"><tspan
          sodipodi:role="line"
-         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="154.66934"
-         y="67.172562"
+         style="font-size:4.23333px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="168.06593"
+         y="42.401493"
          id="tspan3-5-0-3">_view</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
-       x="201.08031"
-       y="35.62006"
+       x="208.91605"
+       y="23.992826"
        id="text1-1"><tspan
          sodipodi:role="line"
          id="tspan1-4"
          style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
-         x="201.08031"
-         y="35.62006">CredentialProviderCredential</tspan><tspan
+         x="208.91605"
+         y="23.992826">CredentialProviderCredential</tspan><tspan
          sodipodi:role="line"
          style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
-         x="201.08031"
-         y="41.793671"
+         x="208.91605"
+         y="30.166439"
          id="tspan3-2">&lt;ICredentialProviderCredential2&gt;</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
        x="120.47159"
-       y="39.869812"
+       y="28.242579"
        id="text1-5"><tspan
          sodipodi:role="line"
          style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
          x="120.47159"
-         y="39.869812"
+         y="28.242579"
          id="tspan3-1">CredentialView</tspan></text>
     <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle)"
-       d="m 61.674895,26.793192 c 0,0 21.232343,-26.03489447 43.981275,-1.769362"
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.657999;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle)"
+       d="m 61.599089,15.159157 c 0,0 21.303048,-19.5534655 44.127731,-1.328877"
        id="path8"
        sodipodi:nodetypes="cc" />
     <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-4)"
-       d="m 133.47241,24.79067 c 0,0 21.23234,-26.0348939 43.98128,-1.769362"
-       id="path8-2"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-41)"
-       d="m 104.45203,48.760034 c 0,0 -21.232333,26.034896 -43.98127,1.769362"
-       id="path8-8"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-41-2)"
-       d="m 178.08442,48.776453 c 0,0 -21.23233,26.034896 -43.98127,1.769362"
-       id="path8-8-9"
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.657999;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-2)"
+       d="m 141.2251,14.444261 c 0,0 21.30305,-19.5534651 44.12773,-1.328877"
+       id="path8-6"
        sodipodi:nodetypes="cc" />
     <text
        xml:space="preserve"
@@ -256,14 +289,24 @@
          y="7.3302131" /></text>
     <text
        xml:space="preserve"
-       style="font-size:4.93889px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="155.60875"
-       y="9.8144531"
+       style="font-size:4.23333px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="163.69725"
+       y="11.583815"
        id="text1-8-65"><tspan
          sodipodi:role="line"
-         style="font-size:4.93889px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="155.60875"
-         y="9.8144531"
+         style="font-size:4.23333px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="163.69725"
+         y="11.583815"
          id="tspan3-5-09">_credentials[idx]</tspan></text>
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.657999;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-7)"
+       d="m 108.21213,37.37921 c 0,0 -21.30305,19.55347 -44.12773,1.32888"
+       id="path8-8"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.657999;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-79)"
+       d="m 191.87568,36.561825 c 0,0 -21.30305,19.55347 -44.12773,1.32888"
+       id="path8-3"
+       sodipodi:nodetypes="cc" />
   </g>
 </svg>
