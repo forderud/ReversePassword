@@ -9,14 +9,14 @@ namespace ReversePassword
     public class CredentialProviderCredential : ICredentialProviderCredential2
     {
         private readonly CredentialView _view;
-        private readonly string sid;
+        private readonly string _sid;
 
         public CredentialProviderCredential(CredentialView view, string sid)
         {
             Logger.Write($"username={Common.GetNameFromSid(sid)}");
 
             _view = view;
-            this.sid = sid;
+            _sid = sid;
         }
 
         public virtual void Advise(ICredentialProviderCredentialEvents pcpce)
@@ -190,7 +190,7 @@ namespace ReversePassword
                 Logger.Write($"Got authentication package: {authPackage}. Only local authenticsation package 0 (msv1_0) is supported.");
 
                 //Get username and password
-                var username = Common.GetNameFromSid(this.sid);
+                var username = Common.GetNameFromSid(this._sid);
                 GetStringValue(2, out var password);
 
                 {
@@ -259,7 +259,7 @@ namespace ReversePassword
 
         public virtual void GetUserSid(out string sid)
         {
-            sid = this.sid;
+            sid = this._sid;
 
             Logger.Write($"username: {Common.GetNameFromSid(sid)}");
         }
