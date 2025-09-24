@@ -24,14 +24,14 @@ Uninstallation steps:
 ## Authentication and logon APIs
 ![CredUIPrompt](CredUIPrompt.png)  
 
-#### Relevant Win32 APIs
+#### User session and authentication APIs
 * Show authentication dialog: [CredUIPromptForWindowsCredentials](https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-creduipromptforwindowscredentialsw)
 * Logoff, shutdown or restart:  [ExitWindowsEx](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex) with `EWX_LOGOFF`, `EWX_POWEROFF` or `EWX_REBOOT` parameter.
 * Lock desktop: [LockWorkStation](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-lockworkstation) (same as Ctrl+Alt+Del and click "Lock")
 * Authenticate to impersonate a user: [LogonUserW](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-logonuserw)
 
-
-## External links
+#### Credential provider APIs
 * [Credential providers in Windows](https://learn.microsoft.com/en-us/windows/win32/secauthn/credential-providers-in-windows)
 * [Credential Provider driven Windows Logon Experience](https://github.com/user-attachments/files/22509252/Credential_Provider_Technical_Reference.pdf) (converted https://go.microsoft.com/fwlink/?LinkId=717287 from XPS to PDF)
-* The project is heavily based on the no longer maintained [CredProvider.NET](https://github.com/SteveSyfuhs/CredProvider.NET)
+
+The project is heavily based on the no longer maintained [CredProvider.NET](https://github.com/SteveSyfuhs/CredProvider.NET)
