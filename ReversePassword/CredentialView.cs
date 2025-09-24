@@ -65,11 +65,10 @@ namespace ReversePassword
             if (idx >= _fields.Count)
                 return false;
 
-            var field = _fields[idx];
+            var fieldDesc = _fields[idx].Descriptor;
 
-            var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(field.Descriptor));
-
-            Marshal.StructureToPtr(field.Descriptor, pcpfd, false);
+            var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(fieldDesc));
+            Marshal.StructureToPtr(fieldDesc, pcpfd, false);
             Marshal.StructureToPtr(pcpfd, ppcpfd, false);
 
             return true;
