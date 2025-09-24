@@ -68,8 +68,6 @@ namespace ReversePassword
 
         public ICredentialProviderCredential GetCredential(uint idx)
         {
-            Logger.Write();
-
             // cache lookup
             if (_credentials.TryGetValue((int)idx, out ICredentialProviderCredential credential))
             {
