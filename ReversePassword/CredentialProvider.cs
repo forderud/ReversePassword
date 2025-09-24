@@ -193,11 +193,9 @@ namespace ReversePassword
             }
         }
 
-        //Lookup the user by index and return the sid
         public string GetUserSidInternal(uint idx)
         {
-            //CredUI does not provide user sids, so return null
-            if (_providerUsers.Count < idx + 1)
+            if (idx >= _providerUsers.Count)
                 return null;
 
             _providerUsers[(int)idx].GetSid(out string sid);
