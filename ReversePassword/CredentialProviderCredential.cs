@@ -183,7 +183,7 @@ namespace ReversePassword
             //Serialization can be called before the user has entered any values. Only applies to logon usage scenarios
             if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_LOGON
                 || usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_UNLOCK_WORKSTATION
-                || usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI)
+                || usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI) // triggered by CredUIPromptForWindowsCredentials
             {
                 //Determine the authentication package
                 Common.RetrieveNegotiateAuthPackage(out var authPackage);
