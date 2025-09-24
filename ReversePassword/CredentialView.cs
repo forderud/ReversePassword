@@ -14,13 +14,13 @@ namespace ReversePassword
 
     public class CredentialView
     {
-        private readonly List<CredentialDescriptor> _fields = new List<CredentialDescriptor>();
-
-        public CredentialProvider Provider { get; private set; }
-
         public const string CPFG_LOGON_PASSWORD_GUID = "60624cfa-a477-47b1-8a8e-3a4a19981827";
         public const string CPFG_CREDENTIAL_PROVIDER_LOGO = "2d837775-f6cd-464e-a745-482fd0b47493";
         public const string CPFG_CREDENTIAL_PROVIDER_LABEL = "286bbff3-bad4-438f-b007-79b7267c3d48";
+
+        private readonly List<CredentialDescriptor> _fields = new List<CredentialDescriptor>();
+
+        public CredentialProvider Provider { get; private set; }
 
         public bool Active { get; set; }
 
