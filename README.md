@@ -15,7 +15,6 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 
 Build steps:
 * Open solution in Visual Studio and build in release or debug mode.
-* Copy `install.reg`, `uninstall.reg`, `REGISTER.bat` and `UNREGISTER.bat` into the same folder as the generated `ReversePassword.comhost.dll`.
 
 Installation steps:
 * Install [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet)
