@@ -140,8 +140,8 @@ namespace ReversePassword
                 throw new ArgumentException();
 
             var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(fieldDesc));
-            Marshal.StructureToPtr(fieldDesc, pcpfd, false);
-            Marshal.StructureToPtr(pcpfd, ppcpfd, false);
+            Marshal.StructureToPtr(fieldDesc, pcpfd, false); // copy field descriptor content
+            Marshal.StructureToPtr(pcpfd, ppcpfd, false); // copy pointer to field descriptor
         }
 
         public virtual void GetCredentialCount(
