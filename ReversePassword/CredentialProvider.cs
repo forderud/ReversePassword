@@ -23,9 +23,7 @@ namespace ReversePassword
 
             Logger.Write($"cpus: {cpus}; dwFlags: {flags}");
 
-            var isSupported = IsSupportedScenario(cpus);
-
-            if (!isSupported)
+            if (!IsSupportedScenario(cpus))
             {
                 if (NotActive == null)
                     NotActive = new CredentialView(this) { Active = false };
@@ -98,9 +96,7 @@ namespace ReversePassword
             _usage = cpus;
 
             if (_view.Active)
-            {
                 return;
-            }
 
             throw new NotImplementedException();
         }
