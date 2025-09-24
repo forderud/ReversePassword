@@ -6,9 +6,7 @@ namespace ReversePassword
     public class CredentialDescriptor
     {
         public _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR Descriptor { get; set; }
-
         public _CREDENTIAL_PROVIDER_FIELD_STATE State { get; set; }
-
         public object Value { get; set; }
     }
 
