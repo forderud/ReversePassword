@@ -209,8 +209,6 @@ namespace ReversePassword
                 var inCredSize = 0;
                 var inCredBuffer = Marshal.AllocCoTaskMem(0);
 
-                //This should work fine in Windows 10 that only uses the Logon scenario
-                //But it could fail for the workstation unlock scanario on older OS's
                 if (!PInvoke.CredPackAuthenticationBuffer(0, username, password, inCredBuffer, ref inCredSize))
                 {
                     Marshal.FreeCoTaskMem(inCredBuffer);
@@ -225,7 +223,6 @@ namespace ReversePassword
                         pcpcs.rgbSerialization = inCredBuffer;
                         pcpcs.cbSerialization = (uint)inCredSize;
                         pcpcs.ulAuthenticationPackage = authPackage;
-
                         return;
                     }
 
