@@ -58,12 +58,12 @@ namespace ReversePassword
             });
         }
 
-        public CredentialDescriptor GetField(int idx)
+        public CredentialDescriptor GetField(uint idx)
         {
             if (idx >= _fields.Count)
                 return null;
 
-            return _fields[idx];
+            return _fields[(int)idx];
         }
 
         public ICredentialProviderCredential GetCredential(int idx)

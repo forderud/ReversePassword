@@ -59,7 +59,7 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
-            CredentialDescriptor field = _view.GetField((int)fieldID);
+            CredentialDescriptor field = _view.GetField(fieldID);
 
             Logger.Write($"Returning field state: {field.State}, interactiveState: None");
             pcpfs = field.State;
@@ -68,7 +68,7 @@ namespace ReversePassword
 
         public virtual void GetStringValue(uint fieldID, out string ppsz)
         {
-            ppsz = (string)_view.GetField((int)fieldID).Value;
+            ppsz = (string)_view.GetField(fieldID).Value;
             Logger.Write($"dwFieldID:{fieldID}, ppsz={ppsz}");
         }
 
@@ -144,7 +144,7 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}; psz: {psz}");
 
-            _view.GetField((int)fieldID).Value = psz;
+            _view.GetField(fieldID).Value = psz;
         }
 
         public virtual void SetCheckboxValue(uint fieldID, int bChecked)

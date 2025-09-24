@@ -135,7 +135,7 @@ namespace ReversePassword
 
         public virtual void GetFieldDescriptorAt(uint idx, [Out] IntPtr ppcpfd)
         {
-            CredentialDescriptor field = _view.GetField((int)idx);
+            CredentialDescriptor field = _view.GetField(idx);
             if (field == null)
                 throw new ArgumentException();
 
