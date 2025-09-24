@@ -15,16 +15,10 @@ namespace ReversePassword
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _usage;
         private List<ICredentialProviderUser> _providerUsers;
 
-        protected CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint flags_)
+        protected CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, CredentialFlag flags)
         {
-            var flags = (CredentialFlag)flags_;
-
-            Logger.Write($"cpus: {cpus}; dwFlags: {flags}");
-
             if (!IsSupportedScenario(cpus))
-            {
                 return new CredentialView(this) { Active = false };
-            }
 
             var view = new CredentialView(this) { Active = true };
             var userNameState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI) ?
@@ -86,8 +80,11 @@ namespace ReversePassword
             }
         }
 
-        public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint flags)
+        public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint flags_)
         {
+            var flags = (CredentialFlag)flags_;
+            Logger.Write($"cpus: {cpus}; dwFlags: {flags}");
+
             _view = Initialize(cpus, flags);
             _usage = cpus;
 
