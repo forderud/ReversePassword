@@ -66,12 +66,12 @@ namespace ReversePassword
             return _fields[(int)idx];
         }
 
-        public ICredentialProviderCredential GetCredential(int idx)
+        public ICredentialProviderCredential GetCredential(uint idx)
         {
             Logger.Write();
 
             // cache lookup
-            if (_credentials.TryGetValue(idx, out ICredentialProviderCredential credential))
+            if (_credentials.TryGetValue((int)idx, out ICredentialProviderCredential credential))
             {
                 Logger.Write("Returning existing credential.");
                 return credential;
@@ -80,7 +80,7 @@ namespace ReversePassword
             // add credential to dict
             var sid = Provider.GetUserSidInternal(idx);
             credential = new CredentialProviderCredential(this, sid);
-            _credentials[idx] = credential;
+            _credentials[(int)idx] = credential;
 
             Logger.Write($"Returning new credential for username={Common.GetNameFromSid(sid)}");
             return credential;

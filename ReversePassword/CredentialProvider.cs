@@ -163,7 +163,7 @@ namespace ReversePassword
         {
             Logger.Write($"dwIndex: {idx}");
 
-            ppcpc = _view.GetCredential((int)idx);
+            ppcpc = _view.GetCredential(idx);
         }
 
         public virtual _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
@@ -194,13 +194,13 @@ namespace ReversePassword
         }
 
         //Lookup the user by index and return the sid
-        public string GetUserSidInternal(int idx)
+        public string GetUserSidInternal(uint idx)
         {
             //CredUI does not provide user sids, so return null
             if (_providerUsers.Count < idx + 1)
                 return null;
 
-            _providerUsers[idx].GetSid(out string sid);
+            _providerUsers[(int)idx].GetSid(out string sid);
             return sid;
         }
     }
