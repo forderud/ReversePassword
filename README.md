@@ -24,14 +24,14 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 
 ![screenshot](Screenshot.png)  
 
-NOTE: You might need to run `CredUITester.exe` with admin privileges if not installed to a folder where all users have read access.
+`CredUITester.exe` can also be used for testing the credential provider:  
+![CredUIPrompt](CredUIPrompt.png)  
 
 #### Uninstallation steps
 * Right click on `UNREGISTER.bat` and select "Run as administrator".
 
 
 ## Authentication and logon APIs
-![CredUIPrompt](CredUIPrompt.png)  
 
 #### User session and authentication APIs
 * Show authentication dialog: [CredUIPromptForWindowsCredentials](https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-creduipromptforwindowscredentialsw)
