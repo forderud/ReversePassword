@@ -153,18 +153,18 @@ namespace ReversePassword
         }
 
         public virtual void GetCredentialCount(
-            out uint pdwCount,
-            out uint pdwDefault,
+            out uint count,
+            out uint default_idx,
             out int pbAutoLogonWithDefault
         )
         {
-            pdwCount = (uint)_providerUsers.Count;
+            count = (uint)_providerUsers.Count;
 
-            pdwDefault = CREDENTIAL_PROVIDER_NO_DEFAULT;
+            default_idx = CREDENTIAL_PROVIDER_NO_DEFAULT;
 
             pbAutoLogonWithDefault = 0;
 
-            Logger.Write($"pdwCount={pdwCount} pdwDefault={pdwDefault}");
+            Logger.Write($"pdwCount={count} pdwDefault={default_idx}");
         }
 
         public virtual void GetCredentialAt(uint idx, out ICredentialProviderCredential ppcpc)

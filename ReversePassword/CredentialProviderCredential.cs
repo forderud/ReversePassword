@@ -127,9 +127,9 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual void GetComboBoxValueAt(uint fieldID, uint dwItem, out string ppszItem)
+        public virtual void GetComboBoxValueAt(uint fieldID, uint item, out string ppszItem)
         {
-            Logger.Write($"dwFieldID: {fieldID}; dwItem: {dwItem}");
+            Logger.Write($"dwFieldID: {fieldID}; dwItem: {item}");
 
             ppszItem = "";
 
