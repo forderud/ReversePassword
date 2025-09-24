@@ -2,6 +2,6 @@
 setlocal enableextensions
 cd /d "%~dp0"
 
-regsvr32.exe /u ReversePassword.comhost.dll
+regsvr32.exe /u /s ReversePassword.comhost.dll
 
 uninstall.reg
