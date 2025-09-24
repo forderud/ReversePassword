@@ -44,9 +44,7 @@ namespace ReversePassword
         )
         {
             if (!Active)
-            {
                 throw new NotSupportedException();
-            }
 
             fields.Add(new CredentialDescriptor
             {
