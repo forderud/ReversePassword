@@ -23,11 +23,10 @@ namespace ReversePassword
             //Just in case multiple threads try to write to the log
             lock (s_signal)
             {
-                var filePath = GetFilePath();
-
                 Console.WriteLine(log);
                 try
                 {
+                    var filePath = GetFilePath();
                     File.AppendAllText(filePath, log + Environment.NewLine);
                 }
                 catch (UnauthorizedAccessException) {/*ignore*/ }
