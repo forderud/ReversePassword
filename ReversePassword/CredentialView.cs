@@ -66,11 +66,6 @@ namespace ReversePassword
             return _fields[idx];
         }
 
-        public void SetValue(int fieldId, string val)
-        {
-            _fields[fieldId].Value = val;
-        }
-
         public void GetFieldState(int fieldId,
             out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs,
             out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis)

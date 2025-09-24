@@ -140,7 +140,7 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}; psz: {psz}");
 
-            _view.SetValue((int) fieldID, psz);
+            _view.GetField((int)fieldID).Value = psz;
         }
 
         public virtual void SetCheckboxValue(uint fieldID, int bChecked)
