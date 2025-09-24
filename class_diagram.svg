@@ -259,24 +259,24 @@
     <text
        xml:space="preserve"
        style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="112.08772"
-       y="31.139978"
+       x="112.34049"
+       y="32.656574"
        id="text1-88-7-1"><tspan
          sodipodi:role="line"
          style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="112.08772"
-         y="31.139978"
+         x="112.34049"
+         y="32.656574"
          id="tspan5-2">Active : bool</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="192.46007"
-       y="42.31292"
+       x="177.04134"
+       y="32.455048"
        id="text1-88-7-6"><tspan
          sodipodi:role="line"
          style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="192.46007"
-         y="42.31292"
+         x="177.04134"
+         y="32.455048"
          id="tspan5-4">_sid : string</tspan></text>
     <text
        xml:space="preserve"
