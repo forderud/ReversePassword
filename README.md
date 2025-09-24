@@ -1,5 +1,9 @@
 Example Windows Credential Provider that require your password to by typed backwards. Written in C#.
 
+## Design
+Overall class diagram:  
+![class diagram](class_diagram.svg)
+
 ## How to test
 It's recommended to **test in a disposable Virtual Machine (VM)**, since credential provider problems might break the windows logon screen. You don't want to risk that on your main computer.
 
