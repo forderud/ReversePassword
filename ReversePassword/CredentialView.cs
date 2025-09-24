@@ -59,16 +59,16 @@ namespace ReversePassword
             });
         }
 
-        public bool GetField(int dwIndex, [Out] IntPtr ppcpfd)
+        public bool GetField(int idx, [Out] IntPtr ppcpfd)
         {
-            Logger.Write($"dwIndex: {dwIndex}; descriptors: {_fields.Count}");
+            Logger.Write($"dwIndex: {idx}; descriptors: {_fields.Count}");
 
-            if (dwIndex >= _fields.Count)
+            if (idx >= _fields.Count)
             {
                 return false;
             }
 
-            var field = _fields[dwIndex];
+            var field = _fields[idx];
 
             var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(field.Descriptor));
 
@@ -104,21 +104,21 @@ namespace ReversePassword
             pcpfis = _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE.CPFIS_NONE;
         }
 
-        public ICredentialProviderCredential GetCredential(int dwIndex)
+        public ICredentialProviderCredential GetCredential(int idx)
         {
             Logger.Write();
 
             // cache lookup
-            if (_credentials.TryGetValue(dwIndex, out ICredentialProviderCredential credential))
+            if (_credentials.TryGetValue(idx, out ICredentialProviderCredential credential))
             {
                 Logger.Write("Returning existing credential.");
                 return credential;
             }
 
             // add credential to dict
-            var sid = Provider.GetUserSidInternal(dwIndex);
+            var sid = Provider.GetUserSidInternal(idx);
             credential = new CredentialProviderCredential(this, sid);
-            _credentials[dwIndex] = credential;
+            _credentials[idx] = credential;
 
             Logger.Write($"Returning new credential for username={Common.GetNameFromSid(sid)}");
             return credential;

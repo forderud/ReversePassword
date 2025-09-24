@@ -142,9 +142,9 @@ namespace ReversePassword
             Logger.Write($"Returning field count: {pdwCount}");
         }
 
-        public virtual void GetFieldDescriptorAt(uint dwIndex, [Out] IntPtr ppcpfd)
+        public virtual void GetFieldDescriptorAt(uint idx, [Out] IntPtr ppcpfd)
         {
-            if (_view.GetField((int)dwIndex, ppcpfd))
+            if (_view.GetField((int)idx, ppcpfd))
             {
                 return;
             }
@@ -167,11 +167,11 @@ namespace ReversePassword
             Logger.Write($"pdwCount={pdwCount} pdwDefault={pdwDefault}");
         }
 
-        public virtual void GetCredentialAt(uint dwIndex, out ICredentialProviderCredential ppcpc)
+        public virtual void GetCredentialAt(uint idx, out ICredentialProviderCredential ppcpc)
         {
-            Logger.Write($"dwIndex: {dwIndex}");
+            Logger.Write($"dwIndex: {idx}");
 
-            ppcpc = _view.GetCredential((int)dwIndex);
+            ppcpc = _view.GetCredential((int)idx);
         }
 
         public virtual _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
@@ -202,13 +202,13 @@ namespace ReversePassword
         }
 
         //Lookup the user by index and return the sid
-        public string GetUserSidInternal(int dwIndex)
+        public string GetUserSidInternal(int idx)
         {
             //CredUI does not provide user sids, so return null
-            if (_providerUsers.Count < dwIndex + 1)
+            if (_providerUsers.Count < idx + 1)
                 return null;
 
-            _providerUsers[dwIndex].GetSid(out string sid);
+            _providerUsers[idx].GetSid(out string sid);
             return sid;
         }
     }
