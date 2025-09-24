@@ -4,6 +4,8 @@ Example Windows Credential Provider that require your password to by typed backw
 Overall class diagram:  
 ![class diagram](class_diagram.svg)
 
+`CredentialProvider` is the parent class that's created by Windows. The `_view` member is initialized on `SetUsageScenario` calls. The `_providerUsers` member is similarly initialized on `SetUserArray` calls.
+
 ## How to test
 It's recommended to **test in a disposable Virtual Machine (VM)**, since credential provider problems might break the windows logon screen. You don't want to risk that on your main computer.
 
