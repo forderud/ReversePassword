@@ -15,8 +15,8 @@ namespace ReversePassword
         public const string CPFG_CREDENTIAL_PROVIDER_LOGO = "2d837775-f6cd-464e-a745-482fd0b47493";
         public const string CPFG_CREDENTIAL_PROVIDER_LABEL = "286bbff3-bad4-438f-b007-79b7267c3d48";
 
-        public CredentialProvider Provider { get; }
-        public bool Active { get; }
+        public readonly CredentialProvider Provider;
+        public readonly bool Active;
         public int DescriptorCount { get { return _fields.Count; } }
 
         private readonly List<CredentialDescriptor> _fields = new List<CredentialDescriptor>();
