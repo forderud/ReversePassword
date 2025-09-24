@@ -7,21 +7,6 @@ namespace ReversePassword
         private static string s_path;
         private static readonly object s_signal = new object();
 
-        static Logger()
-        {
-            AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-            {
-                try
-                {
-                    Write(e.ExceptionObject.ToString());
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
-            };
-        }
-
         public static void Write(string line = null, string caller = null)
         {
             if (string.IsNullOrWhiteSpace(caller))
@@ -41,7 +26,11 @@ namespace ReversePassword
                 var filePath = GetFilePath();
 
                 Console.WriteLine(log);
-                File.AppendAllText(filePath, log + Environment.NewLine);
+                try
+                {
+                    File.AppendAllText(filePath, log + Environment.NewLine);
+                }
+                catch (UnauthorizedAccessException) {/*ignore*/ }
             }
         }
 
