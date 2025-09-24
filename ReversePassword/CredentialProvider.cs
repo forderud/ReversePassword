@@ -171,7 +171,7 @@ namespace ReversePassword
         {
             Logger.Write($"dwIndex: {dwIndex}");
 
-            ppcpc = view.CreateCredential((int)dwIndex);
+            ppcpc = view.GetCredential((int)dwIndex);
         }
 
         public virtual _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()

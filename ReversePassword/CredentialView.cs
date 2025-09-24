@@ -107,21 +107,20 @@ namespace ReversePassword
         private readonly Dictionary<int, ICredentialProviderCredential> credentials
             = new Dictionary<int, ICredentialProviderCredential>();
 
-        public ICredentialProviderCredential CreateCredential(int dwIndex)
+        public ICredentialProviderCredential GetCredential(int dwIndex)
         {
             Logger.Write();
 
+            // cache lookup
             if (credentials.TryGetValue(dwIndex, out ICredentialProviderCredential credential))
             {
                 Logger.Write("Returning existing credential.");
                 return credential;
             }
 
-            //Get the sid for this credential from the index
+            // add credential to dict
             var sid = this.Provider.GetUserSidInternal(dwIndex);
-
             credential = new CredentialProviderCredential(this, sid);
-
             credentials[dwIndex] = credential;
 
             Logger.Write($"Returning new credential for username={Common.GetNameFromSid(sid)}");
