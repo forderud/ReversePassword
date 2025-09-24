@@ -135,10 +135,8 @@ namespace ReversePassword
 
         public virtual void GetFieldDescriptorAt(uint idx, [Out] IntPtr ppcpfd)
         {
-            if (_view.GetField((int)idx, ppcpfd))
-            {
+            if (_view.GetFieldDescriptor((int)idx, ppcpfd))
                 return;
-            }
 
             throw new ArgumentException();
         }

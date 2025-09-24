@@ -58,14 +58,12 @@ namespace ReversePassword
             });
         }
 
-        public bool GetField(int idx, [Out] IntPtr ppcpfd)
+        public bool GetFieldDescriptor(int idx, [Out] IntPtr ppcpfd)
         {
             Logger.Write($"dwIndex: {idx}; descriptors: {_fields.Count}");
 
             if (idx >= _fields.Count)
-            {
                 return false;
-            }
 
             var field = _fields[idx];
 
