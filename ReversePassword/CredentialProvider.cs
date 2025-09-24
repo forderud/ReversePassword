@@ -12,7 +12,7 @@ namespace ReversePassword
     {
         private ICredentialProviderEvents _events;
 
-        private CredentialView view;
+        private CredentialView _view;
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO usage;
 
         private List<ICredentialProviderUser> providerUsers;
@@ -95,10 +95,10 @@ namespace ReversePassword
 
         public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags)
         {
-            view = Initialize(cpus, dwFlags);
+            _view = Initialize(cpus, dwFlags);
             usage = cpus;
 
-            if (view.Active)
+            if (_view.Active)
             {
                 return;
             }
@@ -137,14 +137,14 @@ namespace ReversePassword
 
         public virtual void GetFieldDescriptorCount(out uint pdwCount)
         {
-            pdwCount = (uint)view.DescriptorCount;
+            pdwCount = (uint)_view.DescriptorCount;
 
             Logger.Write($"Returning field count: {pdwCount}");
         }
 
         public virtual void GetFieldDescriptorAt(uint dwIndex, [Out] IntPtr ppcpfd)
         {
-            if (view.GetField((int)dwIndex, ppcpfd))
+            if (_view.GetField((int)dwIndex, ppcpfd))
             {
                 return;
             }
@@ -171,7 +171,7 @@ namespace ReversePassword
         {
             Logger.Write($"dwIndex: {dwIndex}");
 
-            ppcpc = view.GetCredential((int)dwIndex);
+            ppcpc = _view.GetCredential((int)dwIndex);
         }
 
         public virtual _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
