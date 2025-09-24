@@ -173,7 +173,7 @@ namespace ReversePassword
         {
             Logger.Write();
 
-            var usage = this._view.Provider.GetUsage();
+            var usage = _view.Provider.GetUsage();
 
             pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_NOT_FINISHED;
             pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
@@ -190,7 +190,7 @@ namespace ReversePassword
                 Logger.Write($"Got authentication package: {authPackage}. Only local authenticsation package 0 (msv1_0) is supported.");
 
                 //Get username and password
-                var username = Common.GetNameFromSid(this._sid);
+                var username = Common.GetNameFromSid(_sid);
                 GetStringValue(2, out var password);
 
                 {
@@ -259,7 +259,7 @@ namespace ReversePassword
 
         public virtual void GetUserSid(out string sid)
         {
-            sid = this._sid;
+            sid = _sid;
 
             Logger.Write($"username: {Common.GetNameFromSid(sid)}");
         }

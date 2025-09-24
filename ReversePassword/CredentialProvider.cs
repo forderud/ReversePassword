@@ -181,7 +181,7 @@ namespace ReversePassword
 
         public virtual void SetUserArray(ICredentialProviderUserArray users)
         {
-            this._providerUsers = new List<ICredentialProviderUser>();
+            _providerUsers = new List<ICredentialProviderUser>();
 
             users.GetCount(out uint count);
             users.GetAccountOptions(out CREDENTIAL_PROVIDER_ACCOUNT_OPTIONS options);
@@ -195,7 +195,7 @@ namespace ReversePassword
                 user.GetProviderID(out Guid providerId);
                 user.GetSid(out string sid);
 
-                this._providerUsers.Add(user);
+                _providerUsers.Add(user);
 
                 Logger.Write($"providerId: {providerId}; username: {Common.GetNameFromSid(sid)}");
             }
@@ -205,10 +205,10 @@ namespace ReversePassword
         public string GetUserSidInternal(int dwIndex)
         {
             //CredUI does not provide user sids, so return null
-            if (this._providerUsers.Count < dwIndex + 1)
+            if (_providerUsers.Count < dwIndex + 1)
                 return null;
 
-            this._providerUsers[dwIndex].GetSid(out string sid);
+            _providerUsers[dwIndex].GetSid(out string sid);
             return sid;
         }
     }
