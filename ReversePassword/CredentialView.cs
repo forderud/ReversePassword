@@ -58,23 +58,12 @@ namespace ReversePassword
             });
         }
 
-        public bool GetFieldDescriptor(int idx, out _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR fieldDesc)
+        public CredentialDescriptor GetField(int idx)
         {
-            Logger.Write($"dwIndex: {idx}; descriptors: {_fields.Count}");
-
             if (idx >= _fields.Count)
-            {
-                fieldDesc = default(_CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR);
-                return false;
-            }
+                return null;
 
-            fieldDesc = _fields[idx].Descriptor;
-            return true;
-        }
-
-        public string GetValue(int fieldId)
-        {
-            return (string)_fields[fieldId].Value;
+            return _fields[idx];
         }
 
         public void SetValue(int fieldId, string val)

@@ -64,7 +64,7 @@ namespace ReversePassword
 
         public virtual void GetStringValue(uint fieldID, out string ppsz)
         {
-            ppsz = _view.GetValue((int)fieldID);
+            ppsz = (string)_view.GetField((int)fieldID).Value;
             Logger.Write($"dwFieldID:{fieldID}, ppsz={ppsz}");
         }
 

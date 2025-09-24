@@ -135,12 +135,12 @@ namespace ReversePassword
 
         public virtual void GetFieldDescriptorAt(uint idx, [Out] IntPtr ppcpfd)
         {
-            _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR fieldDesc;
-            if (!_view.GetFieldDescriptor((int)idx, out fieldDesc))
+            CredentialDescriptor field = _view.GetField((int)idx);
+            if (field == null)
                 throw new ArgumentException();
 
-            var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(fieldDesc));
-            Marshal.StructureToPtr(fieldDesc, pcpfd, false); // copy field descriptor content
+            var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(field.Descriptor));
+            Marshal.StructureToPtr(field.Descriptor, pcpfd, false); // copy field descriptor content
             Marshal.StructureToPtr(pcpfd, ppcpfd, false); // copy pointer to field descriptor
         }
 
