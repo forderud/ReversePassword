@@ -15,7 +15,7 @@ namespace ReversePassword
         private CredentialView _view;
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _usage;
 
-        private List<ICredentialProviderUser> providerUsers;
+        private List<ICredentialProviderUser> _providerUsers;
 
         public static CredentialView NotActive;
 
@@ -158,7 +158,7 @@ namespace ReversePassword
             out int pbAutoLogonWithDefault
         )
         {
-            pdwCount = (uint)providerUsers.Count;
+            pdwCount = (uint)_providerUsers.Count;
 
             pdwDefault = CREDENTIAL_PROVIDER_NO_DEFAULT;
 
@@ -181,7 +181,7 @@ namespace ReversePassword
 
         public virtual void SetUserArray(ICredentialProviderUserArray users)
         {
-            this.providerUsers = new List<ICredentialProviderUser>();
+            this._providerUsers = new List<ICredentialProviderUser>();
 
             users.GetCount(out uint count);
             users.GetAccountOptions(out CREDENTIAL_PROVIDER_ACCOUNT_OPTIONS options);
@@ -195,7 +195,7 @@ namespace ReversePassword
                 user.GetProviderID(out Guid providerId);
                 user.GetSid(out string sid);
 
-                this.providerUsers.Add(user);
+                this._providerUsers.Add(user);
 
                 Logger.Write($"providerId: {providerId}; username: {Common.GetNameFromSid(sid)}");
             }
@@ -205,10 +205,10 @@ namespace ReversePassword
         public string GetUserSidInternal(int dwIndex)
         {
             //CredUI does not provide user sids, so return null
-            if (this.providerUsers.Count < dwIndex + 1)
+            if (this._providerUsers.Count < dwIndex + 1)
                 return null;
 
-            this.providerUsers[dwIndex].GetSid(out string sid);
+            this._providerUsers[dwIndex].GetSid(out string sid);
             return sid;
         }
     }
