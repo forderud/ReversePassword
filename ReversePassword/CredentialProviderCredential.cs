@@ -201,8 +201,8 @@ namespace ReversePassword
                 pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
                 pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
 
+                IntPtr inCredBuffer = 0;
                 int inCredSize = 0;
-                IntPtr inCredBuffer;
                 if (PInvoke.CredPackAuthenticationBufferWrap(0, username, password, out inCredBuffer, out inCredSize))
                 {
                     ppszOptionalStatusText = string.Empty;
