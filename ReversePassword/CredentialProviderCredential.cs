@@ -108,21 +108,21 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual void GetSubmitButtonValue(uint fieldID, out uint pdwAdjacentTo)
+        public virtual void GetSubmitButtonValue(uint fieldID, out uint adjacentTo)
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
-            pdwAdjacentTo = 0;
+            adjacentTo = 0;
 
             throw new NotImplementedException();
         }
 
-        public virtual void GetComboBoxValueCount(uint fieldID, out uint pcItems, out uint pdwSelectedItem)
+        public virtual void GetComboBoxValueCount(uint fieldID, out uint pcItems, out uint selectedItem)
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
             pcItems = 0;
-            pdwSelectedItem = 0;
+            selectedItem = 0;
 
             throw new NotImplementedException();
         }
@@ -150,9 +150,9 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual void SetComboBoxSelectedValue(uint fieldID, uint dwSelectedItem)
+        public virtual void SetComboBoxSelectedValue(uint fieldID, uint selectedItem)
         {
-            Logger.Write($"dwFieldID: {fieldID}; dwSelectedItem: {dwSelectedItem}");
+            Logger.Write($"dwFieldID: {fieldID}; dwSelectedItem: {selectedItem}");
 
             throw new NotImplementedException();
         }

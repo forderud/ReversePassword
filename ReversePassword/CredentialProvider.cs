@@ -135,11 +135,11 @@ namespace ReversePassword
             }
         }
 
-        public virtual void GetFieldDescriptorCount(out uint pdwCount)
+        public virtual void GetFieldDescriptorCount(out uint count)
         {
-            pdwCount = (uint)_view.DescriptorCount;
+            count = (uint)_view.DescriptorCount;
 
-            Logger.Write($"Returning field count: {pdwCount}");
+            Logger.Write($"Returning field count: {count}");
         }
 
         public virtual void GetFieldDescriptorAt(uint idx, [Out] IntPtr ppcpfd)
