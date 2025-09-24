@@ -7,7 +7,7 @@ Overall class diagram:
 | Class | Description |
 |-------|-------------|
 | `CredentialProvider` | Parent class that's created by Windows. The `_providerUsers` member is similarly initialized on `SetUserArray` calls. |
-| `CredentialView` | Instances are created when `CredentialProvider` initializes its when `_view` member when receiving `SetUsageScenario` calls. |
+| `CredentialView` | Instances are created when `CredentialProvider` initializes its `_view` member when receiving `SetUsageScenario` calls. |
 | `CredentialProviderCredential` | Instances are created on-demand by `CredentialView` when `CredentialProvider` receives `GetCredentialAt` calls. |
 
 ## How to test
