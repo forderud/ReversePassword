@@ -78,7 +78,14 @@ namespace ReversePassword
 
             try
             {
-                TryLoadUserIcon();
+                if (_tileIcon == null)
+                {
+                    var fileName = "ReversePassword.tile-icon.bmp";
+                    var assembly = Assembly.GetExecutingAssembly();
+                    var stream = assembly.GetManifestResourceStream(fileName);
+
+                    _tileIcon = (Bitmap)Image.FromStream(stream);
+                }
             }
             catch (Exception ex) 
             {
@@ -86,18 +93,6 @@ namespace ReversePassword
             }
 
             phbmp = _tileIcon?.GetHbitmap() ?? IntPtr.Zero;
-        }
-
-        private void TryLoadUserIcon()
-        {
-            if (_tileIcon == null)
-            {
-                var fileName = "ReversePassword.tile-icon.bmp";
-                var assembly = Assembly.GetExecutingAssembly();
-                var stream = assembly.GetManifestResourceStream(fileName);
-
-                _tileIcon = (Bitmap)Image.FromStream(stream);
-            }
         }
 
         public virtual void GetCheckboxValue(uint fieldID, out int pbChecked, out string ppszLabel)
