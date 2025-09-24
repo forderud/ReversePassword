@@ -4,8 +4,8 @@ namespace ReversePassword
 {
     internal static class Logger
     {
-        private static string path;
-        private static readonly object signal = new object();
+        private static string s_path;
+        private static readonly object s_signal = new object();
 
         static Logger()
         {
@@ -27,19 +27,16 @@ namespace ReversePassword
             if (string.IsNullOrWhiteSpace(caller))
             {
                 var method = new StackTrace().GetFrame(1).GetMethod();
-
                 caller = $"{method.DeclaringType?.Name}.{method.Name}";
             }
 
             var log = $"{DateTimeOffset.UtcNow:u} [{caller}]";
 
             if (!string.IsNullOrWhiteSpace(line))
-            {
                 log += " " + line;
-            }
 
             //Just in case multiple threads try to write to the log
-            lock (signal)
+            lock (s_signal)
             {
                 var filePath = GetFilePath();
 
@@ -50,16 +47,17 @@ namespace ReversePassword
 
         private static string GetFilePath()
         {
-            if (path == null)
+            if (s_path == null)
             {
                 var folder = $"{Environment.GetFolderPath(Environment.SpecialFolder.Windows)}\\Logs\\ReversePassword";
 
-                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
 
-                path = $"{folder}\\Log-{DateTime.Now.Ticks}.txt";
+                s_path = $"{folder}\\Log-{DateTime.Now.Ticks}.txt";
             }
 
-            return path;
+            return s_path;
         }
     }
 }
