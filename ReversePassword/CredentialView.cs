@@ -27,6 +27,9 @@ namespace ReversePassword
 
         public int DescriptorCount { get { return fields.Count; } }
 
+        private readonly Dictionary<int, ICredentialProviderCredential> credentials = new Dictionary<int, ICredentialProviderCredential>();
+
+
         public CredentialView(CredentialProvider provider) 
         {
             Provider = provider;
@@ -104,9 +107,6 @@ namespace ReversePassword
             pcpfis = _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE.CPFIS_NONE;
         }
 
-        private readonly Dictionary<int, ICredentialProviderCredential> credentials
-            = new Dictionary<int, ICredentialProviderCredential>();
-
         public ICredentialProviderCredential GetCredential(int dwIndex)
         {
             Logger.Write();
@@ -119,7 +119,7 @@ namespace ReversePassword
             }
 
             // add credential to dict
-            var sid = this.Provider.GetUserSidInternal(dwIndex);
+            var sid = Provider.GetUserSidInternal(dwIndex);
             credential = new CredentialProviderCredential(this, sid);
             credentials[dwIndex] = credential;
 
