@@ -4,4 +4,4 @@ cd /d "%~dp0"
 
 regsvr32.exe /s ReversePassword.comhost.dll
 
-install.reg
+reg.exe import install.reg
