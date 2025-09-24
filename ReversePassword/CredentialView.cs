@@ -14,7 +14,7 @@ namespace ReversePassword
 
     public class CredentialView
     {
-        private readonly List<CredentialDescriptor> fields
+        private readonly List<CredentialDescriptor> _fields
             = new List<CredentialDescriptor>();
 
         public CredentialProvider Provider { get; private set; }
@@ -25,7 +25,7 @@ namespace ReversePassword
 
         public bool Active { get; set; }
 
-        public int DescriptorCount { get { return fields.Count; } }
+        public int DescriptorCount { get { return _fields.Count; } }
 
         private readonly Dictionary<int, ICredentialProviderCredential> _credentials = new Dictionary<int, ICredentialProviderCredential>();
 
@@ -46,13 +46,13 @@ namespace ReversePassword
             if (!Active)
                 throw new NotSupportedException();
 
-            fields.Add(new CredentialDescriptor
+            _fields.Add(new CredentialDescriptor
             {
                 State = state,
                 Value = defaultValue,
                 Descriptor = new _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR
                 {
-                    dwFieldID = (uint)fields.Count,
+                    dwFieldID = (uint)_fields.Count,
                     cpft = cpft,
                     pszLabel = pszLabel,
                     guidFieldType = guidFieldType
@@ -62,14 +62,14 @@ namespace ReversePassword
 
         public bool GetField(int dwIndex, [Out] IntPtr ppcpfd)
         {
-            Logger.Write($"dwIndex: {dwIndex}; descriptors: {fields.Count}");
+            Logger.Write($"dwIndex: {dwIndex}; descriptors: {_fields.Count}");
 
-            if (dwIndex >= fields.Count)
+            if (dwIndex >= _fields.Count)
             {
                 return false;
             }
 
-            var field = fields[dwIndex];
+            var field = _fields[dwIndex];
 
             var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(field.Descriptor));
 
@@ -81,12 +81,12 @@ namespace ReversePassword
 
         public string GetValue(int dwFieldId)
         {
-            return (string)fields[dwFieldId].Value;
+            return (string)_fields[dwFieldId].Value;
         }
 
         public void SetValue(int dwFieldId, string val)
         {
-            fields[dwFieldId].Value = val;
+            _fields[dwFieldId].Value = val;
         }
 
         public void GetFieldState(
@@ -97,7 +97,7 @@ namespace ReversePassword
         {
             Logger.Write();
 
-            var field = fields[dwFieldId];
+            var field = _fields[dwFieldId];
 
             Logger.Write($"Returning field state: {field.State}, interactiveState: None");
 
