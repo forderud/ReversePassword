@@ -55,8 +55,7 @@ namespace ReversePassword
         public virtual void GetFieldState(
             uint fieldID,
             out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs,
-            out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis
-        )
+            out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis)
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
@@ -171,8 +170,7 @@ namespace ReversePassword
             out _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE pcpgsr,
             out _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs,
             out string ppszOptionalStatusText,
-            out _CREDENTIAL_PROVIDER_STATUS_ICON pcpsiOptionalStatusIcon
-        )
+            out _CREDENTIAL_PROVIDER_STATUS_ICON pcpsiOptionalStatusIcon)
         {
             Logger.Write();
 
@@ -235,9 +233,9 @@ namespace ReversePassword
                     throw new Exception();
                 }
             }
-            //Implement code to change password here. This is not handled natively.
             else if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD)
             {
+                //Implement code to change password here. This is not handled natively.
                 pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_FINISHED;
                 pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
                 ppszOptionalStatusText = "Password changed success message.";
@@ -251,8 +249,7 @@ namespace ReversePassword
             int ntsStatus,
             int ntsSubstatus,
             out string ppszOptionalStatusText,
-            out _CREDENTIAL_PROVIDER_STATUS_ICON pcpsiOptionalStatusIcon
-        )
+            out _CREDENTIAL_PROVIDER_STATUS_ICON pcpsiOptionalStatusIcon)
         {
             Logger.Write($"ntsStatus: {ntsStatus}; ntsSubstatus: {ntsSubstatus}");
 
