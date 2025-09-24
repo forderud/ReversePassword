@@ -64,5 +64,24 @@ namespace ReversePassword
             IntPtr pPackedCredentials,
             ref int pcbPackedCredentials
         );
+
+        public static bool CredPackAuthenticationBufferWrap(int flags,
+            string username,
+            string password,
+            out IntPtr packedCredentials,
+            out int packedCredentialsSize)
+        {
+            // first call to determine buffer size
+            packedCredentials = Marshal.AllocCoTaskMem(0);
+            packedCredentialsSize = 0;
+            bool ok = PInvoke.CredPackAuthenticationBuffer(flags, username, password, packedCredentials, ref packedCredentialsSize);
+            if (ok) // expected to fail
+                return ok;
+
+            // second call for actual packing
+            Marshal.FreeCoTaskMem(packedCredentials);
+            packedCredentials = Marshal.AllocCoTaskMem(packedCredentialsSize);
+            return PInvoke.CredPackAuthenticationBuffer(flags, username, password, packedCredentials, ref packedCredentialsSize);
+        }
     }
 }

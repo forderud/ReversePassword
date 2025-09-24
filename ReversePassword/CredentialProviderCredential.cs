@@ -201,30 +201,23 @@ namespace ReversePassword
                 pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
                 pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
 
-                var inCredSize = 0;
-                var inCredBuffer = Marshal.AllocCoTaskMem(0);
-
-                if (!PInvoke.CredPackAuthenticationBuffer(0, username, password, inCredBuffer, ref inCredSize))
+                int inCredSize = 0;
+                IntPtr inCredBuffer;
+                if (PInvoke.CredPackAuthenticationBufferWrap(0, username, password, out inCredBuffer, out inCredSize))
                 {
-                    Marshal.FreeCoTaskMem(inCredBuffer);
-                    inCredBuffer = Marshal.AllocCoTaskMem(inCredSize);
+                    ppszOptionalStatusText = string.Empty;
+                    pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
 
-                    if (PInvoke.CredPackAuthenticationBuffer(0, username, password, inCredBuffer, ref inCredSize))
-                    {
-                        ppszOptionalStatusText = string.Empty;
-                        pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
-
-                        pcpcs.clsidCredentialProvider = Guid.Parse(Constants.CredentialProvider_CLSID);
-                        pcpcs.rgbSerialization = inCredBuffer;
-                        pcpcs.cbSerialization = (uint)inCredSize;
-                        pcpcs.ulAuthenticationPackage = authPackage;
-                        return;
-                    }
-
-                    ppszOptionalStatusText = "Failed to pack credentials";
-                    pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_ERROR;
-                    throw new Exception();
+                    pcpcs.clsidCredentialProvider = Guid.Parse(Constants.CredentialProvider_CLSID);
+                    pcpcs.rgbSerialization = inCredBuffer;
+                    pcpcs.cbSerialization = (uint)inCredSize;
+                    pcpcs.ulAuthenticationPackage = authPackage;
+                    return;
                 }
+
+                ppszOptionalStatusText = "Failed to pack credentials";
+                pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_ERROR;
+                throw new Exception();
             }
             else if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD)
             {
