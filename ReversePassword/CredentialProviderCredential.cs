@@ -1,8 +1,6 @@
 ﻿using CredProvider.Interop;
 using System.Drawing;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using static ReversePassword.Constants;
 
 namespace ReversePassword
 {
