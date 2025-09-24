@@ -13,7 +13,7 @@ namespace ReversePassword
         private ICredentialProviderEvents _events;
 
         private CredentialView _view;
-        private _CREDENTIAL_PROVIDER_USAGE_SCENARIO usage;
+        private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _usage;
 
         private List<ICredentialProviderUser> providerUsers;
 
@@ -96,7 +96,7 @@ namespace ReversePassword
         public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags)
         {
             _view = Initialize(cpus, dwFlags);
-            usage = cpus;
+            _usage = cpus;
 
             if (_view.Active)
             {
@@ -176,7 +176,7 @@ namespace ReversePassword
 
         public virtual _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
         {
-            return usage;
+            return _usage;
         }
 
         public virtual void SetUserArray(ICredentialProviderUserArray users)
