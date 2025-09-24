@@ -58,19 +58,17 @@ namespace ReversePassword
             });
         }
 
-        public bool GetFieldDescriptor(int idx, [Out] IntPtr ppcpfd)
+        public bool GetFieldDescriptor(int idx, out _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR fieldDesc)
         {
             Logger.Write($"dwIndex: {idx}; descriptors: {_fields.Count}");
 
             if (idx >= _fields.Count)
+            {
+                fieldDesc = default(_CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR);
                 return false;
+            }
 
-            var fieldDesc = _fields[idx].Descriptor;
-
-            var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(fieldDesc));
-            Marshal.StructureToPtr(fieldDesc, pcpfd, false);
-            Marshal.StructureToPtr(pcpfd, ppcpfd, false);
-
+            fieldDesc = _fields[idx].Descriptor;
             return true;
         }
 
