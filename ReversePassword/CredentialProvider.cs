@@ -18,9 +18,9 @@ namespace ReversePassword
         protected CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, CredentialFlag flags)
         {
             if (!IsSupportedScenario(cpus))
-                return new CredentialView(this) { Active = false };
+                return new CredentialView(this, /*Active*/false);
 
-            var view = new CredentialView(this) { Active = true };
+            var view = new CredentialView(this, /*Active*/true);
             var userNameState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI) ?
                     _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
             var confirmPasswordState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ?
