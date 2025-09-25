@@ -29,19 +29,22 @@ namespace ReversePassword
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_TILE_IMAGE,
                 pszLabel: "Icon",
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
+                defaultValue: null,
                 guidFieldType: Guid.Parse(CredentialView.CPFG_CREDENTIAL_PROVIDER_LOGO)
             );
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT,
                 pszLabel: "Username",
-                state: userNameState
+                state: userNameState,
+                defaultValue: null
             );
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 pszLabel: "Password",
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
+                defaultValue: null,
                 guidFieldType: Guid.Parse(CredentialView.CPFG_LOGON_PASSWORD_GUID)
             );
 
@@ -49,6 +52,7 @@ namespace ReversePassword
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 pszLabel: "Confirm password",
                 state: confirmPasswordState,
+                defaultValue: null,
                 guidFieldType: Guid.Parse(CredentialView.CPFG_LOGON_PASSWORD_GUID)
             );
 

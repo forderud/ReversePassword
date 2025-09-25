@@ -33,7 +33,7 @@ namespace ReversePassword
             _CREDENTIAL_PROVIDER_FIELD_TYPE cpft,
             string pszLabel,
             _CREDENTIAL_PROVIDER_FIELD_STATE state,
-            string defaultValue = null,
+            string defaultValue,
             Guid guidFieldType = default(Guid))
         {
             if (!Active)
