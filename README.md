@@ -33,13 +33,13 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 
 ## Authentication and logon APIs
 
-#### User session and authentication APIs
+#### User session and authentication
 * Show authentication dialog: [CredUIPromptForWindowsCredentials](https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-creduipromptforwindowscredentialsw)
 * Logoff, shutdown or restart:  [ExitWindowsEx](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex) with `EWX_LOGOFF`, `EWX_POWEROFF` or `EWX_REBOOT` parameter.
 * Lock desktop: [LockWorkStation](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-lockworkstation) (same as Ctrl+Alt+Del and click "Lock")
 * Authenticate to impersonate a user: [LogonUserW](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-logonuserw)
 
-#### Credential provider APIs
+#### Credential provider
 * [Credential providers in Windows](https://learn.microsoft.com/en-us/windows/win32/secauthn/credential-providers-in-windows)
 * [Credential Provider driven Windows Logon Experience](https://github.com/user-attachments/files/22509252/Credential_Provider_Technical_Reference.pdf) (converted https://go.microsoft.com/fwlink/?LinkId=717287 from XPS to PDF)
 
