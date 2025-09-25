@@ -52,16 +52,16 @@ namespace ReversePassword
 
         public virtual void GetFieldState(
             uint fieldID,
-            out _CREDENTIAL_PROVIDER_FIELD_STATE pcpfs,
-            out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pcpfis)
+            out _CREDENTIAL_PROVIDER_FIELD_STATE pfs,
+            out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pfis)
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
             CredentialDescriptor field = _view.GetField(fieldID);
 
-            Logger.Write($"Returning field state: {field.State}, interactiveState: None");
-            pcpfs = field.State;
-            pcpfis = _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE.CPFIS_NONE;
+            pfs = field.State;
+            pfis = _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE.CPFIS_NONE; // NONE, READONLY, DISABLED or FOCUSED
+            Logger.Write($"Returning field state: {pfs}, interactiveState: {pfis}");
         }
 
         public virtual void GetStringValue(uint fieldID, out string ppsz)
