@@ -123,7 +123,7 @@ namespace ReversePassword
 
         public virtual void GetFieldDescriptorCount(out uint count)
         {
-            count = (uint)_view.DescriptorCount;
+            count = (uint)_view.FieldsCount;
 
             Logger.Write($"Returning field count: {count}");
         }

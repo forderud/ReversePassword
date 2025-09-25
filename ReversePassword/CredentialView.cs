@@ -17,7 +17,7 @@ namespace ReversePassword
 
         public readonly bool Active;
         public readonly _CREDENTIAL_PROVIDER_USAGE_SCENARIO Usage;
-        public int DescriptorCount { get { return _fields.Count; } }
+        public int FieldsCount { get { return _fields.Count; } }
 
         private readonly List<CredentialDescriptor> _fields = new List<CredentialDescriptor>();
         private readonly Dictionary<string, ICredentialProviderCredential> _credentials = new Dictionary<string, ICredentialProviderCredential>(); // sid as key
