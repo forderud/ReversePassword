@@ -34,7 +34,7 @@ namespace ReversePassword
             string pszLabel,
             _CREDENTIAL_PROVIDER_FIELD_STATE state,
             string defaultValue,
-            Guid guidFieldType = default(Guid))
+            Guid guidFieldType)
         {
             if (!Active)
                 throw new NotSupportedException();
