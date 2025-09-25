@@ -13,7 +13,7 @@ namespace ReversePassword
         private ICredentialProviderEvents _events;
         private CredentialView _view;
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _usage;
-        private List<ICredentialProviderUser> _providerUsers;
+        private List<ICredentialProviderUser> _users;
 
         protected CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, CredentialFlag flags)
         {
@@ -148,7 +148,7 @@ namespace ReversePassword
             out uint default_idx,
             out int pbAutoLogonWithDefault)
         {
-            count = (uint)_providerUsers.Count;
+            count = (uint)_users.Count;
 
             default_idx = CREDENTIAL_PROVIDER_NO_DEFAULT;
 
@@ -172,7 +172,7 @@ namespace ReversePassword
 
         public virtual void SetUserArray(ICredentialProviderUserArray users)
         {
-            _providerUsers = new List<ICredentialProviderUser>();
+            _users = new List<ICredentialProviderUser>();
 
             users.GetCount(out uint count);
             users.GetAccountOptions(out CREDENTIAL_PROVIDER_ACCOUNT_OPTIONS options);
@@ -186,7 +186,7 @@ namespace ReversePassword
                 user.GetProviderID(out Guid providerId);
                 user.GetSid(out string sid);
 
-                _providerUsers.Add(user);
+                _users.Add(user);
 
                 Logger.Write($"providerId: {providerId}; username: {Common.GetNameFromSid(sid)}");
             }
@@ -194,10 +194,10 @@ namespace ReversePassword
 
         private string GetUserSidInternal(uint idx)
         {
-            if (idx >= _providerUsers.Count)
+            if (idx >= _users.Count)
                 return null;
 
-            _providerUsers[(int)idx].GetSid(out string sid);
+            _users[(int)idx].GetSid(out string sid);
             return sid;
         }
     }
