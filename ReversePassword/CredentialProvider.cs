@@ -161,7 +161,11 @@ namespace ReversePassword
         {
             Logger.Write($"dwIndex: {idx}");
 
-            string sid = GetUserSidInternal(idx);
+            if (idx >= _users.Count)
+                throw new ArgumentException();
+
+            _users[(int)idx].GetSid(out string sid);
+
             ppcpc = _view.GetCredential(sid);
         }
 
@@ -190,15 +194,6 @@ namespace ReversePassword
 
                 Logger.Write($"providerId: {providerId}; username: {Common.GetNameFromSid(sid)}");
             }
-        }
-
-        private string GetUserSidInternal(uint idx)
-        {
-            if (idx >= _users.Count)
-                return null;
-
-            _users[(int)idx].GetSid(out string sid);
-            return sid;
         }
     }
 }
