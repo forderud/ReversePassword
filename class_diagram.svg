@@ -391,7 +391,7 @@
          style="font-size:3.52778px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          x="163.69725"
          y="11.583815"
-         id="tspan3-5-09">_credentials[idx]</tspan></text>
+         id="tspan6">_credentials[sid]</tspan></text>
     <path
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.657999;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-7)"
        d="m 108.21213,37.37921 c 0,0 -21.30305,19.55347 -44.12773,1.32888"
