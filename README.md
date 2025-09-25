@@ -20,10 +20,10 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 * Install [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet)
 * Right click on `REGISTER.bat` and select "Run as administrator".
 * Log screen, log out or restart the computer.
-* Observe that there's now a new "RP" sign-in option:
+* Observe that there's now a new "RP" sign-in option:  
 ![screenshot](Screenshot.png)  
 
-* `CredUITester.exe` can also be used for testing the credential provider:
+* `CredUITester.exe` can also be used for testing the credential provider:  
 ![CredUIPrompt](CredUIPrompt.png)  
 
 #### Uninstallation steps
