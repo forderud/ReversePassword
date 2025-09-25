@@ -28,8 +28,8 @@
      inkscape:cy="178.64782"
      inkscape:window-width="1682"
      inkscape:window-height="1138"
-     inkscape:window-x="3543"
-     inkscape:window-y="131"
+     inkscape:window-x="3551"
+     inkscape:window-y="129"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1" />
   <defs
@@ -240,14 +240,19 @@
     <text
        xml:space="preserve"
        style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="112.34049"
-       y="32.656574"
+       x="95.405174"
+       y="29.370617"
        id="text1-88-7-1"><tspan
          sodipodi:role="line"
          style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="112.34049"
-         y="32.656574"
-         id="tspan5-2">Active : bool</tspan></text>
+         x="95.405174"
+         y="29.370617"
+         id="tspan5-2">Active : bool</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         x="95.405174"
+         y="33.780342"
+         id="tspan10">Usage : USAGE_SCENARIO</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
