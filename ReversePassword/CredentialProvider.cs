@@ -161,7 +161,8 @@ namespace ReversePassword
         {
             Logger.Write($"dwIndex: {idx}");
 
-            ppcpc = _view.GetCredential(idx);
+            string sid = GetUserSidInternal(idx);
+            ppcpc = _view.GetCredential(sid);
         }
 
         public _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
@@ -191,7 +192,7 @@ namespace ReversePassword
             }
         }
 
-        public string GetUserSidInternal(uint idx)
+        private string GetUserSidInternal(uint idx)
         {
             if (idx >= _providerUsers.Count)
                 return null;
