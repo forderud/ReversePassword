@@ -15,7 +15,6 @@ namespace ReversePassword
         public const string CPFG_CREDENTIAL_PROVIDER_LOGO = "2d837775-f6cd-464e-a745-482fd0b47493";
         public const string CPFG_CREDENTIAL_PROVIDER_LABEL = "286bbff3-bad4-438f-b007-79b7267c3d48";
 
-        public readonly CredentialProvider Provider;
         public readonly bool Active;
         public readonly _CREDENTIAL_PROVIDER_USAGE_SCENARIO Usage;
         public int DescriptorCount { get { return _fields.Count; } }
@@ -24,9 +23,8 @@ namespace ReversePassword
         private readonly Dictionary<string, ICredentialProviderCredential> _credentials = new Dictionary<string, ICredentialProviderCredential>(); // sid as key
 
 
-        public CredentialView(CredentialProvider provider, bool active, _CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) 
+        public CredentialView(bool active, _CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) 
         {
-            Provider = provider;
             Active = active;
             Usage = usage;
         }
