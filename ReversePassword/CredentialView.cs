@@ -16,7 +16,7 @@ namespace ReversePassword
         public const string CPFG_CREDENTIAL_PROVIDER_LABEL = "286bbff3-bad4-438f-b007-79b7267c3d48";
 
         public readonly bool Active;
-        public readonly _CREDENTIAL_PROVIDER_USAGE_SCENARIO Usage;
+        public readonly _CREDENTIAL_PROVIDER_USAGE_SCENARIO Usage; // LOGON, UNLOCK_WORKSTATION, CHANGE_PASSWORD, CREDUI or PLAP
         public int FieldsCount { get { return _fields.Count; } }
 
         private readonly List<CredentialDescriptor> _fields = new List<CredentialDescriptor>();
