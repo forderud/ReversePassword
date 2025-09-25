@@ -15,7 +15,7 @@ namespace ReversePassword
         private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _usage;
         private List<ICredentialProviderUser> _users;
 
-        protected CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, CredentialFlag flags)
+        private CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, CredentialFlag flags)
         {
             if (!IsSupportedScenario(cpus))
                 return new CredentialView(this, /*Active*/false);
