@@ -80,25 +80,6 @@
     </marker>
     <marker
        style="overflow:visible"
-       id="Triangle-7"
-       refX="0"
-       refY="0"
-       orient="auto-start-reverse"
-       inkscape:stockid="Triangle arrow"
-       markerWidth="1"
-       markerHeight="1"
-       viewBox="0 0 1 1"
-       inkscape:isstock="true"
-       inkscape:collect="always"
-       preserveAspectRatio="xMidYMid">
-      <path
-         transform="scale(0.5)"
-         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
-         d="M 5.77,0 -2.88,5 V -5 Z"
-         id="path135-6" />
-    </marker>
-    <marker
-       style="overflow:visible"
        id="Triangle-79"
        refX="0"
        refY="0"
@@ -292,17 +273,6 @@
     <text
        xml:space="preserve"
        style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       x="84.70031"
-       y="44.065853"
-       id="text1-8-6"><tspan
-         sodipodi:role="line"
-         style="font-size:3.52778px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="84.70031"
-         y="44.065853"
-         id="tspan3-5-0">Provider</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        x="168.06593"
        y="42.401493"
        id="text1-8-6-1"><tspan
@@ -392,11 +362,6 @@
          x="163.69725"
          y="11.583815"
          id="tspan6">_credentials[sid]</tspan></text>
-    <path
-       style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.657999;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-7)"
-       d="m 108.21213,37.37921 c 0,0 -21.30305,19.55347 -44.12773,1.32888"
-       id="path8-8"
-       sodipodi:nodetypes="cc" />
     <path
        style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.657999;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#Triangle-79)"
        d="m 191.87568,36.561825 c 0,0 -21.30305,19.55347 -44.12773,1.32888"
