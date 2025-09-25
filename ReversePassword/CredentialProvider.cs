@@ -12,15 +12,14 @@ namespace ReversePassword
     {
         private ICredentialProviderEvents _events;
         private CredentialView _view;
-        private _CREDENTIAL_PROVIDER_USAGE_SCENARIO _usage;
         private List<ICredentialProviderUser> _users;
 
-        private CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, CredentialFlag flags)
+        private CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, CredentialFlag flags, _CREDENTIAL_PROVIDER_USAGE_SCENARIO usage)
         {
             if (!IsSupportedScenario(cpus))
-                return new CredentialView(this, /*Active*/false);
+                return new CredentialView(this, /*Active*/false, usage);
 
-            var view = new CredentialView(this, /*Active*/true);
+            var view = new CredentialView(this, /*Active*/true, usage);
             var userNameState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI) ?
                     _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
             var confirmPasswordState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ?
@@ -85,8 +84,7 @@ namespace ReversePassword
             var flags = (CredentialFlag)flags_;
             Logger.Write($"cpus: {cpus}; dwFlags: {flags}");
 
-            _view = Initialize(cpus, flags);
-            _usage = cpus;
+            _view = Initialize(cpus, flags, cpus);
 
             if (_view.Active)
                 return;
@@ -167,11 +165,6 @@ namespace ReversePassword
             _users[(int)idx].GetSid(out string sid);
 
             ppcpc = _view.GetCredential(sid);
-        }
-
-        public _CREDENTIAL_PROVIDER_USAGE_SCENARIO GetUsage()
-        {
-            return _usage;
         }
 
         public virtual void SetUserArray(ICredentialProviderUserArray users)

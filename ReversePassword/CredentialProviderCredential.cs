@@ -165,7 +165,7 @@ namespace ReversePassword
             out string ppszOptionalStatusText,
             out _CREDENTIAL_PROVIDER_STATUS_ICON pcpsiOptionalStatusIcon)
         {
-            var usage = _view.Provider.GetUsage();
+            var usage = _view.Usage;
             Logger.Write($"usage: {usage}");
 
             pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_NOT_FINISHED;

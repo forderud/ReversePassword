@@ -17,16 +17,18 @@ namespace ReversePassword
 
         public readonly CredentialProvider Provider;
         public readonly bool Active;
+        public readonly _CREDENTIAL_PROVIDER_USAGE_SCENARIO Usage;
         public int DescriptorCount { get { return _fields.Count; } }
 
         private readonly List<CredentialDescriptor> _fields = new List<CredentialDescriptor>();
         private readonly Dictionary<string, ICredentialProviderCredential> _credentials = new Dictionary<string, ICredentialProviderCredential>(); // sid as key
 
 
-        public CredentialView(CredentialProvider provider, bool active) 
+        public CredentialView(CredentialProvider provider, bool active, _CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) 
         {
             Provider = provider;
             Active = active;
+            Usage = usage;
         }
 
         public void AddField(
