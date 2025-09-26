@@ -121,7 +121,7 @@ namespace ReversePassword
             {
                 _events = null;
 
-                // release references to the host
+                // release references
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
