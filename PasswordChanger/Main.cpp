@@ -44,6 +44,8 @@ int wmain(int argc, wchar_t* argv[])
     if (res != SEC_E_OK) {
         if (res == SEC_E_SECPKG_NOT_FOUND)
             wprintf(L"ERROR: Security package not found.\n");
+        else if (res == SEC_E_INVALID_TOKEN)
+            wprintf(L"ERROR: Invalid token.\n");
         else
             wprintf(L"ERROR: Password change failed with err 0x%x\n", res);
         return -2;
