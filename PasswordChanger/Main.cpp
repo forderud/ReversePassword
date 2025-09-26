@@ -22,12 +22,11 @@ int wmain(int argc, wchar_t* argv[])
         return -1;
     }
 
-    std::wstring domain;
     std::wstring username = argv[1];
     std::wstring oldPwd = argv[2];
     std::wstring newPwd = argv[3];
 
-    wprintf(L"Changing passwordd for user %s...\n", username.c_str());
+    wprintf(L"Changing password for user %s...\n", username.c_str());
 
 #if 0
     std::wstring packageName = L"Negotiate"; // "Kerberos", "Negotiate", or "NTLM".
@@ -47,7 +46,7 @@ int wmain(int argc, wchar_t* argv[])
         output.pBuffers = &response;
     }
 
-    SECURITY_STATUS res = ChangeAccountPasswordW(packageName.data(), domain.data(), username.data(), oldPwd.data(), newPwd.data(), impersonating, 0, &output);
+    SECURITY_STATUS res = ChangeAccountPasswordW(packageName.data(), nullptr, username.data(), oldPwd.data(), newPwd.data(), impersonating, 0, &output);
     if (res != SEC_E_OK) {
         if (res == SEC_E_SECPKG_NOT_FOUND)
             wprintf(L"ERROR: Security package not found.\n");
@@ -58,10 +57,16 @@ int wmain(int argc, wchar_t* argv[])
         return -2;
     }
 #else
-    NET_API_STATUS res = NetUserChangePassword(domain.c_str(), username.c_str(), oldPwd.c_str(), newPwd.c_str());
+    NET_API_STATUS res = NetUserChangePassword(nullptr, username.c_str(), oldPwd.c_str(), newPwd.c_str());
     if (res != NERR_Success) {
-        if (res == NERR_UserNotFound)
+        if (res == ERROR_ACCESS_DENIED)
+            wprintf(L"ERROR: Access denied.\n");
+        else if (res == ERROR_INVALID_PASSWORD)
+            wprintf(L"ERROR: Invalid password.\n");
+        else if (res == NERR_UserNotFound)
             wprintf(L"ERROR: User name not found.\n");
+        else if (res == NERR_PasswordTooShort)
+            wprintf(L"ERROR: Password too short.\n");
         else
             wprintf(L"ERROR: Password change failed with err %u\n", res);
         return -2;
