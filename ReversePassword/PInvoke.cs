@@ -83,5 +83,12 @@ namespace ReversePassword
             packedCredentials = Marshal.AllocCoTaskMem(packedCredentialsSize);
             return PInvoke.CredPackAuthenticationBuffer(flags, username, password, packedCredentials, ref packedCredentialsSize);
         }
+
+        [DllImport("netapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        public static extern uint NetUserChangePassword(
+        [MarshalAs(UnmanagedType.LPWStr)] string domainname,
+        [MarshalAs(UnmanagedType.LPWStr)] string username,
+        [MarshalAs(UnmanagedType.LPWStr)] string oldpassword,
+        [MarshalAs(UnmanagedType.LPWStr)] string newpassword);
     }
 }
