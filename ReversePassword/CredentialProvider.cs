@@ -72,14 +72,14 @@ namespace ReversePassword
         {
             switch (cpus)
             {
-                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI:
-                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_UNLOCK_WORKSTATION:
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_LOGON:
+                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_UNLOCK_WORKSTATION:
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD:
+                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI:
                     return true;
 
-                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_PLAP:
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_INVALID:
+                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_PLAP:
                 default:
                     return false;
             }
