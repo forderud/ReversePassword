@@ -218,12 +218,34 @@ namespace ReversePassword
             }
             else if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD)
             {
-                //Implement code to change password here. This is not handled natively.
-                // TODO: NetUserChangePassword
+                // Password change logic..
+                string username = Common.GetNameFromSid(_sid);
+                string oldPwd = (string)_view.GetField(2).Value; // TODO: Split old vs. new password fields
+                string newPwd = (string)_view.GetField(2).Value;
+
+                uint res = PInvoke.NetUserChangePassword(null, username, oldPwd, newPwd);
+                if (res != Constants.NERR_Success)
+                {
+                    if (res == Constants.ERROR_ACCESS_DENIED)
+                        optionalStatusText = "ERROR: Access denied.";
+                    else if (res == Constants.ERROR_INVALID_PASSWORD)
+                        optionalStatusText = "ERROR: Invalid password.";
+                    else if (res == Constants.NERR_UserNotFound)
+                        optionalStatusText = "ERROR: User name not found.";
+                    else if (res == Constants.NERR_PasswordTooShort)
+                        optionalStatusText = "ERROR: Password too short.";
+                    else
+                        optionalStatusText = $"ERROR: Password change failed with error: {res}";
+                    optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_ERROR;
+                }
+                else
+                {
+                    optionalStatusText = "Password changed.";
+                    optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
+                }
+
                 cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_FINISHED;
                 cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
-                optionalStatusText = "Password change not implemented.";
-                optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
             }
 
             Logger.Write("Returning S_OK");
