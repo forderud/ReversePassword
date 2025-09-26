@@ -1,12 +1,15 @@
 #define SECURITY_WIN32
 
 #include <Windows.h>
+#include <lm.h>
+#include <lmaccess.h>
 #include <ntsecapi.h>
 #include <sspi.h>
 #include <iostream>
 #include <string>
 
 #pragma comment(lib, "Secur32.lib") // for ChangeAccountPasswordW
+#pragma comment(lib, "netapi32.lib") // for NetUserChangePassword
 
 
 int wmain(int argc, wchar_t* argv[])
@@ -18,12 +21,13 @@ int wmain(int argc, wchar_t* argv[])
         return -1;
     }
 
-    std::wstring packageName = L"Negotiate"; // "Kerberos", "Negotiate", or "NTLM".
     std::wstring domain;
     std::wstring username = argv[1];
     std::wstring oldPwd = argv[2];
     std::wstring newPwd = argv[3];
 
+#if 0
+    std::wstring packageName = L"Negotiate"; // "Kerberos", "Negotiate", or "NTLM".
     BOOLEAN impersonating = false;
 
     SecBufferDesc output{};
@@ -50,6 +54,14 @@ int wmain(int argc, wchar_t* argv[])
             wprintf(L"ERROR: Password change failed with err 0x%x\n", res);
         return -2;
     }
+#else
+    NET_API_STATUS res = NetUserChangePassword(domain.c_str(), username.c_str(), oldPwd.c_str(), newPwd.c_str());
+    if (res != NERR_Success) {
+        wprintf(L"ERROR: Password change failed with err 0x%x\n", res);
+        return -2;
+
+    }
+#endif
 
     wprintf(L"SUCCESS: Password changed\n");
     return 0;
