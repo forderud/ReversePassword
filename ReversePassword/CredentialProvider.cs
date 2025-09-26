@@ -158,7 +158,7 @@ namespace ReversePassword
 
             autoLogonWithDefault = 0;
 
-            Logger.Write($"pdwCount={count} pdwDefault={default_idx}");
+            Logger.Write($"pdwCount: {count} pdwDefault: {default_idx}");
         }
 
         public virtual void GetCredentialAt(uint idx, out ICredentialProviderCredential cpc)

@@ -12,7 +12,7 @@ namespace ReversePassword
 
         public CredentialProviderCredential(CredentialView view, string sid)
         {
-            Logger.Write($"username={Common.GetNameFromSid(sid)}");
+            Logger.Write($"username: {Common.GetNameFromSid(sid)}");
 
             _view = view;
             _sid = sid;
@@ -67,7 +67,7 @@ namespace ReversePassword
         public virtual void GetStringValue(uint fieldID, out string val)
         {
             val = (string)_view.GetField(fieldID).Value;
-            Logger.Write($"dwFieldID:{fieldID}, ppsz={val}");
+            Logger.Write($"dwFieldID: {fieldID}, ppsz: {val}");
         }
 
         public virtual void GetBitmapValue(uint fieldID, out IntPtr bmp)
@@ -195,7 +195,7 @@ namespace ReversePassword
                     password = new string(passwordArray);
                 }
 
-                Logger.Write($"Preparing to serialise credential with username={username} and password={password}");
+                Logger.Write($"Preparing to serialise credential with username: {username} and password: {password}");
                 cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
                 cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
 
