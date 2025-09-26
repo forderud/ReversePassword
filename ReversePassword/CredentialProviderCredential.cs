@@ -18,11 +18,11 @@ namespace ReversePassword
             _sid = sid;
         }
 
-        public virtual void Advise(ICredentialProviderCredentialEvents pcpce)
+        public virtual void Advise(ICredentialProviderCredentialEvents cpce)
         {
             Logger.Write();
 
-            if (pcpce is ICredentialProviderCredentialEvents2 ev2)
+            if (cpce is ICredentialProviderCredentialEvents2 ev2)
                 Logger.Write("pcpce is ICredentialProviderCredentialEvents2");
 
             throw new NotImplementedException();
@@ -35,12 +35,12 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual void SetSelected(out int pbAutoLogon)
+        public virtual void SetSelected(out int autoLogon)
         {
             Logger.Write();
 
             //Set this to 1 if you would like GetSerialization called immediately on selection
-            pbAutoLogon = 0;
+            autoLogon = 0;
         }
 
         public virtual void SetDeselected()
@@ -52,25 +52,25 @@ namespace ReversePassword
 
         public virtual void GetFieldState(
             uint fieldID,
-            out _CREDENTIAL_PROVIDER_FIELD_STATE pfs,
-            out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE pfis)
+            out _CREDENTIAL_PROVIDER_FIELD_STATE cpfs,
+            out _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE cpfis)
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
             CredentialDescriptor field = _view.GetField(fieldID);
 
-            pfs = field.State;
-            pfis = _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE.CPFIS_NONE; // NONE, READONLY, DISABLED or FOCUSED
-            Logger.Write($"Returning field state: {pfs}, interactiveState: {pfis}");
+            cpfs = field.State;
+            cpfis = _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE.CPFIS_NONE; // NONE, READONLY, DISABLED or FOCUSED
+            Logger.Write($"Returning field state: {cpfs}, interactiveState: {cpfis}");
         }
 
-        public virtual void GetStringValue(uint fieldID, out string ppsz)
+        public virtual void GetStringValue(uint fieldID, out string val)
         {
-            ppsz = (string)_view.GetField(fieldID).Value;
-            Logger.Write($"dwFieldID:{fieldID}, ppsz={ppsz}");
+            val = (string)_view.GetField(fieldID).Value;
+            Logger.Write($"dwFieldID:{fieldID}, ppsz={val}");
         }
 
-        public virtual void GetBitmapValue(uint fieldID, out IntPtr phbmp)
+        public virtual void GetBitmapValue(uint fieldID, out IntPtr bmp)
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
@@ -90,15 +90,15 @@ namespace ReversePassword
                 Logger.Write("Error: " + ex);
             }
 
-            phbmp = _tileIcon?.GetHbitmap() ?? IntPtr.Zero;
+            bmp = _tileIcon?.GetHbitmap() ?? IntPtr.Zero;
         }
 
-        public virtual void GetCheckboxValue(uint fieldID, out int pbChecked, out string ppszLabel)
+        public virtual void GetCheckboxValue(uint fieldID, out int isChecked, out string label)
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
-            pbChecked = 0;
-            ppszLabel = "";
+            isChecked = 0;
+            label = "";
 
             throw new NotImplementedException();
         }
@@ -112,35 +112,35 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual void GetComboBoxValueCount(uint fieldID, out uint pcItems, out uint selectedItem)
+        public virtual void GetComboBoxValueCount(uint fieldID, out uint itemCount, out uint selectedItem)
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
-            pcItems = 0;
+            itemCount = 0;
             selectedItem = 0;
 
             throw new NotImplementedException();
         }
 
-        public virtual void GetComboBoxValueAt(uint fieldID, uint item, out string ppszItem)
+        public virtual void GetComboBoxValueAt(uint fieldID, uint item, out string val)
         {
             Logger.Write($"dwFieldID: {fieldID}; dwItem: {item}");
 
-            ppszItem = "";
+            val = "";
 
             throw new NotImplementedException();
         }
 
-        public virtual void SetStringValue(uint fieldID, string psz)
+        public virtual void SetStringValue(uint fieldID, string val)
         {
-            Logger.Write($"dwFieldID: {fieldID}; psz: {psz}");
+            Logger.Write($"dwFieldID: {fieldID}; psz: {val}");
 
-            _view.GetField(fieldID).Value = psz;
+            _view.GetField(fieldID).Value = val;
         }
 
-        public virtual void SetCheckboxValue(uint fieldID, int bChecked)
+        public virtual void SetCheckboxValue(uint fieldID, int isChecked)
         {
-            Logger.Write($"dwFieldID: {fieldID}; bChecked: {bChecked}");
+            Logger.Write($"dwFieldID: {fieldID}; bChecked: {isChecked}");
 
             throw new NotImplementedException();
         }
@@ -160,18 +160,18 @@ namespace ReversePassword
         }
 
         public virtual void GetSerialization(
-            out _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE pcpgsr,
-            out _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs,
-            out string ppszOptionalStatusText,
-            out _CREDENTIAL_PROVIDER_STATUS_ICON pcpsiOptionalStatusIcon)
+            out _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE cpgsr,
+            out _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION cpcs,
+            out string optionalStatusText,
+            out _CREDENTIAL_PROVIDER_STATUS_ICON optionalStatusIcon)
         {
             var usage = _view.Usage;
             Logger.Write($"usage: {usage}");
 
-            pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_NOT_FINISHED;
-            pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
-            ppszOptionalStatusText = "";
-            pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
+            cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_NOT_FINISHED;
+            cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
+            optionalStatusText = "";
+            optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
 
             //Serialization can be called before the user has entered any values. Only applies to logon usage scenarios
             if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_LOGON
@@ -196,49 +196,49 @@ namespace ReversePassword
                 }
 
                 Logger.Write($"Preparing to serialise credential with username={username} and password={password}");
-                pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
-                pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
+                cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
+                cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
 
                 IntPtr inCredBuffer = 0;
                 int inCredSize = 0;
                 if (PInvoke.CredPackAuthenticationBufferWrap(0, username, password, out inCredBuffer, out inCredSize))
                 {
-                    ppszOptionalStatusText = string.Empty;
-                    pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
+                    optionalStatusText = string.Empty;
+                    optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
 
-                    pcpcs.clsidCredentialProvider = Guid.Parse(Constants.CredentialProvider_CLSID);
-                    pcpcs.rgbSerialization = inCredBuffer;
-                    pcpcs.cbSerialization = (uint)inCredSize;
-                    pcpcs.ulAuthenticationPackage = authPackage;
+                    cpcs.clsidCredentialProvider = Guid.Parse(Constants.CredentialProvider_CLSID);
+                    cpcs.rgbSerialization = inCredBuffer;
+                    cpcs.cbSerialization = (uint)inCredSize;
+                    cpcs.ulAuthenticationPackage = authPackage;
                     return;
                 }
 
-                ppszOptionalStatusText = "Failed to pack credentials";
-                pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_ERROR;
+                optionalStatusText = "Failed to pack credentials";
+                optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_ERROR;
                 throw new Exception();
             }
             else if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD)
             {
                 //Implement code to change password here. This is not handled natively.
-                pcpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_FINISHED;
-                pcpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
-                ppszOptionalStatusText = "Password changed success message.";
-                pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
+                cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_FINISHED;
+                cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
+                optionalStatusText = "Password changed success message.";
+                optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
             }
 
             Logger.Write("Returning S_OK");
         }
 
         public virtual void ReportResult(
-            int ntsStatus,
+            int status,
             int ntsSubstatus,
-            out string ppszOptionalStatusText,
-            out _CREDENTIAL_PROVIDER_STATUS_ICON pcpsiOptionalStatusIcon)
+            out string optionalStatusText,
+            out _CREDENTIAL_PROVIDER_STATUS_ICON optionalStatusIcon)
         {
-            Logger.Write($"ntsStatus: {ntsStatus}; ntsSubstatus: {ntsSubstatus}");
+            Logger.Write($"ntsStatus: {status}; ntsSubstatus: {ntsSubstatus}");
 
-            ppszOptionalStatusText = "";
-            pcpsiOptionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
+            optionalStatusText = "";
+            optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
         }
 
         public virtual void GetUserSid(out string sid)
