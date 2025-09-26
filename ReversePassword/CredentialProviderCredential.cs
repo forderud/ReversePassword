@@ -201,21 +201,20 @@ namespace ReversePassword
 
                 IntPtr inCredBuffer = 0;
                 int inCredSize = 0;
-                if (PInvoke.CredPackAuthenticationBufferWrap(0, username, password, out inCredBuffer, out inCredSize))
+                if (!PInvoke.CredPackAuthenticationBufferWrap(0, username, password, out inCredBuffer, out inCredSize))
                 {
-                    optionalStatusText = string.Empty;
-                    optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
-
-                    cpcs.clsidCredentialProvider = Guid.Parse(Constants.CredentialProvider_CLSID);
-                    cpcs.rgbSerialization = inCredBuffer;
-                    cpcs.cbSerialization = (uint)inCredSize;
-                    cpcs.ulAuthenticationPackage = authPackage;
-                    return;
+                    optionalStatusText = "Failed to pack credentials";
+                    optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_ERROR;
+                    throw new Exception();
                 }
 
-                optionalStatusText = "Failed to pack credentials";
-                optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_ERROR;
-                throw new Exception();
+                optionalStatusText = string.Empty;
+                optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
+
+                cpcs.clsidCredentialProvider = Guid.Parse(Constants.CredentialProvider_CLSID);
+                cpcs.rgbSerialization = inCredBuffer;
+                cpcs.cbSerialization = (uint)inCredSize;
+                cpcs.ulAuthenticationPackage = authPackage;
             }
             else if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD)
             {
