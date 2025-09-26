@@ -42,7 +42,7 @@ int wmain(int argc, wchar_t* argv[])
 
     SECURITY_STATUS res = ChangeAccountPasswordW(packageName.data(), domain.data(), username.data(), oldPwd.data(), newPwd.data(), impersonating, 0, &output);
     if (res != SEC_E_OK) {
-        wprintf(L"ERROR: Password change failed with err %x\n", res);
+        wprintf(L"ERROR: Password change failed with err 0x%x\n", res);
         return -2;
     }
 
