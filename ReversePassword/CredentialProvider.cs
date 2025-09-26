@@ -27,7 +27,7 @@ namespace ReversePassword
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_TILE_IMAGE,
-                pszLabel: "Icon",
+                label: "Icon",
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
                 defaultValue: null,
                 guidFieldType: Guid.Parse(CredentialView.CPFG_CREDENTIAL_PROVIDER_LOGO)
@@ -35,7 +35,7 @@ namespace ReversePassword
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT,
-                pszLabel: "Username",
+                label: "Username",
                 state: userNameState,
                 defaultValue: null,
                 guidFieldType: default(Guid)
@@ -43,7 +43,7 @@ namespace ReversePassword
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
-                pszLabel: "Password",
+                label: "Password",
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
                 defaultValue: null,
                 guidFieldType: Guid.Parse(CredentialView.CPFG_LOGON_PASSWORD_GUID)
@@ -51,7 +51,7 @@ namespace ReversePassword
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
-                pszLabel: "Confirm password",
+                label: "Confirm password",
                 state: confirmPasswordState,
                 defaultValue: null,
                 guidFieldType: Guid.Parse(CredentialView.CPFG_LOGON_PASSWORD_GUID)
@@ -59,7 +59,7 @@ namespace ReversePassword
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT,
-                pszLabel: "Click Me!",
+                label: "Click Me!",
                 defaultValue: "Reverse Password",
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_DESELECTED_TILE,
                 guidFieldType: default(Guid)

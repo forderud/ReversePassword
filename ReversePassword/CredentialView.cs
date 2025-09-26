@@ -31,7 +31,7 @@ namespace ReversePassword
 
         public void AddField(
             _CREDENTIAL_PROVIDER_FIELD_TYPE cpft,
-            string pszLabel,
+            string label,
             _CREDENTIAL_PROVIDER_FIELD_STATE state,
             string defaultValue,
             Guid guidFieldType)
@@ -47,7 +47,7 @@ namespace ReversePassword
                 {
                     dwFieldID = (uint)_fields.Count,
                     cpft = cpft,
-                    pszLabel = pszLabel,
+                    pszLabel = label,
                     guidFieldType = guidFieldType
                 }
             });
