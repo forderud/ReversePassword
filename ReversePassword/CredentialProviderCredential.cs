@@ -221,7 +221,7 @@ namespace ReversePassword
                 //Implement code to change password here. This is not handled natively.
                 cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_FINISHED;
                 cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
-                optionalStatusText = "Password changed success message.";
+                optionalStatusText = "Password change not implemented.";
                 optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
             }
 
