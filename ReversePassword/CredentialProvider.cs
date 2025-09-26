@@ -98,18 +98,18 @@ namespace ReversePassword
             throw new NotImplementedException();
         }
 
-        public virtual void SetSerialization(ref _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION pcpcs)
+        public virtual void SetSerialization(ref _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION cpcs)
         {
-            Logger.Write($"ulAuthenticationPackage: {pcpcs.ulAuthenticationPackage}");
+            Logger.Write($"ulAuthenticationPackage: {cpcs.ulAuthenticationPackage}");
         }
 
-        public virtual void Advise(ICredentialProviderEvents pcpe, ulong upAdviseContext)
+        public virtual void Advise(ICredentialProviderEvents cpe, ulong adviseContext)
         {
-            Logger.Write($"upAdviseContext: {upAdviseContext}");
+            Logger.Write($"upAdviseContext: {adviseContext}");
 
-            if (pcpe != null)
+            if (cpe != null)
             {
-                _events = pcpe;
+                _events = cpe;
             }
         }
 
@@ -134,7 +134,7 @@ namespace ReversePassword
             Logger.Write($"Returning field count: {count}");
         }
 
-        public virtual void GetFieldDescriptorAt(uint idx, [Out] IntPtr ppcpfd)
+        public virtual void GetFieldDescriptorAt(uint idx, [Out] IntPtr cpfd)
         {
             Logger.Write($"idx: {idx}");
 
@@ -144,24 +144,24 @@ namespace ReversePassword
 
             var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(field.Descriptor));
             Marshal.StructureToPtr(field.Descriptor, pcpfd, false); // copy field descriptor content
-            Marshal.StructureToPtr(pcpfd, ppcpfd, false); // copy pointer to field descriptor
+            Marshal.StructureToPtr(pcpfd, cpfd, false); // copy pointer to field descriptor
         }
 
         public virtual void GetCredentialCount(
             out uint count,
             out uint default_idx,
-            out int pbAutoLogonWithDefault)
+            out int autoLogonWithDefault)
         {
             count = (uint)_users.Count;
 
             default_idx = CREDENTIAL_PROVIDER_NO_DEFAULT;
 
-            pbAutoLogonWithDefault = 0;
+            autoLogonWithDefault = 0;
 
             Logger.Write($"pdwCount={count} pdwDefault={default_idx}");
         }
 
-        public virtual void GetCredentialAt(uint idx, out ICredentialProviderCredential ppcpc)
+        public virtual void GetCredentialAt(uint idx, out ICredentialProviderCredential cpc)
         {
             Logger.Write($"dwIndex: {idx}");
 
@@ -170,7 +170,7 @@ namespace ReversePassword
 
             _users[(int)idx].GetSid(out string sid);
 
-            ppcpc = _view.GetCredential(sid);
+            cpc = _view.GetCredential(sid);
         }
 
         public virtual void SetUserArray(ICredentialProviderUserArray users)
