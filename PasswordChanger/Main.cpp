@@ -15,6 +15,7 @@
 int wmain(int argc, wchar_t* argv[])
 {
     wprintf(L"Change password for a local account.\n");
+    wprintf(L"\n");
 
     if (argc < 4) {
         wprintf(L"Usage: PasswordChanger.exe <username> <old-password> <new-password>\n");
@@ -57,9 +58,11 @@ int wmain(int argc, wchar_t* argv[])
 #else
     NET_API_STATUS res = NetUserChangePassword(domain.c_str(), username.c_str(), oldPwd.c_str(), newPwd.c_str());
     if (res != NERR_Success) {
-        wprintf(L"ERROR: Password change failed with err 0x%x\n", res);
+        if (res == NERR_UserNotFound)
+            wprintf(L"ERROR: User name not found.\n");
+        else
+            wprintf(L"ERROR: Password change failed with err %u\n", res);
         return -2;
-
     }
 #endif
 
