@@ -1,6 +1,12 @@
+#define SECURITY_WIN32
+
 #include <Windows.h>
+#include <ntsecapi.h>
+#include <sspi.h>
 #include <iostream>
 #include <string>
+
+#pragma comment(lib, "Secur32.lib") // for ChangeAccountPasswordW
 
 
 int wmain(int argc, wchar_t* argv[])
@@ -12,10 +18,29 @@ int wmain(int argc, wchar_t* argv[])
         return -1;
     }
 
+    std::wstring packageName;
+    std::wstring domain;
     std::wstring username = argv[1];
     std::wstring oldPwd = argv[2];
     std::wstring newPwd = argv[3];
 
+    BOOLEAN impersonating = false;
+
+    SecBufferDesc output{};
+    SecBuffer response{};
+    DOMAIN_PASSWORD_INFORMATION dpi{};
+    {
+        // output must contain a single SECBUFFER_CHANGE_PASS_RESPONSE buffer
+        response.BufferType = SECBUFFER_CHANGE_PASS_RESPONSE;
+        response.cbBuffer = sizeof(dpi);
+        response.pvBuffer = &dpi;
+
+        output.ulVersion = SECBUFFER_VERSION;
+        output.cBuffers = 1; // one buffer
+        output.pBuffers = &response;
+    }
+
+    SECURITY_STATUS res = ChangeAccountPasswordW(packageName.data(), domain.data(), username.data(), oldPwd.data(), newPwd.data(), impersonating, 0, &output);
 
     wprintf(L"ERROR: Not yet implemented");
     return -2;
