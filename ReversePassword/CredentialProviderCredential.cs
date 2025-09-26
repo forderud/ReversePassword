@@ -219,6 +219,7 @@ namespace ReversePassword
             else if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD)
             {
                 //Implement code to change password here. This is not handled natively.
+                // TODO: ChangeAccountPasswordW
                 cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_FINISHED;
                 cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
                 optionalStatusText = "Password change not implemented.";
