@@ -18,7 +18,7 @@ int wmain(int argc, wchar_t* argv[])
         return -1;
     }
 
-    std::wstring packageName;
+    std::wstring packageName = L"Negotiate"; // "Kerberos", "Negotiate", or "NTLM".
     std::wstring domain;
     std::wstring username = argv[1];
     std::wstring oldPwd = argv[2];
