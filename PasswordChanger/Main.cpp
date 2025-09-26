@@ -27,6 +27,8 @@ int wmain(int argc, wchar_t* argv[])
     std::wstring oldPwd = argv[2];
     std::wstring newPwd = argv[3];
 
+    wprintf(L"Changing passwordd for user %s...\n", username.c_str());
+
 #if 0
     std::wstring packageName = L"Negotiate"; // "Kerberos", "Negotiate", or "NTLM".
     BOOLEAN impersonating = false;
