@@ -6,8 +6,7 @@
 #pragma comment(lib, "netapi32.lib") // for NetUserChangePassword
 
 
-int wmain(int argc, wchar_t* argv[])
-{
+int wmain(int argc, wchar_t* argv[]) {
     wprintf(L"Change password for a local account.\n");
     wprintf(L"\n");
 
@@ -16,13 +15,13 @@ int wmain(int argc, wchar_t* argv[])
         return -1;
     }
 
-    std::wstring username = argv[1];
-    std::wstring oldPwd = argv[2];
-    std::wstring newPwd = argv[3];
+    wchar_t* username = argv[1];
+    wchar_t* oldPwd = argv[2];
+    wchar_t* newPwd = argv[3];
 
-    wprintf(L"Changing password for user %s...\n", username.c_str());
+    wprintf(L"Changing password for user %s...\n", username);
 
-    NET_API_STATUS res = NetUserChangePassword(nullptr, username.c_str(), oldPwd.c_str(), newPwd.c_str());
+    NET_API_STATUS res = NetUserChangePassword(nullptr, username, oldPwd, newPwd);
     if (res != NERR_Success) {
         if (res == ERROR_ACCESS_DENIED)
             wprintf(L"ERROR: Access denied.\n");
