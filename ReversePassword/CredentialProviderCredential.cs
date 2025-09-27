@@ -223,6 +223,8 @@ namespace ReversePassword
                 string oldPwd = (string)_view.GetField(2).Value;
                 string newPwd = (string)_view.GetField(3).Value;
 
+                Logger.Write($"Changing password for username: {username}");
+
                 uint res = PInvoke.NetUserChangePassword(null, username, oldPwd, newPwd);
                 if (res != Constants.NERR_Success)
                 {
