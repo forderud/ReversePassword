@@ -187,13 +187,7 @@ namespace ReversePassword
                 //Get username and password
                 var username = Common.GetNameFromSid(_sid);
                 var password = (string)_view.GetField(2).Value;
-
-                {
-                    // reverse password
-                    char[] passwordArray = password.ToCharArray();
-                    Array.Reverse(passwordArray);
-                    password = new string(passwordArray);
-                }
+                password = Reverse(password);
 
                 Logger.Write($"Preparing to serialise credential with username: {username} and password: {password}");
                 cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
@@ -221,7 +215,9 @@ namespace ReversePassword
                 // Password change logic..
                 string username = Common.GetNameFromSid(_sid); // in <domain>\<user> format
                 string oldPwd = (string)_view.GetField(2).Value;
+                oldPwd = Reverse(oldPwd);
                 string newPwd = (string)_view.GetField(3).Value;
+                newPwd = Reverse(newPwd);
 
                 string[] domainUser = username.Split('\\');
                 Logger.Write($"Changing password for domain: {domainUser[0]}, username: {domainUser[1]}");
@@ -273,6 +269,13 @@ namespace ReversePassword
             sid = _sid;
 
             Logger.Write($"username: {Common.GetNameFromSid(sid)}");
+        }
+
+        private static string Reverse (string text)
+        {
+            char[] charArray = text.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
     }
 }
