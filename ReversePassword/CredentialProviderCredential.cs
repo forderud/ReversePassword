@@ -230,6 +230,8 @@ namespace ReversePassword
                         optionalStatusText = "ERROR: Access denied.";
                     else if (res == Constants.ERROR_INVALID_PASSWORD)
                         optionalStatusText = "ERROR: Invalid password.";
+                    else if (res == Constants.ERROR_CANT_ACCESS_DOMAIN_INFO)
+                        optionalStatusText = "ERROR: Configuration information could not be read from the domain controller, either because the machine is unavailable, or access has been denied.";
                     else if (res == Constants.NERR_UserNotFound)
                         optionalStatusText = "ERROR: User name not found.";
                     else if (res == Constants.NERR_PasswordTooShort)

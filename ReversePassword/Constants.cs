@@ -10,6 +10,7 @@
         // from <winerror.h>
         public const uint ERROR_ACCESS_DENIED = 5;
         public const uint ERROR_INVALID_PASSWORD = 86;
+        public const uint ERROR_CANT_ACCESS_DOMAIN_INFO = 1351;
 
         // from <lmerr.h>
         public const uint NERR_Success = 0;
