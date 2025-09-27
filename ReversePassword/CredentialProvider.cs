@@ -51,7 +51,7 @@ namespace ReversePassword
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
-                label: "Confirm password",
+                label: "New password",
                 state: confirmPasswordState,
                 defaultValue: null,
                 guidFieldType: Guid.Parse(CredentialView.CPFG_LOGON_PASSWORD_GUID)

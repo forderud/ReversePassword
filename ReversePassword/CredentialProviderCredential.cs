@@ -220,8 +220,8 @@ namespace ReversePassword
             {
                 // Password change logic..
                 string username = Common.GetNameFromSid(_sid);
-                string oldPwd = (string)_view.GetField(2).Value; // TODO: Split old vs. new password fields
-                string newPwd = (string)_view.GetField(2).Value;
+                string oldPwd = (string)_view.GetField(2).Value;
+                string newPwd = (string)_view.GetField(3).Value;
 
                 uint res = PInvoke.NetUserChangePassword(null, username, oldPwd, newPwd);
                 if (res != Constants.NERR_Success)
