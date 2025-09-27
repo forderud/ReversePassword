@@ -219,13 +219,14 @@ namespace ReversePassword
             else if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD)
             {
                 // Password change logic..
-                string username = Common.GetNameFromSid(_sid);
+                string username = Common.GetNameFromSid(_sid); // in <domain>\<user> format
                 string oldPwd = (string)_view.GetField(2).Value;
                 string newPwd = (string)_view.GetField(3).Value;
 
-                Logger.Write($"Changing password for username: {username}");
+                string[] domainUser = username.Split('\\');
+                Logger.Write($"Changing password for domain: {domainUser[0]}, username: {domainUser[1]}");
 
-                uint res = PInvoke.NetUserChangePassword(null, username, oldPwd, newPwd);
+                uint res = PInvoke.NetUserChangePassword(domainUser[0], domainUser[1], oldPwd, newPwd);
                 if (res != Constants.NERR_Success)
                 {
                     if (res == Constants.ERROR_ACCESS_DENIED)
