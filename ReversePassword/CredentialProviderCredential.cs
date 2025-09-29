@@ -258,7 +258,7 @@ namespace ReversePassword
             out string optionalStatusText,
             out _CREDENTIAL_PROVIDER_STATUS_ICON optionalStatusIcon)
         {
-            Logger.Write($"ntsStatus: {status}; ntsSubstatus: {ntsSubstatus}");
+            Logger.Write($"ntsStatus: 0x{status:X}; ntsSubstatus: 0x{ntsSubstatus:X}");
 
             optionalStatusText = "";
             optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
