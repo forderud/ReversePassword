@@ -28,41 +28,41 @@ namespace ReversePassword
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_TILE_IMAGE,
                 label: "Icon",
+                guidFieldType: default(Guid),
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH, // display in selected & deselected tiles
-                defaultValue: null,
-                guidFieldType: default(Guid)
+                defaultValue: null
             );
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT,
                 label: "Username",
+                guidFieldType: default(Guid),
                 state: userNameState,
-                defaultValue: null,
-                guidFieldType: default(Guid)
+                defaultValue: null
             );
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 label: "Password",
+                guidFieldType: default(Guid),
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
-                defaultValue: null,
-                guidFieldType: default(Guid)
+                defaultValue: null
             );
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 label: "New password",
+                guidFieldType: default(Guid),
                 state: confirmPasswordState,
-                defaultValue: null,
-                guidFieldType: default(Guid)
+                defaultValue: null
             );
 
             view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT,
                 label: null,
-                defaultValue: "Reverse Password",
+                guidFieldType: default(Guid),
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
-                guidFieldType: default(Guid)
+                defaultValue: "Reverse Password"
             );
 
             return view;

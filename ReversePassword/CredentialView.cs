@@ -32,9 +32,9 @@ namespace ReversePassword
         public void AddField(
             _CREDENTIAL_PROVIDER_FIELD_TYPE cpft,
             string label,
+            Guid guidFieldType,
             _CREDENTIAL_PROVIDER_FIELD_STATE state,
-            string defaultValue,
-            Guid guidFieldType)
+            string defaultValue)
         {
             if (!Active)
                 throw new NotSupportedException();
