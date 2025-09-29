@@ -30,7 +30,7 @@ namespace ReversePassword
                 label: "Icon",
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH, // display in selected & deselected tiles
                 defaultValue: null,
-                guidFieldType: Guid.Parse(CredentialView.CPFG_CREDENTIAL_PROVIDER_LOGO)
+                guidFieldType: default(Guid)
             );
 
             view.AddField(
@@ -46,7 +46,7 @@ namespace ReversePassword
                 label: "Password",
                 state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
                 defaultValue: null,
-                guidFieldType: Guid.Parse(CredentialView.CPFG_LOGON_PASSWORD_GUID)
+                guidFieldType: default(Guid)
             );
 
             view.AddField(
@@ -54,7 +54,7 @@ namespace ReversePassword
                 label: "New password",
                 state: confirmPasswordState,
                 defaultValue: null,
-                guidFieldType: Guid.Parse(CredentialView.CPFG_LOGON_PASSWORD_GUID)
+                guidFieldType: default(Guid)
             );
 
             view.AddField(
