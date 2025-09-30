@@ -146,8 +146,9 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}; psz: {val}");
 
+            // valid for CPFT_EDIT_TEXT & CPFT_PASSWORD_TEXT
             CredentialDescriptor desc = _view.GetField(fieldID);
-            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT)
+            if ((desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT) && (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT))
                 throw new InvalidCastException();
 
             desc.Value = val;
