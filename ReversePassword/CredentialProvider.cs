@@ -14,7 +14,7 @@ namespace ReversePassword
         private CredentialView _view;
         private List<ICredentialProviderUser> _users;
 
-        private CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, CredentialFlag flags)
+        private CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus)
         {
             if (!IsSupportedScenario(cpus))
                 return new CredentialView(cpus);
@@ -98,7 +98,7 @@ namespace ReversePassword
             var flags = (CredentialFlag)flags_;
             Logger.Write($"cpus: {cpus}; dwFlags: {flags}");
 
-            _view = Initialize(cpus, flags);
+            _view = Initialize(cpus);
 
             if (_view.FieldsCount == 0)
             {
