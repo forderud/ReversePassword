@@ -46,7 +46,7 @@ namespace ReversePassword
         public virtual void SetDeselected()
         {
             Logger.Write();
-            // purge buffers here
+            // purge buffers containing sensitive information
         }
 
         public virtual void GetFieldState(
