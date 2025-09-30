@@ -111,9 +111,11 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
-            adjacentTo = 0;
+            CredentialDescriptor desc = _view.GetField(fieldID);
+            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SUBMIT_BUTTON)
+                throw new InvalidCastException();
 
-            throw new NotImplementedException();
+            adjacentTo = (uint)desc.Value; // assume value contains adjacentTo fieldID
         }
 
         public virtual void GetComboBoxValueCount(uint fieldID, out uint itemCount, out uint selectedItem)
