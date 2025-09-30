@@ -115,6 +115,11 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
+            CredentialDescriptor desc = _view.GetField(fieldID);
+            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
+                throw new InvalidCastException(); 
+
+            // TODO: Implement combo-box support
             itemCount = 0;
             selectedItem = 0;
 
@@ -125,8 +130,12 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}; dwItem: {item}");
 
-            val = "";
+            CredentialDescriptor desc = _view.GetField(fieldID);
+            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
+                throw new InvalidCastException();
 
+            // TODO: Implement combo-box support
+            val = "";
             throw new NotImplementedException();
         }
 
