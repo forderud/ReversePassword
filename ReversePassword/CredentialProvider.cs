@@ -29,7 +29,7 @@ namespace ReversePassword
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_TILE_IMAGE,
                 label: "Icon",
                 guidFieldType: default(Guid),
-                state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH, // display in selected & deselected tiles
+                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH, // display in selected & deselected tiles
                 defaultValue: null
             );
 
@@ -37,7 +37,7 @@ namespace ReversePassword
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT,
                 label: "Username",
                 guidFieldType: default(Guid),
-                state: userNameState,
+                visibility: userNameState,
                 defaultValue: null
             );
 
@@ -45,7 +45,7 @@ namespace ReversePassword
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 label: "Password",
                 guidFieldType: default(Guid),
-                state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
+                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
                 defaultValue: null
             );
 
@@ -53,7 +53,7 @@ namespace ReversePassword
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 label: "New password",
                 guidFieldType: default(Guid),
-                state: confirmPasswordState,
+                visibility: confirmPasswordState,
                 defaultValue: null
             );
 
@@ -61,7 +61,7 @@ namespace ReversePassword
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT,
                 label: null,
                 guidFieldType: default(Guid),
-                state: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
+                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
                 defaultValue: "Reverse Password"
             );
 

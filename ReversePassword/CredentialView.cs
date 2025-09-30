@@ -5,7 +5,7 @@ namespace ReversePassword
     public class CredentialDescriptor
     {
         public _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR Descriptor { get; set; }
-        public _CREDENTIAL_PROVIDER_FIELD_STATE State { get; set; }
+        public _CREDENTIAL_PROVIDER_FIELD_STATE Visibility { get; set; }
         public object Value { get; set; }
     }
 
@@ -33,7 +33,7 @@ namespace ReversePassword
             _CREDENTIAL_PROVIDER_FIELD_TYPE cpft,
             string label,
             Guid guidFieldType,
-            _CREDENTIAL_PROVIDER_FIELD_STATE state,
+            _CREDENTIAL_PROVIDER_FIELD_STATE visibility,
             string defaultValue)
         {
             if (!Active)
@@ -41,7 +41,7 @@ namespace ReversePassword
 
             _fields.Add(new CredentialDescriptor
             {
-                State = state,
+                Visibility = visibility,
                 Value = defaultValue,
                 Descriptor = new _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR
                 {

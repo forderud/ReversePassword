@@ -59,7 +59,7 @@ namespace ReversePassword
 
             CredentialDescriptor field = _view.GetField(fieldID);
 
-            cpfs = field.State;
+            cpfs = field.Visibility;
             cpfis = _CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE.CPFIS_NONE; // NONE, READONLY, DISABLED or FOCUSED
             Logger.Write($"Returning field state: {cpfs}, interactiveState: {cpfis}");
         }
