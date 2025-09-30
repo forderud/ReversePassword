@@ -35,6 +35,12 @@
   <defs
      id="defs1">
     <rect
+       x="406.97311"
+       y="118.46166"
+       width="1.9106719"
+       height="13.374703"
+       id="rect11" />
+    <rect
        x="510.14938"
        y="301.88617"
        width="30.570749"
@@ -241,17 +247,12 @@
        xml:space="preserve"
        style="font-size:3.52778px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        x="95.405174"
-       y="29.370617"
+       y="30.887213"
        id="text1-88-7-1"><tspan
          sodipodi:role="line"
          style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          x="95.405174"
-         y="29.370617"
-         id="tspan5-2">Active : bool</tspan><tspan
-         sodipodi:role="line"
-         style="font-size:3.52778px;text-align:start;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         x="95.405174"
-         y="33.780342"
+         y="30.887213"
          id="tspan10">Usage : USAGE_SCENARIO</tspan></text>
     <text
        xml:space="preserve"
@@ -387,5 +388,10 @@
        transform="scale(0.26458333)"
        id="text6"
        style="font-size:16px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect6);display:inline;fill:none;stroke:#000000;stroke-width:2.48693;stroke-opacity:1" />
+    <text
+       xml:space="preserve"
+       transform="scale(0.26458333)"
+       id="text11"
+       style="fill:none;text-orientation:auto;stroke-width:2.48692913;font-size:13.33333333px;-inkscape-font-specification:'Arial, Normal';font-family:Arial;stroke:#000000;text-align:start;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect11)" />
   </g>
 </svg>
