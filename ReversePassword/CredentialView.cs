@@ -43,12 +43,6 @@ namespace ReversePassword
             _CREDENTIAL_PROVIDER_FIELD_STATE visibility,
             object value)
         {
-            if (!Active)
-            {
-                Logger.Write("throw new NotSupportedException");
-                throw new NotSupportedException();
-            }
-
             _fields.Add(new CredentialDescriptor
             {
                 Visibility = visibility,
