@@ -241,7 +241,12 @@ namespace ReversePassword
                 Logger.Write($"Got authentication package: {authPackage}. Only local authenticsation package 0 (msv1_0) is supported.");
 
                 //Get username and password
-                var username = Common.GetNameFromSid(_sid);
+                string username;
+                if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI)
+                    username = (string)_view.GetField(1).Value; // user-entered
+                else
+                    username = Common.GetNameFromSid(_sid); // implicit
+
                 var password = (string)_view.GetField(2).Value;
                 password = Reverse(password);
 
