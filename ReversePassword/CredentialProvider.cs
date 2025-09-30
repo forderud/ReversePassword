@@ -29,7 +29,7 @@ namespace ReversePassword
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_TILE_IMAGE,
                 label: "Icon",
                 guidFieldType: default(Guid),
-                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH, // display in selected & deselected tiles
+                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
                 value: null
             );
 
