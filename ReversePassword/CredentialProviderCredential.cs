@@ -66,7 +66,12 @@ namespace ReversePassword
 
         public virtual void GetStringValue(uint fieldID, out string val)
         {
-            val = (string)_view.GetField(fieldID).Value;
+            // Valid for CPFT_LARGE_TEXT, CPFT_SMALL_TEXT, CPFT_COMMAND_LINK, CPFT_EDIT_TEXT & CPFT_PASSWORD_TEXT
+            CredentialDescriptor desc = _view.GetField(fieldID);
+            if ((desc.Descriptor.cpft < _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT) || (desc.Descriptor.cpft > _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT))
+                throw new InvalidCastException();
+
+            val = (string)desc.Value;
             Logger.Write($"dwFieldID: {fieldID}, ppsz: {val}");
         }
 
@@ -143,7 +148,11 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}; psz: {val}");
 
-            _view.GetField(fieldID).Value = val;
+            CredentialDescriptor desc = _view.GetField(fieldID);
+            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT)
+                throw new InvalidCastException();
+
+            desc.Value = val;
         }
 
         public virtual void SetCheckboxValue(uint fieldID, int isChecked)
