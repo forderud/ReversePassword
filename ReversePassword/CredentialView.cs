@@ -40,6 +40,7 @@ namespace ReversePassword
                     _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
             var confirmPasswordState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ?
                     _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
+            uint lastPwdField = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ? (uint)3 : (uint)2;
 
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_TILE_IMAGE,
@@ -78,7 +79,7 @@ namespace ReversePassword
                 label: "Submit",
                 guidFieldType: default(Guid),
                 visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
-                value: (uint)2 // adjacentTo fieldID
+                value: lastPwdField // adjacentTo fieldID
             );
 
             AddField(
