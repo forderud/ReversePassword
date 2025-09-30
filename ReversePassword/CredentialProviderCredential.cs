@@ -41,6 +41,7 @@ namespace ReversePassword
 
             //Set this to 1 if you would like GetSerialization called immediately on selection
             autoLogon = 0;
+            Logger.Write($"Returning autoLogon: {autoLogon}");
         }
 
         public virtual void SetDeselected()
@@ -106,6 +107,7 @@ namespace ReversePassword
             CredentialDescriptor desc = _view.GetField(fieldID);
             isChecked = (int)desc.Value; // bool value
             label = desc.Descriptor.pszLabel;
+            Logger.Write($"Returning isChecked: {isChecked}, label: {label}");
         }
 
         public virtual void GetSubmitButtonValue(uint fieldID, out uint adjacentTo)
