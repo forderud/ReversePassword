@@ -46,8 +46,7 @@ namespace ReversePassword
         public virtual void SetDeselected()
         {
             Logger.Write();
-
-            throw new NotImplementedException();
+            // purge buffers here
         }
 
         public virtual void GetFieldState(
@@ -178,6 +177,12 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
+            CredentialDescriptor desc = _view.GetField(fieldID);
+            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMMAND_LINK)
+                throw new InvalidCastException();
+
+            string url = (string)desc.Value;
+            // TODO: Open URL in some way
             throw new NotImplementedException();
         }
 
