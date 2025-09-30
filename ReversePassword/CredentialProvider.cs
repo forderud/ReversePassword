@@ -58,6 +58,14 @@ namespace ReversePassword
             );
 
             view.AddField(
+                cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SUBMIT_BUTTON,
+                label: "Submit",
+                guidFieldType: default(Guid),
+                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
+                value: (uint)2 // adjacentTo fieldID
+            );
+
+            view.AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT,
                 label: null,
                 guidFieldType: default(Guid),
