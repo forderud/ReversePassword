@@ -25,6 +25,7 @@ namespace ReversePassword
             if (cpce is ICredentialProviderCredentialEvents2 ev2)
                 Logger.Write("pcpce is ICredentialProviderCredentialEvents2");
 
+            Logger.Write("throw new NotImplementedException");
             throw new NotImplementedException();
         }
 
@@ -32,6 +33,7 @@ namespace ReversePassword
         {
             Logger.Write();
 
+            Logger.Write("throw new NotImplementedException");
             throw new NotImplementedException();
         }
 
@@ -71,7 +73,10 @@ namespace ReversePassword
             // Valid for CPFT_LARGE_TEXT, CPFT_SMALL_TEXT, CPFT_COMMAND_LINK, CPFT_EDIT_TEXT & CPFT_PASSWORD_TEXT
             CredentialDescriptor desc = _view.GetField(fieldID);
             if ((desc.Descriptor.cpft < _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT) || (desc.Descriptor.cpft > _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT))
+            {
+                Logger.Write("throw new InvalidCastException");
                 throw new InvalidCastException();
+            }
 
             val = (string)desc.Value;
             Logger.Write($"Returning ppsz: {val}");
@@ -116,7 +121,10 @@ namespace ReversePassword
 
             CredentialDescriptor desc = _view.GetField(fieldID);
             if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SUBMIT_BUTTON)
+            {
+                Logger.Write("throw new InvalidCastException");
                 throw new InvalidCastException();
+            }
 
             adjacentTo = (uint)desc.Value; // assume value contains adjacentTo fieldID
             Logger.Write($"Returning adjacentTo: {adjacentTo}");
@@ -128,7 +136,10 @@ namespace ReversePassword
 
             CredentialDescriptor desc = _view.GetField(fieldID);
             if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
+            {
+                Logger.Write("throw new InvalidCastException");
                 throw new InvalidCastException();
+            }
 
             var cb = desc.Value as ComboBox;
             itemCount = (uint)cb.items.Count;
@@ -142,7 +153,10 @@ namespace ReversePassword
 
             CredentialDescriptor desc = _view.GetField(fieldID);
             if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
+            {
+                Logger.Write("throw new InvalidCastException");
                 throw new InvalidCastException();
+            }
 
             var cb = desc.Value as ComboBox;
             val = cb.items[(int)item];
@@ -156,7 +170,10 @@ namespace ReversePassword
             // valid for CPFT_EDIT_TEXT & CPFT_PASSWORD_TEXT
             CredentialDescriptor desc = _view.GetField(fieldID);
             if ((desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT) && (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT))
+            {
+                Logger.Write("throw new InvalidCastException");
                 throw new InvalidCastException();
+            }
 
             desc.Value = val;
             Logger.Write($"Returning");
@@ -177,7 +194,10 @@ namespace ReversePassword
 
             CredentialDescriptor desc = _view.GetField(fieldID);
             if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
+            {
+                Logger.Write("throw new InvalidCastException");
                 throw new InvalidCastException();
+            }
 
             var cb = desc.Value as ComboBox;
             cb.selectedItem = selectedItem;
@@ -190,10 +210,14 @@ namespace ReversePassword
 
             CredentialDescriptor desc = _view.GetField(fieldID);
             if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMMAND_LINK)
+            {
+                Logger.Write("throw new InvalidCastException");
                 throw new InvalidCastException();
+            }
 
             string url = (string)desc.Value;
             // TODO: Open URL in some way
+            Logger.Write("throw new NotImplementedException");
             throw new NotImplementedException();
         }
 

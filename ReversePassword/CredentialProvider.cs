@@ -93,7 +93,10 @@ namespace ReversePassword
             _view = Initialize(cpus, flags);
 
             if (!_view.Active)
+            {
+                Logger.Write("throw new NotSupportedException");
                 throw new NotSupportedException();
+            }
 
             return;
         }
@@ -140,7 +143,10 @@ namespace ReversePassword
 
             CredentialDescriptor field = _view.GetField(idx);
             if (field == null)
+            {
+                Logger.Write("throw new ArgumentException");
                 throw new ArgumentException();
+            }
 
             var pcpfd = Marshal.AllocHGlobal(Marshal.SizeOf(field.Descriptor));
             Marshal.StructureToPtr(field.Descriptor, pcpfd, false); // copy field descriptor content
@@ -166,7 +172,10 @@ namespace ReversePassword
             Logger.Write($"dwIndex: {idx}");
 
             if (idx >= _users.Count)
+            {
+                Logger.Write("throw new ArgumentException");
                 throw new ArgumentException();
+            }
 
             _users[(int)idx].GetSid(out string sid);
 
