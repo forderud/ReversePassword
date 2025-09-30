@@ -41,7 +41,7 @@ namespace ReversePassword
             string label,
             Guid guidFieldType,
             _CREDENTIAL_PROVIDER_FIELD_STATE visibility,
-            string defaultValue)
+            object value)
         {
             if (!Active)
                 throw new NotSupportedException();
@@ -49,7 +49,7 @@ namespace ReversePassword
             _fields.Add(new CredentialDescriptor
             {
                 Visibility = visibility,
-                Value = defaultValue,
+                Value = value,
                 Descriptor = new _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR
                 {
                     dwFieldID = (uint)_fields.Count,
