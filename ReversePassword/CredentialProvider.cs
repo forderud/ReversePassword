@@ -92,10 +92,10 @@ namespace ReversePassword
 
             _view = Initialize(cpus, flags);
 
-            if (_view.Active)
-                return;
+            if (!_view.Active)
+                throw new NotImplementedException();
 
-            throw new NotImplementedException();
+            return;
         }
 
         public virtual void SetSerialization(ref _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION cpcs)
