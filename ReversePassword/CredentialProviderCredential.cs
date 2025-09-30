@@ -65,13 +65,15 @@ namespace ReversePassword
 
         public virtual void GetStringValue(uint fieldID, out string val)
         {
+            Logger.Write($"dwFieldID: {fieldID}");
+
             // Valid for CPFT_LARGE_TEXT, CPFT_SMALL_TEXT, CPFT_COMMAND_LINK, CPFT_EDIT_TEXT & CPFT_PASSWORD_TEXT
             CredentialDescriptor desc = _view.GetField(fieldID);
             if ((desc.Descriptor.cpft < _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT) || (desc.Descriptor.cpft > _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT))
                 throw new InvalidCastException();
 
             val = (string)desc.Value;
-            Logger.Write($"dwFieldID: {fieldID}, ppsz: {val}");
+            Logger.Write($"Returning ppsz: {val}");
         }
 
         public virtual void GetBitmapValue(uint fieldID, out IntPtr bmp)
@@ -115,6 +117,7 @@ namespace ReversePassword
                 throw new InvalidCastException();
 
             adjacentTo = (uint)desc.Value; // assume value contains adjacentTo fieldID
+            Logger.Write($"Returning adjacentTo: {adjacentTo}");
         }
 
         public virtual void GetComboBoxValueCount(uint fieldID, out uint itemCount, out uint selectedItem)
@@ -128,6 +131,7 @@ namespace ReversePassword
             var cb = desc.Value as ComboBox;
             itemCount = (uint)cb.items.Count;
             selectedItem = cb.selectedItem;
+            Logger.Write($"Returning itemCount: {itemCount}, selectedItem: {selectedItem}");
         }
 
         public virtual void GetComboBoxValueAt(uint fieldID, uint item, out string val)
@@ -140,6 +144,7 @@ namespace ReversePassword
 
             var cb = desc.Value as ComboBox;
             val = cb.items[(int)item];
+            Logger.Write($"Returning val: {val}");
         }
 
         public virtual void SetStringValue(uint fieldID, string val)
@@ -152,6 +157,7 @@ namespace ReversePassword
                 throw new InvalidCastException();
 
             desc.Value = val;
+            Logger.Write($"Returning");
         }
 
         public virtual void SetCheckboxValue(uint fieldID, int isChecked)
@@ -160,6 +166,7 @@ namespace ReversePassword
 
             CredentialDescriptor desc = _view.GetField(fieldID);
             desc.Value = isChecked;
+            Logger.Write($"Returning");
         }
 
         public virtual void SetComboBoxSelectedValue(uint fieldID, uint selectedItem)
@@ -172,6 +179,7 @@ namespace ReversePassword
 
             var cb = desc.Value as ComboBox;
             cb.selectedItem = selectedItem;
+            Logger.Write($"Returning");
         }
 
         public virtual void CommandLinkClicked(uint fieldID)
