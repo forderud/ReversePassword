@@ -17,9 +17,9 @@ namespace ReversePassword
         private CredentialView Initialize(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, CredentialFlag flags)
         {
             if (!IsSupportedScenario(cpus))
-                return new CredentialView(/*Active*/false, cpus);
+                return new CredentialView(cpus);
 
-            var view = new CredentialView(/*Active*/true, cpus);
+            var view = new CredentialView(cpus);
             var userNameState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI) ?
                     _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
             var confirmPasswordState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ?
@@ -100,7 +100,7 @@ namespace ReversePassword
 
             _view = Initialize(cpus, flags);
 
-            if (!_view.Active)
+            if (_view.FieldsCount == 0)
             {
                 Logger.Write("throw new NotSupportedException");
                 throw new NotSupportedException();

@@ -22,7 +22,6 @@ namespace ReversePassword
         public const string CPFG_CREDENTIAL_PROVIDER_LOGO = "2d837775-f6cd-464e-a745-482fd0b47493";
         public const string CPFG_CREDENTIAL_PROVIDER_LABEL = "286bbff3-bad4-438f-b007-79b7267c3d48";
 
-        public readonly bool Active;
         public readonly _CREDENTIAL_PROVIDER_USAGE_SCENARIO Usage; // LOGON, UNLOCK_WORKSTATION, CHANGE_PASSWORD, CREDUI or PLAP
         public int FieldsCount { get { return _fields.Count; } }
 
@@ -30,9 +29,8 @@ namespace ReversePassword
         private readonly Dictionary<string, ICredentialProviderCredential> _credentials = new Dictionary<string, ICredentialProviderCredential>(); // sid as key
 
 
-        public CredentialView(bool active, _CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) 
+        public CredentialView(_CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) 
         {
-            Active = active;
             Usage = usage;
         }
 
