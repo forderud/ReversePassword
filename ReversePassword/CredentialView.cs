@@ -29,12 +29,68 @@ namespace ReversePassword
         private readonly Dictionary<string, ICredentialProviderCredential> _credentials = new Dictionary<string, ICredentialProviderCredential>(); // sid as key
 
 
-        public CredentialView(_CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) 
+        public CredentialView(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus) 
         {
-            Usage = usage;
+            Usage = cpus;
+
+            if (!IsSupportedScenario(cpus))
+                return;
+
+            var userNameState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI) ?
+                    _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
+            var confirmPasswordState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ?
+                    _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
+
+            AddField(
+                cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_TILE_IMAGE,
+                label: "Icon",
+                guidFieldType: default(Guid),
+                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
+                value: null
+            );
+
+            AddField(
+                cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT,
+                label: "Username",
+                guidFieldType: default(Guid),
+                visibility: userNameState,
+                value: null
+            );
+
+            AddField(
+                cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
+                label: "Password",
+                guidFieldType: default(Guid),
+                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
+                value: null
+            );
+
+            AddField(
+                cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
+                label: "New password",
+                guidFieldType: default(Guid),
+                visibility: confirmPasswordState,
+                value: null
+            );
+
+            AddField(
+                cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SUBMIT_BUTTON,
+                label: "Submit",
+                guidFieldType: default(Guid),
+                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
+                value: (uint)2 // adjacentTo fieldID
+            );
+
+            AddField(
+                cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT,
+                label: null,
+                guidFieldType: default(Guid),
+                visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
+                value: "Reverse Password"
+            );
         }
 
-        public void AddField(
+        private void AddField(
             _CREDENTIAL_PROVIDER_FIELD_TYPE cpft,
             string label,
             Guid guidFieldType,
@@ -53,6 +109,23 @@ namespace ReversePassword
                     guidFieldType = guidFieldType
                 }
             });
+        }
+
+        private static bool IsSupportedScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus)
+        {
+            switch (cpus)
+            {
+                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_LOGON:
+                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_UNLOCK_WORKSTATION:
+                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD:
+                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI:
+                    return true;
+
+                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_INVALID:
+                case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_PLAP:
+                default:
+                    return false;
+            }
         }
 
         public CredentialDescriptor GetField(uint idx)
