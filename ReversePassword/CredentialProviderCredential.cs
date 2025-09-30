@@ -122,13 +122,11 @@ namespace ReversePassword
 
             CredentialDescriptor desc = _view.GetField(fieldID);
             if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
-                throw new InvalidCastException(); 
+                throw new InvalidCastException();
 
-            // TODO: Implement combo-box support
-            itemCount = 0;
-            selectedItem = 0;
-
-            throw new NotImplementedException();
+            var cb = desc.Value as ComboBox;
+            itemCount = (uint)cb.items.Count;
+            selectedItem = cb.selectedItem;
         }
 
         public virtual void GetComboBoxValueAt(uint fieldID, uint item, out string val)
@@ -139,9 +137,8 @@ namespace ReversePassword
             if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
                 throw new InvalidCastException();
 
-            // TODO: Implement combo-box support
-            val = "";
-            throw new NotImplementedException();
+            var cb = desc.Value as ComboBox;
+            val = cb.items[(int)item];
         }
 
         public virtual void SetStringValue(uint fieldID, string val)
@@ -167,7 +164,12 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}; dwSelectedItem: {selectedItem}");
 
-            throw new NotImplementedException();
+            CredentialDescriptor desc = _view.GetField(fieldID);
+            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
+                throw new InvalidCastException();
+
+            var cb = desc.Value as ComboBox;
+            cb.selectedItem = selectedItem;
         }
 
         public virtual void CommandLinkClicked(uint fieldID)

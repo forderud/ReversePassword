@@ -2,6 +2,13 @@
 
 namespace ReversePassword
 {
+    /** Minimal _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX implementation. */
+    public class ComboBox
+    {
+        public uint selectedItem = 0;
+        public List<string> items = new List<string>();
+    }
+
     public class CredentialDescriptor
     {
         public _CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR Descriptor { get; set; }
