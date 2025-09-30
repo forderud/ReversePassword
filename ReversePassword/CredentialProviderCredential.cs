@@ -97,10 +97,9 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}");
 
-            isChecked = 0;
-            label = "";
-
-            throw new NotImplementedException();
+            CredentialDescriptor desc = _view.GetField(fieldID);
+            isChecked = (int)desc.Value; // bool value
+            label = desc.Descriptor.pszLabel;
         }
 
         public virtual void GetSubmitButtonValue(uint fieldID, out uint adjacentTo)
@@ -142,7 +141,8 @@ namespace ReversePassword
         {
             Logger.Write($"dwFieldID: {fieldID}; bChecked: {isChecked}");
 
-            throw new NotImplementedException();
+            CredentialDescriptor desc = _view.GetField(fieldID);
+            desc.Value = isChecked;
         }
 
         public virtual void SetComboBoxSelectedValue(uint fieldID, uint selectedItem)
