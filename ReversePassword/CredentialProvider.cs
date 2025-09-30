@@ -93,7 +93,7 @@ namespace ReversePassword
             _view = Initialize(cpus, flags);
 
             if (!_view.Active)
-                throw new NotImplementedException();
+                throw new NotSupportedException();
 
             return;
         }
