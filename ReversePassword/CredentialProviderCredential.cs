@@ -20,8 +20,6 @@ namespace ReversePassword
 
         public virtual void Advise(ICredentialProviderCredentialEvents cpce)
         {
-            Logger.Write();
-
             if (cpce is ICredentialProviderCredentialEvents2 ev2)
                 Logger.Write("pcpce is ICredentialProviderCredentialEvents2");
 
@@ -31,16 +29,12 @@ namespace ReversePassword
 
         public virtual void UnAdvise()
         {
-            Logger.Write();
-
             Logger.Write("throw new NotImplementedException");
             throw new NotImplementedException();
         }
 
         public virtual void SetSelected(out int autoLogon)
         {
-            Logger.Write();
-
             //Set this to 1 if you would like GetSerialization called immediately on selection
             autoLogon = 0;
             Logger.Write($"Returning autoLogon: {autoLogon}");
