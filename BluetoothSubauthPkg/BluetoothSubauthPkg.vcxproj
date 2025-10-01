@@ -75,6 +75,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bluetooth.hpp" />
+  </ItemGroup>
+  <ItemGroup>
     <Text Include="Readme.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

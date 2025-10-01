@@ -4,6 +4,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bluetooth.hpp" />
+  </ItemGroup>
+  <ItemGroup>
     <Text Include="Readme.md" />
   </ItemGroup>
 </Project>
