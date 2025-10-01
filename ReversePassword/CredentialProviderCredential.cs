@@ -226,7 +226,7 @@ namespace ReversePassword
 
             cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_NOT_FINISHED;
             cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
-            optionalStatusText = "";
+            optionalStatusText = string.Empty;
             optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
 
             //Serialization can be called before the user has entered any values. Only applies to logon usage scenarios
@@ -262,7 +262,6 @@ namespace ReversePassword
                     throw new Exception();
                 }
 
-                optionalStatusText = string.Empty;
                 optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_SUCCESS;
 
                 cpcs.clsidCredentialProvider = Guid.Parse(Constants.CredentialProvider_CLSID);
