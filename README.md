@@ -46,3 +46,4 @@ The project is heavily based on the no longer maintained [CredProvider.NET](http
 
 #### Authentication packages
 * [Custom Security Packages](https://learn.microsoft.com/en-us/windows/win32/secauthn/custom-security-packages)
+* [MSV1_0 SubAuthentication Sample](https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/security/authentication/msvsubauth) - extends the inbuilt [MSV1_0 Authentication Package](https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package) that's used for local machine logons (Kerberos is used for network logons).
