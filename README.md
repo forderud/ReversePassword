@@ -49,4 +49,8 @@ The project is heavily based on the no longer maintained [CredProvider.NET](http
 * [Creating Custom Security Packages](https://learn.microsoft.com/en-us/windows/win32/secauthn/creating-custom-security-packages)
 * [MSV1_0 Authentication Package](https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package) that's used for local machine logons (Kerberos is used for network logons).
 * [Registering Subauthentication Packages](https://learn.microsoft.com/en-us/previous-versions//aa379395(v=vs.85))
+
+Authentication package samples:
 * [MSV1_0 SubAuthentication Sample](https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/security/authentication/msvsubauth) shows how to extend the MSV1_0 Authentication Package
+* Zero Trust Service Access [wincredprov](https://github.com/eduardomozart/trasa/tree/master/tfa/wincredprov)
+* [BthLogon](https://github.com/6ziv/Custom-Samples/tree/master/BthLogon) - lets all login attempts pass if bluetooth is disabled
