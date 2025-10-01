@@ -252,7 +252,6 @@ namespace ReversePassword
 
                 Logger.Write($"Preparing to serialise credential with username: {username} and password: {password}");
                 cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_RETURN_CREDENTIAL_FINISHED;
-                cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
 
                 IntPtr inCredBuffer = 0;
                 int inCredSize = 0;
@@ -307,7 +306,6 @@ namespace ReversePassword
                 }
 
                 cpgsr = _CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE.CPGSR_NO_CREDENTIAL_FINISHED;
-                cpcs = new _CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION();
             }
 
             Logger.Write("Returning S_OK");
