@@ -5,11 +5,12 @@ Sample MSV1_0 subauthentication package that will deny login if Bluetooth is ena
 ## Prerequisite
 Local Security Authority (LSA) protection needs to be disabled in order for the autentication package DLL to load.
 
-Instructions:
+#### Instructions
 * Open "Windows Security"
 * Click on "Device security"
 * Click on "Core isolation"
 * Turn off "Local Security Authority protection"
+* Reboot
 
 ## Installation
 Run `install.bat` as admin.
