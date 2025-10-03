@@ -128,7 +128,8 @@ int main() {
         username = username.substr(idx + 1);
     }
 
-    // Check credentials (confirmed to work for local accounts, domain accounts and PIN-codes)
+    wprintf(L"\n");
+    wprintf(L"Attempting to authenticate with the provided credentials...\n");
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
     HANDLE token = 0;
     BOOL ok = LogonUserW(username.c_str(), domain.c_str(), password.c_str(), LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
