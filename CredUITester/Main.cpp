@@ -36,6 +36,32 @@ struct SecureString : std::wstring {
     }
 };
 
+BOOL CredUnPackAuthenticationBufferWrap(DWORD flags, CredentialBlob authBuffer,
+                                        std::wstring& username, std::wstring& password)
+{
+    // determine buffer sizes
+    DWORD username_len = 0, password_len = 0;
+    BOOL ok = CredUnPackAuthenticationBufferW(flags,
+        authBuffer.ptr, authBuffer.size,
+        nullptr, &username_len,
+        nullptr, nullptr, // domain
+        nullptr, &password_len);
+    assert(!ok);
+
+    username.resize(username_len);
+    password.resize(password_len);
+
+    // get username & password strings
+    // skip domain string
+    ok = CredUnPackAuthenticationBufferW(flags,
+        authBuffer.ptr, authBuffer.size,
+        username.data(), &username_len,
+        nullptr, nullptr, // domain
+        password.data(), &password_len);
+    return ok;
+}
+
+
 int main() {
     CredentialBlob authBuffer;
     {
@@ -77,24 +103,8 @@ int main() {
     std::wstring username;
     SecureString password;
     {
-        // determine buffer sizes
-        DWORD username_len = 0, password_len = 0;
-        BOOL ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
-            authBuffer.ptr, authBuffer.size,
-            nullptr, &username_len,
-            nullptr, nullptr,
-            nullptr, &password_len);
-        assert(!ok);
-
-        username.resize(username_len);
-        password.resize(password_len);
-
         // get username, password & domain strings
-        ok = CredUnPackAuthenticationBufferW(CRED_PACK_PROTECTED_CREDENTIALS,
-            authBuffer.ptr, authBuffer.size,
-            username.data(), &username_len,
-            nullptr, nullptr,
-            password.data(), &password_len);
+        BOOL ok = CredUnPackAuthenticationBufferWrap(CRED_PACK_PROTECTED_CREDENTIALS, authBuffer, username, password);
         if (!ok) {
             DWORD err = GetLastError();
             if (err == ERROR_NOT_CAPABLE) {
