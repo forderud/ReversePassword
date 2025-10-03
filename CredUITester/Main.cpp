@@ -97,10 +97,12 @@ int main() {
             password.data(), &password_len);
         if (!ok) {
             DWORD err = GetLastError();
-            if (err == ERROR_NOT_CAPABLE)
-                wprintf(L"ERROR: CredUnPackAuthenticationBuffer is unable to decrypt credentials.\n"); // happens for PIN code credentials
-            else
+            if (err == ERROR_NOT_CAPABLE) {
+                wprintf(L"ERROR: CredUnPackAuthenticationBuffer is unable to decrypt credentials. This happens with PIN code credentials\n");
+                wprintf(L"Run from a \"psexec.exe -i -accepteula -s cmd.exe\" command prompt to bypass this problem.\n");
+            } else {
                 wprintf(L"ERROR: CredUnPackAuthenticationBuffer failed (err=%u)\n", err);
+            }
             return -1;
         }
     }
