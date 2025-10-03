@@ -130,7 +130,7 @@ int main() {
     wprintf(L"Attempting to authenticate with the provided credentials...\n");
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
     HANDLE token = 0;
-    BOOL ok = LogonUserW(username.c_str(), domain.c_str(), password.c_str(), LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
+    ok = LogonUserW(username.c_str(), domain.c_str(), password.c_str(), LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
         DWORD err = GetLastError();
         if (err == ERROR_LOGON_FAILURE) {
