@@ -16,4 +16,6 @@ Run `install.bat` as admin.
 
 ## External links
 * [Registering Subauthentication Packages](https://learn.microsoft.com/en-us/previous-versions//aa379395(v=vs.85))
+* [Msv1_0SubAuthenticationFilter](https://learn.microsoft.com/en-us/windows/win32/api/subauth/nf-subauth-msv1_0subauthenticationfilter) user logon entry point (only called if DLL is registered as 'Auth0')
+* [Msv1_0SubAuthenticationRoutine](https://learn.microsoft.com/en-us/windows/win32/api/subauth/nf-subauth-msv1_0subauthenticationroutine) client/server entry point
 * [MSV1_0 SubAuthentication Sample](https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/security/authentication/msvsubauth) shows how to extend the MSV1_0 Authentication Package
