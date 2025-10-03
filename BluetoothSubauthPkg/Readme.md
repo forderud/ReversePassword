@@ -13,3 +13,7 @@ Instructions:
 
 ## Installation
 Run `install.bat` as admin.
+
+## External links
+* [Registering Subauthentication Packages](https://learn.microsoft.com/en-us/previous-versions//aa379395(v=vs.85))
+* [MSV1_0 SubAuthentication Sample](https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/security/authentication/msvsubauth) shows how to extend the MSV1_0 Authentication Package
