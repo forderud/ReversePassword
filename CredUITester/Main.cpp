@@ -48,8 +48,8 @@ BOOL CredUnPackAuthenticationBufferWrap(DWORD flags, CredentialBlob authBuffer,
         nullptr, &password_len);
     assert(!ok);
 
-    username.resize(username_len);
-    password.resize(password_len);
+    username.resize(username_len - 1);
+    password.resize(password_len - 1);
 
     // get username & password strings
     // skip domain string
