@@ -9,15 +9,16 @@ namespace ReversePassword
         {
             Logger.Write();
 
+            // establish LSA connection
             var status = PInvoke.LsaConnectUntrusted(out var lsaHandle);
 
-            //Use Negotiate to allow LSA to decide whether to use local or Kerberos authentication package.
-            //Yubikey sub auth module link: https://github.com/Yubico/yubico-windows-auth
+            // use Negotiate to allow LSA to decide whether to use local or Kerberos authentication package
             using (var name = new PInvoke.LsaStringWrapper("Negotiate"))
             {
                 status = PInvoke.LsaLookupAuthenticationPackage(lsaHandle, ref name._string, out authPackage);
             }
 
+            // close LSA handle
             PInvoke.LsaDeregisterLogonProcess(lsaHandle);
 
             Logger.Write($"Using authentication package id: {authPackage}");
