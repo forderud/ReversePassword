@@ -102,19 +102,17 @@ int main() {
 
     std::wstring username;
     SecureString password;
-    {
-        // get username, password & domain strings
-        BOOL ok = CredUnPackAuthenticationBufferWrap(CRED_PACK_PROTECTED_CREDENTIALS, authBuffer, username, password);
-        if (!ok) {
-            DWORD err = GetLastError();
-            if (err == ERROR_NOT_CAPABLE) {
-                wprintf(L"ERROR: CredUnPackAuthenticationBuffer is unable to decrypt credentials. This happens with PIN code credentials on non-domain-joined computers.\n");
-                wprintf(L"Run from a \"psexec.exe -i -accepteula -s cmd.exe\" command prompt to bypass this problem.\n");
-            } else {
-                wprintf(L"ERROR: CredUnPackAuthenticationBuffer failed (err=%u)\n", err);
-            }
-            return -1;
+    // get username, password & domain strings
+    BOOL ok = CredUnPackAuthenticationBufferWrap(CRED_PACK_PROTECTED_CREDENTIALS, authBuffer, username, password);
+    if (!ok) {
+        DWORD err = GetLastError();
+        if (err == ERROR_NOT_CAPABLE) {
+            wprintf(L"ERROR: CredUnPackAuthenticationBuffer is unable to decrypt credentials. This happens with PIN code credentials on non-domain-joined computers.\n");
+            wprintf(L"Run from a \"psexec.exe -i -accepteula -s cmd.exe\" command prompt to bypass this problem.\n");
+        } else {
+            wprintf(L"ERROR: CredUnPackAuthenticationBuffer failed (err=%u)\n", err);
         }
+        return -1;
     }
 
     wprintf(L"Provided credentials (not checked):\n");
