@@ -36,7 +36,7 @@ struct SecureString : std::wstring {
     }
 };
 
-BOOL CredUnPackAuthenticationBufferWrap(DWORD flags, CredentialBlob authBuffer,
+BOOL CredUnPackAuthenticationBufferWrap(DWORD flags, const CredentialBlob& authBuffer,
                                         std::wstring& username, std::wstring& password)
 {
     // determine buffer sizes
