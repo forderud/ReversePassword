@@ -55,4 +55,3 @@ The project is heavily based on the no longer maintained [CredProvider.NET](http
 Authentication package samples:
 * [MSV1_0 SubAuthentication Sample](https://github.com/microsoft/Windows-classic-samples/tree/main/Samples/Win7Samples/security/authentication/msvsubauth) shows how to extend the MSV1_0 Authentication Package
 * Zero Trust Service Access [wincredprov](https://github.com/eduardomozart/trasa/tree/master/tfa/wincredprov)
-* [BthLogon](https://github.com/6ziv/Custom-Samples/tree/master/BthLogon) - lets all login attempts pass if bluetooth is disabled
