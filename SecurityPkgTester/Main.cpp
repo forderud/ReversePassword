@@ -136,6 +136,7 @@ int wmain(int argc, wchar_t* argv[]) {
     if (argc == 1) {
         // query installed security packages
         {
+            // NOTE: EnumerateSecurityPackages doesn't seem to detect MSV1_0
             ULONG package_count = 0;
             SecPkgInfoA* packages = nullptr;
             SECURITY_STATUS ret = EnumerateSecurityPackagesA(&package_count, &packages);
