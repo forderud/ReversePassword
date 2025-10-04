@@ -115,7 +115,7 @@ ULONG GetAuthPackage(LsaHandle& lsa, const char* name) {
     return authPkg;
 }
 
-bool LsaLogonUserTest(LsaHandle& lsa, ULONG authPkg, std::wstring& username, std::wstring& password) {
+bool LsaLogonUser_MSV1_0(LsaHandle& lsa, std::wstring& username, std::wstring& password) {
     const char ORIGIN[] = "QuerySecurityPkg";
     LSA_STRING origin {
         .Length = (USHORT)strlen(ORIGIN),
@@ -173,6 +173,8 @@ bool LsaLogonUserTest(LsaHandle& lsa, ULONG authPkg, std::wstring& username, std
         GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
         assert(returnLength == sizeof(sourceContext));
     }
+
+    ULONG authPkg = GetAuthPackage(lsa, MSV1_0_PACKAGE_NAME);
     
     // output arguments
     void* profileBuffer = nullptr;
@@ -232,10 +234,12 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
 
 #if 0
     {
-        ULONG authPkg = GetAuthPackage(lsa, MSV1_0_PACKAGE_NAME);
-        std::wstring username = L"test";
+        std::wstring username = L"user";
         std::wstring password = L"secret";
-        bool ok = LsaLogonUserTest(lsa, authPkg, username, password);
+
+        wprintf(L"\n");
+        wprintf(L"Attempting local interactive logon against the MSV1_0 authentication package...\n");
+        bool ok = LsaLogonUser_MSV1_0(lsa, username, password);
         if (ok)
             wprintf(L"SUCCESS: User logon succeeded.\n");
         else
