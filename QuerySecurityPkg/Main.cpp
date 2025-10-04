@@ -186,7 +186,10 @@ bool LsaLogonUser_MSV1_0(LsaHandle& lsa, std::wstring& username, std::wstring& p
 
     NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
     if (ret != STATUS_SUCCESS) {
-        wprintf(L"ERROR: LsaLogonUser failed, ret: 0x%x\n", ret);
+        if (ret == STATUS_LOGON_FAILURE) // observed both for unknonw user and invalid password
+            wprintf(L"ERROR: LsaLogonUser STATUS_LOGON_FAILURE\n");
+        else
+            wprintf(L"ERROR: LsaLogonUser failed, ret: 0x%x\n", ret);
     }
 
     LsaFreeReturnBuffer(profileBuffer);
