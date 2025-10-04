@@ -6,6 +6,7 @@
 #include <SubAuth.h>
 #include <cassert>
 #include <iostream>
+#include <vector>
 
 #pragma comment(lib, "Secur32.lib")
 
@@ -98,10 +99,11 @@ private:
 };
 
 ULONG GetAuthPackage(LsaHandle& lsa, const char* name) {
-    LSA_STRING lsa_name{};
-    lsa_name.Buffer = (char*)name;
-    lsa_name.Length = (USHORT)strlen(name);
-    lsa_name.MaximumLength = lsa_name.Length;
+    LSA_STRING lsa_name {
+        .Length = (USHORT)strlen(name),
+        .MaximumLength = (USHORT)strlen(name),
+        .Buffer = (char*)name,
+    };
 
     ULONG authPkg = 0;
     NTSTATUS status = LsaLookupAuthenticationPackage(lsa, &lsa_name, &authPkg);
@@ -111,6 +113,43 @@ ULONG GetAuthPackage(LsaHandle& lsa, const char* name) {
     }
 
     return authPkg;
+}
+
+bool LsaLogonTest(LsaHandle& lsa, ULONG authPkg, std::wstring& username, std::wstring& password) {
+    const char ORIGIN[] = "QuerySecurityPkg";
+    LSA_STRING origin {
+        .Length = (USHORT)strlen(ORIGIN),
+        .MaximumLength = (USHORT)strlen(ORIGIN),
+        .Buffer = (char*)ORIGIN,
+    };
+
+    std::vector<BYTE> authInfo;
+    {
+        // TODO: Populate with username & password
+    }
+
+    TOKEN_SOURCE sourceContext{};
+    {
+        // Populate SourceName & SourceIdentifier fields
+        HANDLE userToken = GetCurrentProcessToken(); // TODO: Verify that this gives the "user token"
+        DWORD returnLength = 0;
+        GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
+        assert(returnLength == sizeof(sourceContext));
+    }
+    
+    // output arguments
+    void* profileBuffer = nullptr;
+    ULONG profileBufferLen = 0;
+    LUID logonId{};
+    HANDLE token = 0;
+    QUOTA_LIMITS quotas{};
+    NTSTATUS subStatus = 0;
+
+    NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
+
+    LsaFreeReturnBuffer(profileBuffer);
+
+    return (ret == STATUS_SUCCESS);
 }
 
 
