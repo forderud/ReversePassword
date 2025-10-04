@@ -15,7 +15,6 @@
 
 
 LSA_DISPATCH_TABLE DispatchTable;
-LSA_STRING         PackageName;
 
 void LogMessage(const char* message) {
 #ifdef NDEBUG
@@ -28,15 +27,19 @@ void LogMessage(const char* message) {
 #endif
 }
 
-LSA_STRING CreateLsaString(const char msg[]) {
+/** Allocate and create a new LSA_STRING object. */
+LSA_STRING* CreateLsaString(const char* msg) {
     USHORT msg_len = sizeof(msg) - 1; // exclude null-termination
 
-    LSA_STRING str{};
-    str.Buffer = (char*)DispatchTable.AllocateLsaHeap(msg_len);
-    strcpy_s(str.Buffer, msg_len, msg);
-    str.Length = msg_len;
-    str.MaximumLength = msg_len;
-    return str;
+    auto* obj = (LSA_STRING*)DispatchTable.AllocateLsaHeap(sizeof(LSA_STRING));
+
+    obj->Buffer = (char*)DispatchTable.AllocateLsaHeap(msg_len);
+    strcpy_s(obj->Buffer, msg_len, msg);
+
+    obj->Length = msg_len;
+    obj->MaximumLength = msg_len;
+
+    return obj;
 }
 
 // LSA calls LsaApInitializePackage() when loading AuthPkg DLL
@@ -50,8 +53,7 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
 
     DispatchTable = *LsaDispatchTable; // copy function pointer table
 
-    PackageName = CreateLsaString("CustomAuthPkg");
-    *AuthenticationPackageName = &PackageName;
+    *AuthenticationPackageName = CreateLsaString("CustomAuthPkg"); // freed by caller
 
     return 0;
 }
