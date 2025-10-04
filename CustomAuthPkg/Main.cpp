@@ -184,17 +184,18 @@ NTSTATUS LsaApCallPackagePassthrough(
 
 
 SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
-    LsaApInitializePackage,
-    LsaApLogonUser,
-    LsaApCallPackage,
-    LsaApLogonTerminated,
-    LsaApCallPackageUntrusted,
-    LsaApCallPackagePassthrough,
-    LsaApLogonUserEx,
-    LsaApLogonUserEx2,
-    SpInitialize,
-    SpShutDown,
-    SpGetInfo,
+    .InitializePackage = LsaApInitializePackage,
+    .LogonUser = LsaApLogonUser,
+    .CallPackage = LsaApCallPackage,
+    .LogonTerminated = LsaApLogonTerminated,
+    .CallPackageUntrusted = LsaApCallPackageUntrusted,
+    .CallPackagePassthrough = LsaApCallPackagePassthrough,
+    .LogonUserEx = LsaApLogonUserEx,
+    .LogonUserEx2 = LsaApLogonUserEx2,
+    .Initialize = SpInitialize,
+    .Shutdown = SpShutDown,
+    .GetInfo = SpGetInfo,
+#if 0
     NULL, // SpAcceptCredentialsFn
     NULL, // SpAcquireCredentialsHandleFn
     NULL, // SpQueryCredentialsAttributesFn
@@ -227,6 +228,7 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     NULL, // PLSA_AP_PRE_LOGON_USER_SURROGATE
     NULL, // PLSA_AP_POST_LOGON_USER_SURROGATE
     NULL, // SpExtractTargetInfoFn
+#endif
 };
 
 // LSA calls SpLsaModeInitialize() when loading SSP DLL
