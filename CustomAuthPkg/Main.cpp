@@ -69,12 +69,13 @@ NTSTATUS NTAPI SpShutDown() {
 NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     LogMessage("SpGetInfo");
 
+    // return security package metadata
     PackageInfo->fCapabilities = SECPKG_FLAG_ACCEPT_WIN32_NAME | SECPKG_FLAG_CONNECTION;
     PackageInfo->wVersion = 1;
     PackageInfo->wRPCID = SECPKG_ID_NONE;
     PackageInfo->cbMaxToken = 0;
     PackageInfo->Name = (SEC_WCHAR*)L"CustomAuthPkg";
-    PackageInfo->Comment = (SEC_WCHAR*)L"CustomAuthPkg";
+    PackageInfo->Comment = (SEC_WCHAR*)L"Custom security package for testing";
 
     return 0;
 }
