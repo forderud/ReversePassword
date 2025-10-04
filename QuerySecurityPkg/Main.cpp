@@ -3,6 +3,8 @@
 #include <sspi.h>
 #include <security.h> // for NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A
 #include <NTSecAPI.h> // for MSV1_0_PACKAGE_NAME
+#include <SubAuth.h>
+#include <cassert>
 #include <iostream>
 
 #pragma comment(lib, "Secur32.lib")
@@ -65,10 +67,10 @@ void PrintCapabilities(unsigned long capabilities) {
         wprintf(L"CALLFLAGS_FORCE_SUPPLIED |");
 }
 
-void PrintPackageInfo(const SecPkgInfoW& pkg) {
-    wprintf(L"Package: %s\n", pkg.Name);
+void PrintPackageInfo(const SecPkgInfoA& pkg) {
+    wprintf(L"Package: %hs\n", pkg.Name);
 
-    wprintf(L"* Comment: %s\n", pkg.Comment);
+    wprintf(L"* Comment: %hs\n", pkg.Comment);
 
     wprintf(L"* Capabilities: ");
     PrintCapabilities(pkg.fCapabilities);
@@ -76,11 +78,35 @@ void PrintPackageInfo(const SecPkgInfoW& pkg) {
 }
 
 
+ULONG GetAuthPackage(const char* name) {
+    // establish LSA connection
+    HANDLE lsa = 0;
+    NTSTATUS status = LsaConnectUntrusted(&lsa);
+    assert(status == STATUS_SUCCESS);
+
+    // use Negotiate to allow LSA to decide whether to use local or Kerberos authentication package
+    LSA_STRING lsa_name{}; // "Negotiate"
+    lsa_name.Buffer = (char*)name;
+    lsa_name.Length = (USHORT)strlen(name);
+    lsa_name.MaximumLength = lsa_name.Length;
+
+    ULONG authPkg = 0;
+    status = LsaLookupAuthenticationPackage(lsa, &lsa_name, &authPkg);
+    assert(status == STATUS_SUCCESS);
+
+    // close LSA handle
+    status = LsaDeregisterLogonProcess(lsa);
+    assert(status == STATUS_SUCCESS);
+
+    return authPkg;
+}
+
+
 int wmain(int /*argc*/, wchar_t* /*argv*/[])
 {
     ULONG package_count = 0;
-    SecPkgInfoW* packages = nullptr;
-    SECURITY_STATUS ret = EnumerateSecurityPackagesW(&package_count, &packages);
+    SecPkgInfoA* packages = nullptr;
+    SECURITY_STATUS ret = EnumerateSecurityPackagesA(&package_count, &packages);
     if (ret != SEC_E_OK) {
         wprintf(L"ERROR: EnumerateSecurityPackagesW failed with error %u\n", ret);
         return -1;
@@ -88,9 +114,12 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[])
 
     wprintf(L"Installed security packages:\n");
     for (ULONG idx = 0; idx < package_count; idx++) {
-        SecPkgInfoW& pkg = packages[idx];
+        SecPkgInfoA& pkg = packages[idx];
         wprintf(L"\n");
         PrintPackageInfo(pkg);
+
+        ULONG authPkg = GetAuthPackage(pkg.Name);
+        wprintf(L"  AuthPkg: %u\n", authPkg);
     }
 
     FreeContextBuffer(packages);
