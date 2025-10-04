@@ -50,4 +50,3 @@ The project is heavily based on the no longer maintained [CredProvider.NET](http
 * [LSA Authentication Model](https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-authentication-model) (mentions _custom authentication packages_)
 * [Creating Custom Security Packages](https://learn.microsoft.com/en-us/windows/win32/secauthn/creating-custom-security-packages)
 * [MSV1_0 Authentication Package](https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package) that's used for local machine logons (Kerberos is used for network logons).
-* Zero Trust Service Access [wincredprov](https://github.com/eduardomozart/trasa/tree/master/tfa/wincredprov)
