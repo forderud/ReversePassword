@@ -154,25 +154,30 @@ bool LsaLogonTest(LsaHandle& lsa, ULONG authPkg, std::wstring& username, std::ws
 
 
 int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
-    ULONG package_count = 0;
-    SecPkgInfoA* packages = nullptr;
-    SECURITY_STATUS ret = EnumerateSecurityPackagesA(&package_count, &packages);
-    if (ret != SEC_E_OK) {
-        wprintf(L"ERROR: EnumerateSecurityPackagesW failed with error %u\n", ret);
-        return -1;
-    }
-
     LsaHandle lsa;
 
-    wprintf(L"Installed security packages:\n");
-    for (ULONG idx = 0; idx < package_count; idx++) {
-        SecPkgInfoA& pkg = packages[idx];
-        wprintf(L"\n");
-        PrintPackageInfo(pkg);
+    {
+        ULONG package_count = 0;
+        SecPkgInfoA* packages = nullptr;
+        SECURITY_STATUS ret = EnumerateSecurityPackagesA(&package_count, &packages);
+        if (ret != SEC_E_OK) {
+            wprintf(L"ERROR: EnumerateSecurityPackagesW failed with error %u\n", ret);
+            return -1;
+        }
 
-        ULONG authPkg = GetAuthPackage(lsa, pkg.Name);
-        wprintf(L"  AuthPkgID: %u\n", authPkg);
+        wprintf(L"Installed security packages:\n");
+        for (ULONG idx = 0; idx < package_count; idx++) {
+            SecPkgInfoA& pkg = packages[idx];
+            wprintf(L"\n");
+            PrintPackageInfo(pkg);
+
+            ULONG authPkg = GetAuthPackage(lsa, pkg.Name);
+            wprintf(L"  AuthPkgID: %u\n", authPkg);
+        }
+
+        FreeContextBuffer(packages);
     }
+
 
     wprintf(L"\n");
     wprintf(L"Predefined security packages:\n");
@@ -183,6 +188,4 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
         wprintf(L"* Package: %hs\n", package);
         wprintf(L"  AuthPkgID: %u\n", authPkg);
     }
-
-    FreeContextBuffer(packages);
 }
