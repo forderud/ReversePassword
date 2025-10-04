@@ -161,15 +161,13 @@ std::tuple<const char*, std::vector<BYTE>> PrepareLogon_MSV1_0(std::wstring& use
     return { MSV1_0_PACKAGE_NAME, authInfo };
 }
 
-NTSTATUS LsaLogonUser_MSV1_0(LsaHandle& lsa, std::wstring& username, std::wstring& password) {
+NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const char* authPkgName, std::vector<BYTE> authInfo) {
     const char ORIGIN[] = "QuerySecurityPkg";
     LSA_STRING origin {
         .Length = (USHORT)strlen(ORIGIN),
         .MaximumLength = (USHORT)strlen(ORIGIN),
         .Buffer = (char*)ORIGIN,
     };
-
-    auto [authPkgName, authInfo] = PrepareLogon_MSV1_0(username, password);
 
     TOKEN_SOURCE sourceContext{};
     {
@@ -242,7 +240,8 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
 
         wprintf(L"\n");
         wprintf(L"Attempting local interactive logon against the MSV1_0 authentication package...\n");
-        NTSTATUS ret = LsaLogonUser_MSV1_0(lsa, username, password);
+        auto [authPkgName, authInfo] = PrepareLogon_MSV1_0(username, password);
+        NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo);
         if (ret != STATUS_SUCCESS) {
             if (ret == STATUS_LOGON_FAILURE) // observed both for unknonw user and invalid password
                 wprintf(L"ERROR: LsaLogonUser STATUS_LOGON_FAILURE\n");
