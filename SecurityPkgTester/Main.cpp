@@ -60,8 +60,7 @@ std::tuple<const char*, std::vector<BYTE>> PrepareLogon_MSV1_0(std::wstring& use
     auto passwordSize = (USHORT)(2 * password.size());
 
     // populate packed MSV1_0_INTERACTIVE_LOGON struct with domain, username & password at the end
-    std::vector<BYTE> authInfo; // MSV1_0_INTERACTIVE_LOGON
-    authInfo.resize(sizeof(MSV1_0_INTERACTIVE_LOGON) + domainSize + usernameSize + passwordSize);
+    std::vector<BYTE> authInfo(sizeof(MSV1_0_INTERACTIVE_LOGON) + domainSize + usernameSize + passwordSize, (BYTE)0);
     auto* logon = (MSV1_0_INTERACTIVE_LOGON*)authInfo.data();
     logon->MessageType = MsV1_0InteractiveLogon;
 
