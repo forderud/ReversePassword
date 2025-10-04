@@ -195,11 +195,12 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .Initialize = SpInitialize,
     .Shutdown = SpShutDown,
     .GetInfo = SpGetInfo,
+
+    .AcceptCredentials = nullptr,
+    .AcquireCredentialsHandle = nullptr,
+    .QueryCredentialsAttributes = nullptr,
+    .FreeCredentialsHandle = nullptr,
 #if 0
-    NULL, // SpAcceptCredentialsFn
-    NULL, // SpAcquireCredentialsHandleFn
-    NULL, // SpQueryCredentialsAttributesFn
-    NULL, // SpFreeCredentialsHandleFn
     NULL, // SpSaveCredentialsFn
     NULL, // SpGetCredentialsFn
     NULL, // SpDeleteCredentialsFn
