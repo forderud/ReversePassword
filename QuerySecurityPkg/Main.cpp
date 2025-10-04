@@ -65,6 +65,16 @@ void PrintCapabilities(unsigned long capabilities) {
         wprintf(L"CALLFLAGS_FORCE_SUPPLIED |");
 }
 
+void PrintPackageInfo(const SecPkgInfoW& pkg) {
+    wprintf(L"Package: %s\n", pkg.Name);
+
+    wprintf(L"* Comment: %s\n", pkg.Comment);
+
+    wprintf(L"* Capabilities: ");
+    PrintCapabilities(pkg.fCapabilities);
+    wprintf(L"\n");
+}
+
 
 int wmain(int /*argc*/, wchar_t* /*argv*/[])
 {
@@ -80,11 +90,7 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[])
     for (ULONG idx = 0; idx < package_count; idx++) {
         SecPkgInfoW& pkg = packages[idx];
         wprintf(L"\n");
-        wprintf(L"Package: %s\n", pkg.Name);
-        wprintf(L"* Comment: %s\n", pkg.Comment);
-        wprintf(L"* Capabilities: ");
-        PrintCapabilities(pkg.fCapabilities);
-        wprintf(L"\n");
+        PrintPackageInfo(pkg);
     }
 
     FreeContextBuffer(packages);
