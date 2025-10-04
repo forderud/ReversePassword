@@ -208,19 +208,19 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .DeleteContext = nullptr,
     .ApplyControlToken = nullptr,
     .GetUserInfo = nullptr,
+    .GetExtendedInformation = nullptr,
+    .QueryContextAttributes = nullptr,
+    .AddCredentialsW = nullptr,
+    .SetExtendedInformation = nullptr,
+    .SetContextAttributes = nullptr,
+    .SetCredentialsAttributes = nullptr,
+    .ChangeAccountPassword = nullptr,
+    .QueryMetaData = nullptr,
+    .ExchangeMetaData = nullptr,
+    .GetCredUIContext = nullptr,
+    .UpdateCredentials = nullptr,
+    .ValidateTargetInfo = nullptr,
 #if 0
-    NULL, // SpGetExtendedInformationFn
-    NULL, // SpQueryContextAttributesFn
-    NULL, // SpAddCredentialsFn
-    NULL, // SpSetExtendedInformationFn
-    NULL, // SpSetContextAttributesFn
-    NULL, // SpSetCredentialsAttributesFn
-    NULL, // SpChangeAccountPasswordFn
-    NULL, // SpQueryMetaDataFn
-    NULL, // SpExchangeMetaDataFn
-    NULL, // SpGetCredUIContextFn
-    NULL, // SpUpdateCredentialsFn
-    NULL, // SpValidateTargetInfoFn
     NULL, // LSA_AP_POST_LOGON_USER
     NULL, // SpGetRemoteCredGuardLogonBufferFn
     NULL, // SpGetRemoteCredGuardSupplementalCredsFn
