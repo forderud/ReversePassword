@@ -220,15 +220,15 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .GetCredUIContext = nullptr,
     .UpdateCredentials = nullptr,
     .ValidateTargetInfo = nullptr,
+    .PostLogonUser = nullptr,
+    .GetRemoteCredGuardLogonBuffer = nullptr,
+    .GetRemoteCredGuardSupplementalCreds = nullptr,
+    .GetTbalSupplementalCreds = nullptr,
+    .LogonUserEx3 = nullptr,
+    .PreLogonUserSurrogate = nullptr,
+    .PostLogonUserSurrogate = nullptr,
+    .ExtractTargetInfo = nullptr,
 #if 0
-    NULL, // LSA_AP_POST_LOGON_USER
-    NULL, // SpGetRemoteCredGuardLogonBufferFn
-    NULL, // SpGetRemoteCredGuardSupplementalCredsFn
-    NULL, // SpGetTbalSupplementalCredsFn
-    NULL, // PLSA_AP_LOGON_USER_EX3
-    NULL, // PLSA_AP_PRE_LOGON_USER_SURROGATE
-    NULL, // PLSA_AP_POST_LOGON_USER_SURROGATE
-    NULL, // SpExtractTargetInfoFn
 #endif
 };
 
