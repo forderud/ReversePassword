@@ -77,26 +77,38 @@ void PrintPackageInfo(const SecPkgInfoA& pkg) {
     wprintf(L"\n");
 }
 
+class LsaHandle {
+public:
+    LsaHandle() {
+        // establish LSA connection
+        NTSTATUS status = LsaConnectUntrusted(&m_lsa);
+        assert(status == STATUS_SUCCESS);
+    }
+    ~LsaHandle() {
+        // close LSA handle
+        NTSTATUS status = LsaDeregisterLogonProcess(m_lsa);
+        assert(status == STATUS_SUCCESS);
+    }
 
-ULONG GetAuthPackage(const char* name) {
-    // establish LSA connection
-    HANDLE lsa = 0;
-    NTSTATUS status = LsaConnectUntrusted(&lsa);
-    assert(status == STATUS_SUCCESS);
+    operator HANDLE() {
+        return m_lsa;
+    }
+private:
+    HANDLE m_lsa = 0;
+};
 
-    // use Negotiate to allow LSA to decide whether to use local or Kerberos authentication package
-    LSA_STRING lsa_name{}; // "Negotiate"
+ULONG GetAuthPackage(LsaHandle& lsa, const char* name) {
+    LSA_STRING lsa_name{};
     lsa_name.Buffer = (char*)name;
     lsa_name.Length = (USHORT)strlen(name);
     lsa_name.MaximumLength = lsa_name.Length;
 
     ULONG authPkg = 0;
-    status = LsaLookupAuthenticationPackage(lsa, &lsa_name, &authPkg);
-    assert(status == STATUS_SUCCESS);
-
-    // close LSA handle
-    status = LsaDeregisterLogonProcess(lsa);
-    assert(status == STATUS_SUCCESS);
+    NTSTATUS status = LsaLookupAuthenticationPackage(lsa, &lsa_name, &authPkg);
+    if (status != STATUS_SUCCESS) {
+        wprintf(L"ERROR: LsaLookupAuthenticationPackage failed with err: %u", status);
+        abort();
+    }
 
     return authPkg;
 }
@@ -112,13 +124,15 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[])
         return -1;
     }
 
+    LsaHandle lsa;
+
     wprintf(L"Installed security packages:\n");
     for (ULONG idx = 0; idx < package_count; idx++) {
         SecPkgInfoA& pkg = packages[idx];
         wprintf(L"\n");
         PrintPackageInfo(pkg);
 
-        ULONG authPkg = GetAuthPackage(pkg.Name);
+        ULONG authPkg = GetAuthPackage(lsa, pkg.Name);
         wprintf(L"  AuthPkg: %u\n", authPkg);
     }
 
