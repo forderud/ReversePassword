@@ -1,0 +1,22 @@
+# Security Support Provider/Authentication Package (SSP/AP) sample
+Minimal Security Support Provider/Authentication Package (SSP/AP) that does nothing.
+
+## Prerequisite
+Local Security Authority (LSA) protection needs to be disabled in order for the DLL to load.
+
+#### Instructions
+* Open "Windows Security"
+* Click on "Device security"
+* Click on "Core isolation"
+* Turn off "Local Security Authority protection"
+* Reboot
+
+## Installation
+Run `install.bat` as admin.
+
+## External links
+* [Registering SSP/AP DLLs](https://learn.microsoft.com/en-us/windows/win32/secauthn/registering-ssp-ap-dlls) 
+* [LSA Mode Initialization](https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-mode-initialization)
+* [SpLsaModeInitialize](https://learn.microsoft.com/en-us/windows/win32/api/ntsecpkg/nc-ntsecpkg-splsamodeinitializefn) entry point
+* [SECPKG_FUNCTION_TABLE](https://learn.microsoft.com/en-us/windows/win32/api/ntsecpkg/ns-ntsecpkg-secpkg_function_table) function dispatch table
+* [Functions Implemented by Authentication Packages](https://learn.microsoft.com/en-us/windows/win32/secauthn/authentication-functions#functions-implemented-by-authentication-packages)
