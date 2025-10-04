@@ -162,7 +162,7 @@ std::tuple<const char*, std::vector<BYTE>> PrepareLogon_MSV1_0(std::wstring& use
 }
 
 NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const char* authPkgName, const std::vector<BYTE>& authInfo) {
-    const char ORIGIN[] = "QuerySecurityPkg";
+    const char ORIGIN[] = "SecurityPkgTester";
     LSA_STRING origin {
         .Length = (USHORT)strlen(ORIGIN),
         .MaximumLength = (USHORT)strlen(ORIGIN),
