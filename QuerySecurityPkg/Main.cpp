@@ -114,8 +114,7 @@ ULONG GetAuthPackage(LsaHandle& lsa, const char* name) {
 }
 
 
-int wmain(int /*argc*/, wchar_t* /*argv*/[])
-{
+int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
     ULONG package_count = 0;
     SecPkgInfoA* packages = nullptr;
     SECURITY_STATUS ret = EnumerateSecurityPackagesA(&package_count, &packages);
@@ -133,7 +132,17 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[])
         PrintPackageInfo(pkg);
 
         ULONG authPkg = GetAuthPackage(lsa, pkg.Name);
-        wprintf(L"  AuthPkg: %u\n", authPkg);
+        wprintf(L"  AuthPkgID: %u\n", authPkg);
+    }
+
+    wprintf(L"\n");
+    wprintf(L"Predefined security packages:\n");
+    const char* predefined_packages[] = { NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A, MSV1_0_PACKAGE_NAME };
+    for (const char* package : predefined_packages) {
+        ULONG authPkg = GetAuthPackage(lsa, package);
+        wprintf(L"\n");
+        wprintf(L"* Package: %hs\n", package);
+        wprintf(L"  AuthPkgID: %u\n", authPkg);
     }
 
     FreeContextBuffer(packages);
