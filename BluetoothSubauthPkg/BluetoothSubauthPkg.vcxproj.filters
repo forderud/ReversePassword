@@ -7,6 +7,6 @@
     <ClInclude Include="Bluetooth.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Readme.md" />
+    <None Include="README.md" />
   </ItemGroup>
 </Project>
