@@ -196,10 +196,11 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const char* authPkgName, const 
 }
 
 
-int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
+int wmain(int argc, wchar_t* argv[]) {
     LsaHandle lsa;
 
-    {
+    if (argc == 1) {
+        // query installed security packages
         ULONG package_count = 0;
         SecPkgInfoA* packages = nullptr;
         SECURITY_STATUS ret = EnumerateSecurityPackagesA(&package_count, &packages);
@@ -219,24 +220,20 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
         }
 
         FreeContextBuffer(packages);
-    }
 
-
-    wprintf(L"\n");
-    wprintf(L"Predefined security packages:\n");
-    const char* predefined_packages[] = { NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A, MSV1_0_PACKAGE_NAME };
-    for (const char* package : predefined_packages) {
-        ULONG authPkg = GetAuthPackage(lsa, package);
         wprintf(L"\n");
-        wprintf(L"* Package: %hs\n", package);
-        wprintf(L"  AuthPkgID: %u\n", authPkg);
-    }
-
-
-#if 0
-    {
-        std::wstring username = L"user";
-        std::wstring password = L"secret";
+        wprintf(L"Predefined security packages:\n");
+        const char* predefined_packages[] = { NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A, MSV1_0_PACKAGE_NAME };
+        for (const char* package : predefined_packages) {
+            ULONG authPkg = GetAuthPackage(lsa, package);
+            wprintf(L"\n");
+            wprintf(L"* Package: %hs\n", package);
+            wprintf(L"  AuthPkgID: %u\n", authPkg);
+        }
+    } else if (argc == 3) {
+        // try to login with username & password against MSV1_0
+        std::wstring username = argv[1];
+        std::wstring password = argv[2];
 
         wprintf(L"\n");
         wprintf(L"Attempting local interactive logon against the MSV1_0 authentication package...\n");
@@ -250,6 +247,9 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
         } else {
             wprintf(L"SUCCESS: User logon succeeded.\n");
         }
+    } else {
+        wprintf(L"USAGE:\n");
+        wprintf(L"  List security packages: SecurityPkgTester.exe\n");
+        wprintf(L"  Attempt MSV1_0 login: SecurityPkgTester.exe <username> <password>\n");
     }
-#endif
 }
