@@ -12,7 +12,7 @@
 #pragma comment(lib, "Secur32.lib")
 
 
-void PrintCapabilities(unsigned long capabilities) {
+void PrintSecPkgCapabilities(unsigned long capabilities) {
     if (capabilities | SECPKG_FLAG_INTEGRITY)
         wprintf(L"FLAG_INTEGRITY |");
     if (capabilities | SECPKG_FLAG_PRIVACY)
@@ -75,7 +75,7 @@ void PrintPackageInfo(const SecPkgInfoA& pkg) {
     wprintf(L"* Comment: %hs\n", pkg.Comment);
 
     wprintf(L"* Capabilities: ");
-    PrintCapabilities(pkg.fCapabilities);
+    PrintSecPkgCapabilities(pkg.fCapabilities);
     wprintf(L"\n");
 }
 
