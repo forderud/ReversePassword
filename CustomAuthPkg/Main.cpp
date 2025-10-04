@@ -51,21 +51,25 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
 ) {
     LogMessage("LsaApInitializePackage");
 
+    assert(!Database);
+    assert(!Confidentiality);
+    
     DispatchTable = *LsaDispatchTable; // copy function pointer table
-
     *AuthenticationPackageName = CreateLsaString("CustomAuthPkg"); // freed by caller
 
-    return 0;
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, LSA_SECPKG_FUNCTION_TABLE* FunctionTable) {
     LogMessage("SpInitialize");
-    return 0;
+
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS NTAPI SpShutDown() {
     LogMessage("SpShutDown");
-    return 0;
+
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
@@ -79,7 +83,7 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     PackageInfo->Name = (SEC_WCHAR*)L"CustomAuthPkg";
     PackageInfo->Comment = (SEC_WCHAR*)L"Custom security package for testing";
 
-    return 0;
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS LsaApLogonUser(PLSA_CLIENT_REQUEST ClientRequest,
@@ -97,7 +101,8 @@ NTSTATUS LsaApLogonUser(PLSA_CLIENT_REQUEST ClientRequest,
     LSA_UNICODE_STRING** AuthenticatingAuthority)
 {
     LogMessage("LsaApLogonUser");
-    return 0;
+
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS LsaApLogonUserEx(
@@ -117,7 +122,8 @@ NTSTATUS LsaApLogonUserEx(
     PUNICODE_STRING* MachineName)
 {
     LogMessage("LsaApLogonUserEx");
-    return 0;
+
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS LsaApLogonUserEx2(
@@ -139,7 +145,8 @@ NTSTATUS LsaApLogonUserEx2(
     SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials)
 {
     LogMessage("LsaApLogonUserEx2");
-    return 0;
+
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS LsaApCallPackage(PLSA_CLIENT_REQUEST ClientRequest,
@@ -151,7 +158,8 @@ NTSTATUS LsaApCallPackage(PLSA_CLIENT_REQUEST ClientRequest,
     NTSTATUS* ProtocolStatus)
 {
     LogMessage("LsaApCallPackage");
-    return 0;
+
+    return STATUS_SUCCESS;
 }
 
 void LsaApLogonTerminated(LUID* LogonId) {
@@ -168,7 +176,8 @@ NTSTATUS LsaApCallPackageUntrusted(
     NTSTATUS*           ProtocolStatus)
 {
     LogMessage("LsaApCallPackageUntrusted");
-    return 0;
+
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS LsaApCallPackagePassthrough(
@@ -181,7 +190,8 @@ NTSTATUS LsaApCallPackagePassthrough(
     NTSTATUS* ProtocolStatus)
 {
     LogMessage("LsaApCallPackagePassthrough");
-    return 0;
+
+    return STATUS_SUCCESS;
 }
 
 
