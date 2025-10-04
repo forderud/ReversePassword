@@ -168,7 +168,7 @@ bool LsaLogonUserTest(LsaHandle& lsa, ULONG authPkg, std::wstring& username, std
     TOKEN_SOURCE sourceContext{};
     {
         // Populate SourceName & SourceIdentifier fields
-        HANDLE userToken = GetCurrentProcessToken(); // TODO: Verify that this gives the "user token"
+        HANDLE userToken = GetCurrentProcessToken();
         DWORD returnLength = 0;
         GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
         assert(returnLength == sizeof(sourceContext));
@@ -183,6 +183,9 @@ bool LsaLogonUserTest(LsaHandle& lsa, ULONG authPkg, std::wstring& username, std
     NTSTATUS subStatus = 0;
 
     NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
+    if (ret != STATUS_SUCCESS) {
+        wprintf(L"ERROR: LsaLogonUser failed, ret: 0x%x\n", ret);
+    }
 
     LsaFreeReturnBuffer(profileBuffer);
 
@@ -225,4 +228,18 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
         wprintf(L"* Package: %hs\n", package);
         wprintf(L"  AuthPkgID: %u\n", authPkg);
     }
+
+
+#if 0
+    {
+        ULONG authPkg = GetAuthPackage(lsa, MSV1_0_PACKAGE_NAME);
+        std::wstring username = L"test";
+        std::wstring password = L"secret";
+        bool ok = LsaLogonUserTest(lsa, authPkg, username, password);
+        if (ok)
+            wprintf(L"SUCCESS: User logon succeeded.\n");
+        else
+            wprintf(L"ERROR: User logon failed.\n");
+    }
+#endif
 }
