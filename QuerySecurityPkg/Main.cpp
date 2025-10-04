@@ -161,7 +161,7 @@ std::tuple<const char*, std::vector<BYTE>> PrepareLogon_MSV1_0(std::wstring& use
     return { MSV1_0_PACKAGE_NAME, authInfo };
 }
 
-NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const char* authPkgName, std::vector<BYTE> authInfo) {
+NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const char* authPkgName, const std::vector<BYTE>& authInfo) {
     const char ORIGIN[] = "QuerySecurityPkg";
     LSA_STRING origin {
         .Length = (USHORT)strlen(ORIGIN),
@@ -188,7 +188,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const char* authPkgName, std::v
     QUOTA_LIMITS quotas{};
     NTSTATUS subStatus = 0;
 
-    NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
+    NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
 
     LsaFreeReturnBuffer(profileBuffer);
 
