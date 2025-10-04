@@ -200,15 +200,15 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .AcquireCredentialsHandle = nullptr,
     .QueryCredentialsAttributes = nullptr,
     .FreeCredentialsHandle = nullptr,
+    .SaveCredentials = nullptr,
+    .GetCredentials = nullptr,
+    .DeleteCredentials = nullptr,
+    .InitLsaModeContext = nullptr,
+    .AcceptLsaModeContext = nullptr,
+    .DeleteContext = nullptr,
+    .ApplyControlToken = nullptr,
+    .GetUserInfo = nullptr,
 #if 0
-    NULL, // SpSaveCredentialsFn
-    NULL, // SpGetCredentialsFn
-    NULL, // SpDeleteCredentialsFn
-    NULL, // SpInitLsaModeContextFn
-    NULL, // SpAcceptLsaModeContextFn
-    NULL, // SpDeleteContextFn
-    NULL, // SpApplyControlTokenFn
-    NULL, // SpGetUserInfoFn
     NULL, // SpGetExtendedInformationFn
     NULL, // SpQueryContextAttributesFn
     NULL, // SpAddCredentialsFn
