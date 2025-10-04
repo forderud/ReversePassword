@@ -41,17 +41,17 @@ LSA_STRING CreateLsaString(const char msg[]) {
 
 // LSA calls LsaApInitializePackage() when loading AuthPkg DLL
 NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
-    PLSA_DISPATCH_TABLE LsaDispatchTable,
-    PLSA_STRING Database,
-    PLSA_STRING Confidentiality,
-    PLSA_STRING* AuthenticationPackageName
+    LSA_DISPATCH_TABLE* LsaDispatchTable,
+    LSA_STRING* Database,
+    LSA_STRING* Confidentiality,
+    LSA_STRING** AuthenticationPackageName
 ) {
     LogMessage("LsaApInitializePackage");
 
     DispatchTable = *LsaDispatchTable; // copy function pointer table
 
     PackageName = CreateLsaString("CustomAuthPkg");
-    (*AuthenticationPackageName) = &PackageName;
+    *AuthenticationPackageName = &PackageName;
 
     return 0;
 }
@@ -228,8 +228,6 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .PreLogonUserSurrogate = nullptr,
     .PostLogonUserSurrogate = nullptr,
     .ExtractTargetInfo = nullptr,
-#if 0
-#endif
 };
 
 // LSA calls SpLsaModeInitialize() when loading SSP DLL
