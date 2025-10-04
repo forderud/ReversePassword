@@ -77,9 +77,10 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[])
     wprintf(L"Installed security packages:\n");
     for (ULONG idx = 0; idx < package_count; idx++) {
         SecPkgInfoW& pkg = packages[idx];
-        wprintf(L"* Package: %s\n", pkg.Name);
-        wprintf(L"  Comment: %s\n", pkg.Comment);
-        wprintf(L"  Capabilities: ");
+        wprintf(L"\n");
+        wprintf(L"Package: %s\n", pkg.Name);
+        wprintf(L"* Comment: %s\n", pkg.Comment);
+        wprintf(L"* Capabilities: ");
         PrintCapabilities(pkg.fCapabilities);
         wprintf(L"\n");
     }
