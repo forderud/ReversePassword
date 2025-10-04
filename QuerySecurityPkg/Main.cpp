@@ -6,6 +6,7 @@
 #include <SubAuth.h>
 #include <cassert>
 #include <iostream>
+#include <tuple>
 #include <vector>
 
 #pragma comment(lib, "Secur32.lib")
@@ -115,8 +116,8 @@ ULONG GetAuthPackage(LsaHandle& lsa, const char* name) {
     return authPkg;
 }
 
-/** Create MSV1_0_INTERACTIVE_LOGON struct to be passed to LsaLogonUser when using authPkg=MSV1_0_PACKAGE_NAME. */
-std::vector<BYTE> Create_MSV1_0_INTERACTIVE_LOGON(std::wstring& username, std::wstring& password) {
+/** Prepare MSV1_0_INTERACTIVE_LOGON struct to be passed to LsaLogonUser when using authPkg=MSV1_0_PACKAGE_NAME. */
+std::tuple<const char*, std::vector<BYTE>> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& password) {
     std::wstring domain = L"";
 
     // field sizes [bytes]
@@ -157,10 +158,10 @@ std::vector<BYTE> Create_MSV1_0_INTERACTIVE_LOGON(std::wstring& username, std::w
     BYTE* passwordStart = authInfo.data() + (size_t)logon->Password.Buffer;
     memcpy(passwordStart, password.data(), passwordSize);
 
-    return authInfo;
+    return { MSV1_0_PACKAGE_NAME, authInfo };
 }
 
-bool LsaLogonUser_MSV1_0(LsaHandle& lsa, std::wstring& username, std::wstring& password) {
+NTSTATUS LsaLogonUser_MSV1_0(LsaHandle& lsa, std::wstring& username, std::wstring& password) {
     const char ORIGIN[] = "QuerySecurityPkg";
     LSA_STRING origin {
         .Length = (USHORT)strlen(ORIGIN),
@@ -168,7 +169,7 @@ bool LsaLogonUser_MSV1_0(LsaHandle& lsa, std::wstring& username, std::wstring& p
         .Buffer = (char*)ORIGIN,
     };
 
-    std::vector<BYTE> authInfo = Create_MSV1_0_INTERACTIVE_LOGON(username, password);
+    auto [authPkgName, authInfo] = PrepareLogon_MSV1_0(username, password);
 
     TOKEN_SOURCE sourceContext{};
     {
@@ -179,7 +180,7 @@ bool LsaLogonUser_MSV1_0(LsaHandle& lsa, std::wstring& username, std::wstring& p
         assert(returnLength == sizeof(sourceContext));
     }
 
-    ULONG authPkg = GetAuthPackage(lsa, MSV1_0_PACKAGE_NAME);
+    ULONG authPkg = GetAuthPackage(lsa, authPkgName);
     
     // output arguments
     void* profileBuffer = nullptr;
@@ -190,16 +191,10 @@ bool LsaLogonUser_MSV1_0(LsaHandle& lsa, std::wstring& username, std::wstring& p
     NTSTATUS subStatus = 0;
 
     NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
-    if (ret != STATUS_SUCCESS) {
-        if (ret == STATUS_LOGON_FAILURE) // observed both for unknonw user and invalid password
-            wprintf(L"ERROR: LsaLogonUser STATUS_LOGON_FAILURE\n");
-        else
-            wprintf(L"ERROR: LsaLogonUser failed, ret: 0x%x\n", ret);
-    }
 
     LsaFreeReturnBuffer(profileBuffer);
 
-    return (ret == STATUS_SUCCESS);
+    return ret;
 }
 
 
@@ -247,11 +242,15 @@ int wmain(int /*argc*/, wchar_t* /*argv*/[]) {
 
         wprintf(L"\n");
         wprintf(L"Attempting local interactive logon against the MSV1_0 authentication package...\n");
-        bool ok = LsaLogonUser_MSV1_0(lsa, username, password);
-        if (ok)
+        NTSTATUS ret = LsaLogonUser_MSV1_0(lsa, username, password);
+        if (ret != STATUS_SUCCESS) {
+            if (ret == STATUS_LOGON_FAILURE) // observed both for unknonw user and invalid password
+                wprintf(L"ERROR: LsaLogonUser STATUS_LOGON_FAILURE\n");
+            else
+                wprintf(L"ERROR: LsaLogonUser failed, ret: 0x%x\n", ret);
+        } else {
             wprintf(L"SUCCESS: User logon succeeded.\n");
-        else
-            wprintf(L"ERROR: User logon failed.\n");
+        }
     }
 #endif
 }
