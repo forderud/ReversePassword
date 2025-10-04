@@ -1,6 +1,8 @@
 #define SECURITY_WIN32 // required by sspi.h
 #include <windows.h>
 #include <sspi.h>
+#include <security.h> // for NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A
+#include <NTSecAPI.h> // for MSV1_0_PACKAGE_NAME
 #include <iostream>
 
 #pragma comment(lib, "Secur32.lib")
