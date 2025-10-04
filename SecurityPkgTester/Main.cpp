@@ -201,32 +201,33 @@ int wmain(int argc, wchar_t* argv[]) {
 
     if (argc == 1) {
         // query installed security packages
-        ULONG package_count = 0;
-        SecPkgInfoA* packages = nullptr;
-        SECURITY_STATUS ret = EnumerateSecurityPackagesA(&package_count, &packages);
-        if (ret != SEC_E_OK) {
-            wprintf(L"ERROR: EnumerateSecurityPackagesW failed with error %u\n", ret);
-            return -1;
+        {
+            ULONG package_count = 0;
+            SecPkgInfoA* packages = nullptr;
+            SECURITY_STATUS ret = EnumerateSecurityPackagesA(&package_count, &packages);
+            if (ret != SEC_E_OK) {
+                wprintf(L"ERROR: EnumerateSecurityPackagesW failed with error %u\n", ret);
+                return -1;
+            }
+
+            wprintf(L"Installed security packages:\n");
+            for (ULONG idx = 0; idx < package_count; idx++) {
+                SecPkgInfoA& pkg = packages[idx];
+                wprintf(L"\n");
+                PrintPackageInfo(pkg);
+
+                ULONG authPkg = GetAuthPackage(lsa, pkg.Name);
+                wprintf(L"  AuthPkgID: %u\n", authPkg);
+            }
+
+            FreeContextBuffer(packages);
         }
-
-        wprintf(L"Installed security packages:\n");
-        for (ULONG idx = 0; idx < package_count; idx++) {
-            SecPkgInfoA& pkg = packages[idx];
-            wprintf(L"\n");
-            PrintPackageInfo(pkg);
-
-            ULONG authPkg = GetAuthPackage(lsa, pkg.Name);
-            wprintf(L"  AuthPkgID: %u\n", authPkg);
-        }
-
-        FreeContextBuffer(packages);
 
         wprintf(L"\n");
         wprintf(L"Predefined security packages:\n");
         const char* predefined_packages[] = { NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A, MSV1_0_PACKAGE_NAME };
         for (const char* package : predefined_packages) {
             ULONG authPkg = GetAuthPackage(lsa, package);
-            wprintf(L"\n");
             wprintf(L"* Package: %hs\n", package);
             wprintf(L"  AuthPkgID: %u\n", authPkg);
         }
