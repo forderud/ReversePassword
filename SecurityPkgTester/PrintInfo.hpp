@@ -58,10 +58,10 @@ void PrintSecPkgCapabilities(unsigned long capabilities) {
         wprintf(L"CALLFLAGS_FORCE_SUPPLIED |");
 }
 
-void PrintSecPkgInfo(const SecPkgInfoA& pkg) {
-    wprintf(L"Package: %hs\n", pkg.Name);
+void PrintSecPkgInfo(const SecPkgInfoW& pkg) {
+    wprintf(L"Package: %s\n", pkg.Name);
 
-    wprintf(L"* Comment: %hs\n", pkg.Comment);
+    wprintf(L"* Comment: %s\n", pkg.Comment);
 
     wprintf(L"* Capabilities: ");
     PrintSecPkgCapabilities(pkg.fCapabilities);
