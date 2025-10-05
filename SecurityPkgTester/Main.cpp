@@ -165,10 +165,16 @@ int wmain(int argc, wchar_t* argv[]) {
             wprintf(L"* Package: %hs\n", package);
             wprintf(L"  AuthPkgID: %u\n", authPkg);
         }
-    } else if (argc == 3) {
+    } else if (argc >= 3) {
+        size_t argIdx = 1;
+#if 0
+        std::wstring authPkgName = MSV1_0_PACKAGE_NAMEW; // default to MSV1_0
+        if (argc >= 4)
+            authPkgName = argv[argIdx++];
+#endif
         // try to login with username & password against MSV1_0
-        std::wstring username = argv[1];
-        std::wstring password = argv[2];
+        std::wstring username = argv[argIdx++];
+        std::wstring password = argv[argIdx++];
 
         wprintf(L"\n");
         wprintf(L"Attempting local interactive logon against the MSV1_0 authentication package...\n");
