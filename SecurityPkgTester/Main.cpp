@@ -198,7 +198,9 @@ int wmain(int argc, wchar_t* argv[]) {
         wprintf(L"\n");
         wprintf(L"Attempting local interactive logon against the %s authentication package...\n", authPkgName);
         std::vector<BYTE> authInfo;
-        authInfo = PrepareLogon_MSV1_0(username, password);
+        if (std::wstring(authPkgName) == MSV1_0_PACKAGE_NAMEW)
+            authInfo = PrepareLogon_MSV1_0(username, password);
+
         NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo);
         if (ret != STATUS_SUCCESS) {
             if (ret == STATUS_LOGON_FAILURE) // observed both for unknonw user and invalid password
@@ -211,6 +213,6 @@ int wmain(int argc, wchar_t* argv[]) {
     } else {
         wprintf(L"USAGE:\n");
         wprintf(L"  List security packages: SecurityPkgTester.exe\n");
-        wprintf(L"  Attempt MSV1_0 login: SecurityPkgTester.exe <username> <password>\n");
+        wprintf(L"  Attempt MSV1_0 login: SecurityPkgTester.exe [auth-package] <username> <password>\n");
     }
 }
