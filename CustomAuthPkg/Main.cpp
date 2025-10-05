@@ -11,8 +11,6 @@
 // exported symbols
 #pragma comment(linker, "/export:SpLsaModeInitialize" )
 
-#pragma warning(disable: 4100) // unreferenced formal parameter
-
 
 LSA_SECPKG_FUNCTION_TABLE SecpkgFunctionTable;
 LSA_DISPATCH_TABLE LsaDispatchTable; // never initialized
@@ -70,7 +68,7 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
     LSA_STRING** AuthenticationPackageName
 ) {
     LogMessage("LsaApInitializePackage");
-
+    AuthenticationPackageId;
     assert(!Database);
     assert(!Confidentiality);
     
@@ -83,7 +81,8 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
 
 NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, LSA_SECPKG_FUNCTION_TABLE* FunctionTable) {
     LogMessage("SpInitialize");
-
+    PackageId;
+    Parameters;
     SecpkgFunctionTable = *FunctionTable; // copy function pointer table
 
     LogMessage("  return STATUS_SUCCESS");
@@ -232,12 +231,20 @@ NTSTATUS LsaApCallPackage(PLSA_CLIENT_REQUEST ClientRequest,
     NTSTATUS* ProtocolStatus)
 {
     LogMessage("LsaApCallPackage");
+    ClientRequest;
+    ProtocolSubmitBuffer;
+    ClientBufferBase;
+    SubmitBufferLength;
+    ProtocolReturnBuffer;
+    ReturnBufferLength;
+    ProtocolStatus;
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
 void LsaApLogonTerminated(LUID* LogonId) {
     LogMessage("LsaApLogonTerminated");
+    LogonId;
     LogMessage("  return");
 }
 
@@ -251,6 +258,13 @@ NTSTATUS LsaApCallPackageUntrusted(
     NTSTATUS*           ProtocolStatus)
 {
     LogMessage("LsaApCallPackageUntrusted");
+    ClientRequest;
+    ProtocolSubmitBuffer;
+    ClientBufferBase;
+    SubmitBufferLength;
+    ProtocolReturnBuffer;
+    ReturnBufferLength;
+    ProtocolStatus;
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
@@ -265,6 +279,13 @@ NTSTATUS LsaApCallPackagePassthrough(
     NTSTATUS* ProtocolStatus)
 {
     LogMessage("LsaApCallPackagePassthrough");
+    ClientRequest;
+    ProtocolSubmitBuffer;
+    ClientBufferBase;
+    SubmitBufferLength;
+    ProtocolReturnBuffer;
+    ReturnBufferLength;
+    ProtocolStatus;
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
@@ -321,7 +342,7 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
 extern "C"
 NTSTATUS NTAPI SpLsaModeInitialize(ULONG LsaVersion, ULONG* PackageVersion, SECPKG_FUNCTION_TABLE** ppTables, ULONG* pcTables) {
     LogMessage("SpLsaModeInitialize");
-
+    LsaVersion;
     *PackageVersion = SECPKG_INTERFACE_VERSION;
     *ppTables = &SecurityPackageFunctionTable;
     *pcTables = 1;
