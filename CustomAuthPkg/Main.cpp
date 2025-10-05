@@ -16,14 +16,20 @@
 
 LSA_DISPATCH_TABLE DispatchTable;
 
-void LogMessage(const char* message...) {
+void LogMessage(const char* message, ...) {
 #ifdef NDEBUG
     message;
 #else
+    // append to log file
     FILE* file = nullptr;
     fopen_s(&file, "C:\\CustomAuthPkg_log.txt", "a+");
-    // append to log file
-    fprintf(file, message);
+    {
+        // print variadic message
+        va_list args;
+        va_start(args, message);
+        _vfprintf_l(file, message, NULL, args);
+        va_end(args);
+    }
     fprintf(file, "\n");
     fclose(file);
 #endif
