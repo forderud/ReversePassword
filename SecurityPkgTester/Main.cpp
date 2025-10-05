@@ -205,6 +205,8 @@ int wmain(int argc, wchar_t* argv[]) {
         if (ret != STATUS_SUCCESS) {
             if (ret == STATUS_LOGON_FAILURE) // observed both for unknonw user and invalid password
                 wprintf(L"ERROR: LsaLogonUser STATUS_LOGON_FAILURE\n");
+            else if (ret == RPC_NT_CALL_FAILED)
+                wprintf(L"ERROR: LsaLogonUser RPC_NT_CALL_FAILED\n");
             else
                 wprintf(L"ERROR: LsaLogonUser failed, ret: 0x%x\n", ret);
         } else {
