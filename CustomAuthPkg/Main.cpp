@@ -16,7 +16,7 @@
 
 LSA_DISPATCH_TABLE DispatchTable;
 
-void LogMessage(const char* message) {
+void LogMessage(const char* message...) {
 #ifdef NDEBUG
     message;
 #else
@@ -117,10 +117,10 @@ NTSTATUS LsaApLogonUserEx2_impl(
 {
     // input arguments
     ClientRequest;
-    LogonType; // Interactive
+    LogMessage("  LogonType: %i", LogonType); // Interactive=2
     ProtocolSubmitBuffer;
     ClientBufferBase;
-    SubmitBufferSize;
+    LogMessage("  SubmitBufferSize: %i", SubmitBufferSize);
 
     // assign output arguments
     *ProfileBuffer = nullptr;
@@ -138,7 +138,8 @@ NTSTATUS LsaApLogonUserEx2_impl(
     return STATUS_SUCCESS;
 }
 
-NTSTATUS LsaApLogonUser(PLSA_CLIENT_REQUEST ClientRequest,
+NTSTATUS LsaApLogonUser(
+    PLSA_CLIENT_REQUEST ClientRequest,
     SECURITY_LOGON_TYPE LogonType,
     VOID* AuthenticationInformation,
     VOID* ClientAuthenticationBase,
