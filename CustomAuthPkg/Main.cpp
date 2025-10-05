@@ -56,7 +56,7 @@ LSA_UNICODE_STRING* CreateLsaString(const std::wstring& msg) {
     assert(SecpkgFunctionTable.AllocateLsaHeap);
     auto* obj = (LSA_UNICODE_STRING*)SecpkgFunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
     obj->Buffer = (wchar_t*)SecpkgFunctionTable.AllocateLsaHeap(2*msg_len);
-    wcsncpy_s(obj->Buffer, msg_len, msg.c_str(), msg_len);
+    memcpy(/*dst*/obj->Buffer, /*src*/msg.c_str(), 2*msg_len);
     obj->Length = 2*msg_len;
     obj->MaximumLength = 2*msg_len;
     return obj;
@@ -142,10 +142,14 @@ NTSTATUS LsaApLogonUserEx2_impl(
     *TokenInformation = nullptr;
     *AccountName = CreateLsaString(L"SomeUser"); // mandatory
     *AuthenticatingAuthority = nullptr; // optional
-    *MachineName = nullptr; // optional
-    *PrimaryCredentials = {};
-    *SupplementalCredentials = nullptr;
+    if (MachineName)
+        *MachineName = nullptr; // optional
+    if (PrimaryCredentials)
+        *PrimaryCredentials = {};
+    if (SupplementalCredentials)
+        *SupplementalCredentials = nullptr;
 
+    LogMessage("  STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
