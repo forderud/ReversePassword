@@ -11,6 +11,7 @@
 #define USE_SECPKG_FUNCTION_TABLE
 
 // exported symbols
+#pragma comment(linker, "/export:DllMain")
 #if 1
   #pragma comment(linker, "/export:SpLsaModeInitialize")
 #else
@@ -380,4 +381,29 @@ NTSTATUS NTAPI SpLsaModeInitialize(ULONG LsaVersion, ULONG* PackageVersion, SECP
 
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
+}
+
+
+extern "C"
+BOOL WINAPI DllMain(HINSTANCE /*hinstDLL*/, DWORD fdwReason, LPVOID lpvReserved) {
+    switch (fdwReason) {
+    case DLL_PROCESS_ATTACH:
+        LogMessage("DLL_PROCESS_ATTACH");
+        break;
+
+    case DLL_THREAD_ATTACH:
+        break;
+
+    case DLL_THREAD_DETACH:
+        break;
+
+    case DLL_PROCESS_DETACH:
+        if (lpvReserved != nullptr)
+            break; // do not do cleanup if process termination scenario
+
+        LogMessage("DLL_PROCESS_DETACH");
+        break;
+    }
+
+    return TRUE;
 }
