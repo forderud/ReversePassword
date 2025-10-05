@@ -104,6 +104,26 @@ NTSTATUS LsaApLogonUserEx2_impl(
     SECPKG_PRIMARY_CRED* PrimaryCredentials,
     SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials)
 {
+    // input arguments
+    ClientRequest;
+    LogonType; // Interactive
+    ProtocolSubmitBuffer;
+    ClientBufferBase;
+    SubmitBufferSize;
+
+    // assign output arguments
+    *ProfileBuffer = nullptr;
+    *ProfileBufferSize = 0;
+    *LogonId = { 0, 0 };
+    *SubStatus = STATUS_SUCCESS; // reason for error
+    *TokenInformationType = LsaTokenInformationNull;
+    *TokenInformation = nullptr;
+    //*AccountName = CreateLsaString(L"SomeUser");
+    *AuthenticatingAuthority = nullptr; // optional
+    *MachineName = nullptr; // optional
+    *PrimaryCredentials = {};
+    *SupplementalCredentials = nullptr;
+
     return STATUS_SUCCESS;
 }
 
