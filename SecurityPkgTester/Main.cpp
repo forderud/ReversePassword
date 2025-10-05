@@ -1,8 +1,10 @@
+#define UMDF_USING_NTSTATUS 
 #define SECURITY_WIN32 // required by sspi.h
 #include <windows.h>
 #include <sspi.h>
 #include <security.h> // for NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A
 #include <NTSecAPI.h> // for MSV1_0_PACKAGE_NAME
+#include <ntstatus.h>
 #include <SubAuth.h>
 #include <cassert>
 #include <iostream>
@@ -63,7 +65,10 @@ ULONG GetAuthPackage(LsaHandle& lsa, const wchar_t* name) {
     ULONG authPkg = 0;
     NTSTATUS status = LsaLookupAuthenticationPackage(lsa, &lsa_name, &authPkg);
     if (status != STATUS_SUCCESS) {
-        wprintf(L"ERROR: LsaLookupAuthenticationPackage failed with err: 0x%x", status);
+        if (status == STATUS_NO_SUCH_PACKAGE)
+            wprintf(L"ERROR: LsaLookupAuthenticationPackage failed with STATUS_NO_SUCH_PACKAGE\n");
+        else
+            wprintf(L"ERROR: LsaLookupAuthenticationPackage failed with err: 0x%x\n", status);
         abort();
     }
 
