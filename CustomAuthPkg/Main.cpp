@@ -77,7 +77,7 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
     LsaDispatchTable = *lsaDispatchTable; // copy function pointer table
     *AuthenticationPackageName = CreateLsaString("CustomAuthPkg"); // freed by caller
 
-    LogMessage("  STATUS_SUCCESS");
+    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
@@ -86,13 +86,13 @@ NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, 
 
     SecpkgFunctionTable = *FunctionTable; // copy function pointer table
 
-    LogMessage("  STATUS_SUCCESS");
+    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
 NTSTATUS NTAPI SpShutDown() {
     LogMessage("SpShutDown");
-
+    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
@@ -107,7 +107,7 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     PackageInfo->Name = (wchar_t*)L"CustomAuthPkg";
     PackageInfo->Comment = (wchar_t*)L"Custom security package for testing";
 
-    LogMessage("  STATUS_SUCCESS");
+    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
@@ -152,7 +152,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
     if (SupplementalCredentials)
         *SupplementalCredentials = nullptr;
 
-    LogMessage("  STATUS_SUCCESS");
+    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
@@ -232,12 +232,13 @@ NTSTATUS LsaApCallPackage(PLSA_CLIENT_REQUEST ClientRequest,
     NTSTATUS* ProtocolStatus)
 {
     LogMessage("LsaApCallPackage");
-
+    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
 void LsaApLogonTerminated(LUID* LogonId) {
     LogMessage("LsaApLogonTerminated");
+    LogMessage("  return");
 }
 
 NTSTATUS LsaApCallPackageUntrusted(
@@ -250,7 +251,7 @@ NTSTATUS LsaApCallPackageUntrusted(
     NTSTATUS*           ProtocolStatus)
 {
     LogMessage("LsaApCallPackageUntrusted");
-
+    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
@@ -264,7 +265,7 @@ NTSTATUS LsaApCallPackagePassthrough(
     NTSTATUS* ProtocolStatus)
 {
     LogMessage("LsaApCallPackagePassthrough");
-
+    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
@@ -325,6 +326,6 @@ NTSTATUS NTAPI SpLsaModeInitialize(ULONG LsaVersion, ULONG* PackageVersion, SECP
     *ppTables = &SecurityPackageFunctionTable;
     *pcTables = 1;
 
-    LogMessage("  STATUS_SUCCESS");
+    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
