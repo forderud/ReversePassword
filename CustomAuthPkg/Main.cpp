@@ -28,14 +28,13 @@ void LogMessage(const char* message) {
 }
 
 /** Allocate and create a new LSA_STRING object. */
-LSA_STRING* CreateLsaString(const char* msg) {
-    USHORT msg_len = sizeof(msg) - 1; // exclude null-termination
+LSA_STRING* CreateLsaString(const std::string& msg) {
+    auto msg_len = (USHORT)msg.size(); // exclude null-termination
 
     auto* obj = (LSA_STRING*)DispatchTable.AllocateLsaHeap(sizeof(LSA_STRING));
 
     obj->Buffer = (char*)DispatchTable.AllocateLsaHeap(msg_len);
-    strcpy_s(obj->Buffer, msg_len, msg);
-
+    strcpy_s(obj->Buffer, msg_len, msg.c_str());
     obj->Length = msg_len;
     obj->MaximumLength = msg_len;
 
