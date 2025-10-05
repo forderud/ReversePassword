@@ -13,6 +13,24 @@
 #pragma comment(lib, "Secur32.lib")
 
 
+/** Converts unicode string to ASCII */
+inline std::string ToAscii(const std::wstring& w_str) {
+    std::string s_str(w_str.size(), '\0');
+    size_t charsConverted = 0;
+    auto err = wcstombs_s(&charsConverted, s_str.data(), s_str.size() + 1, w_str.c_str(), s_str.size());
+    assert(!err); (void)err; // mute unreferenced variable warning
+    return s_str;
+}
+
+/** Converts ASCII string to unicode */
+inline std::wstring ToUnicode(const std::string& s_str) {
+    std::wstring w_str(s_str.size(), L'\0');
+    size_t charsConverted = 0;
+    auto err = mbstowcs_s(&charsConverted, w_str.data(), w_str.size() + 1, s_str.c_str(), w_str.size());
+    assert(!err); (void)err; // mute unreferenced variable warning
+    return w_str;
+}
+
 class LsaHandle {
 public:
     LsaHandle() {
@@ -33,11 +51,13 @@ private:
     HANDLE m_lsa = 0;
 };
 
-ULONG GetAuthPackage(LsaHandle& lsa, const char* name) {
-    LSA_STRING lsa_name {
-        .Length = (USHORT)strlen(name),
-        .MaximumLength = (USHORT)strlen(name),
-        .Buffer = (char*)name,
+ULONG GetAuthPackage(LsaHandle& lsa, const wchar_t* name) {
+    std::string name_a = ToAscii(name);
+
+    LSA_STRING lsa_name{
+        .Length = (USHORT)name_a.size(),
+        .MaximumLength = (USHORT)name_a.size(),
+        .Buffer = name_a.data(),
     };
 
     ULONG authPkg = 0;
@@ -94,7 +114,7 @@ std::tuple<const char*, std::vector<BYTE>> PrepareLogon_MSV1_0(std::wstring& use
     return { MSV1_0_PACKAGE_NAME, authInfo };
 }
 
-NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const char* authPkgName, const std::vector<BYTE>& authInfo) {
+NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo) {
     const char ORIGIN[] = "SecurityPkgTester";
     LSA_STRING origin {
         .Length = (USHORT)strlen(ORIGIN),
@@ -150,7 +170,7 @@ int wmain(int argc, wchar_t* argv[]) {
                 wprintf(L"\n");
                 PrintSecPkgInfo(pkg);
 
-                ULONG authPkg = GetAuthPackage(lsa, pkg.Name);
+                ULONG authPkg = GetAuthPackage(lsa, ToUnicode(pkg.Name).c_str());
                 wprintf(L"  AuthPkgID: %u\n", authPkg);
             }
 
@@ -161,7 +181,7 @@ int wmain(int argc, wchar_t* argv[]) {
         wprintf(L"Predefined security packages:\n");
         const char* predefined_packages[] = { NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A, MSV1_0_PACKAGE_NAME };
         for (const char* package : predefined_packages) {
-            ULONG authPkg = GetAuthPackage(lsa, package);
+            ULONG authPkg = GetAuthPackage(lsa, ToUnicode(package).c_str());
             wprintf(L"* Package: %hs\n", package);
             wprintf(L"  AuthPkgID: %u\n", authPkg);
         }
@@ -179,7 +199,7 @@ int wmain(int argc, wchar_t* argv[]) {
         wprintf(L"\n");
         wprintf(L"Attempting local interactive logon against the MSV1_0 authentication package...\n");
         auto [authPkgName, authInfo] = PrepareLogon_MSV1_0(username, password);
-        NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo);
+        NTSTATUS ret = LsaLogonUserInteractive(lsa, ToUnicode(authPkgName).c_str(), authInfo);
         if (ret != STATUS_SUCCESS) {
             if (ret == STATUS_LOGON_FAILURE) // observed both for unknonw user and invalid password
                 wprintf(L"ERROR: LsaLogonUser STATUS_LOGON_FAILURE\n");
