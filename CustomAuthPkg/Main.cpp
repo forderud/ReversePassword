@@ -102,8 +102,8 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     PackageInfo->wVersion = 1;
     PackageInfo->wRPCID = SECPKG_ID_NONE;
     PackageInfo->cbMaxToken = 0;
-    PackageInfo->Name = (SEC_WCHAR*)L"CustomAuthPkg";
-    PackageInfo->Comment = (SEC_WCHAR*)L"Custom security package for testing";
+    PackageInfo->Name = (wchar_t*)L"CustomAuthPkg";
+    PackageInfo->Comment = (wchar_t*)L"Custom security package for testing";
 
     return STATUS_SUCCESS;
 }
