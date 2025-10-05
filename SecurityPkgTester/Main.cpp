@@ -200,6 +200,8 @@ int wmain(int argc, wchar_t* argv[]) {
         std::vector<BYTE> authInfo;
         if (std::wstring(authPkgName) == MSV1_0_PACKAGE_NAMEW)
             authInfo = PrepareLogon_MSV1_0(username, password);
+        else
+            authInfo = PrepareLogon_MSV1_0(username, password); // TODO: Replace with suitable authInfo for the selected authPkg
 
         NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo);
         if (ret != STATUS_SUCCESS) {
