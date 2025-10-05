@@ -32,12 +32,22 @@ LSA_STRING* CreateLsaString(const std::string& msg) {
     auto msg_len = (USHORT)msg.size(); // exclude null-termination
 
     auto* obj = (LSA_STRING*)DispatchTable.AllocateLsaHeap(sizeof(LSA_STRING));
-
     obj->Buffer = (char*)DispatchTable.AllocateLsaHeap(msg_len);
     strcpy_s(obj->Buffer, msg_len, msg.c_str());
     obj->Length = msg_len;
     obj->MaximumLength = msg_len;
+    return obj;
+}
 
+/** Allocate and create a new LSA_STRING object. */
+LSA_UNICODE_STRING* CreateLsaString(const std::wstring& msg) {
+    auto msg_len = (USHORT)msg.size(); // exclude null-termination
+
+    auto* obj = (LSA_UNICODE_STRING*)DispatchTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
+    obj->Buffer = (wchar_t*)DispatchTable.AllocateLsaHeap(2*msg_len);
+    wcsncpy_s(obj->Buffer, msg_len, msg.c_str(), msg_len);
+    obj->Length = 2*msg_len;
+    obj->MaximumLength = 2*msg_len;
     return obj;
 }
 
@@ -117,7 +127,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
     *SubStatus = STATUS_SUCCESS; // reason for error
     *TokenInformationType = LsaTokenInformationNull;
     *TokenInformation = nullptr;
-    //*AccountName = CreateLsaString(L"SomeUser");
+    *AccountName = CreateLsaString(L"SomeUser");
     *AuthenticatingAuthority = nullptr; // optional
     *MachineName = nullptr; // optional
     *PrimaryCredentials = {};
