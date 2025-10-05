@@ -66,7 +66,7 @@ NTSTATUS GetAuthPackage(LsaHandle& lsa, const wchar_t* name, /*out*/ULONG* authP
 }
 
 /** Prepare MSV1_0_INTERACTIVE_LOGON struct to be passed to LsaLogonUser when using authPkg=MSV1_0_PACKAGE_NAME. */
-std::tuple<const wchar_t*, std::vector<BYTE>> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& password) {
+std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& password) {
     std::wstring domain = L"";
 
     // field sizes [bytes]
@@ -106,7 +106,7 @@ std::tuple<const wchar_t*, std::vector<BYTE>> PrepareLogon_MSV1_0(std::wstring& 
     BYTE* passwordStart = authInfo.data() + (size_t)logon->Password.Buffer;
     memcpy(passwordStart, password.data(), passwordSize);
 
-    return { MSV1_0_PACKAGE_NAMEW, authInfo };
+    return authInfo;
 }
 
 NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo) {
@@ -187,18 +187,18 @@ int wmain(int argc, wchar_t* argv[]) {
         }
     } else if (argc >= 3) {
         size_t argIdx = 1;
-#if 0
-        std::wstring authPkgName = MSV1_0_PACKAGE_NAMEW; // default to MSV1_0
+        const wchar_t* authPkgName = MSV1_0_PACKAGE_NAMEW; // default to MSV1_0
         if (argc >= 4)
             authPkgName = argv[argIdx++];
-#endif
-        // try to login with username & password against MSV1_0
+
+        // try to login with username & password
         std::wstring username = argv[argIdx++];
         std::wstring password = argv[argIdx++];
 
         wprintf(L"\n");
-        wprintf(L"Attempting local interactive logon against the MSV1_0 authentication package...\n");
-        auto [authPkgName, authInfo] = PrepareLogon_MSV1_0(username, password);
+        wprintf(L"Attempting local interactive logon against the %s authentication package...\n", authPkgName);
+        std::vector<BYTE> authInfo;
+        authInfo = PrepareLogon_MSV1_0(username, password);
         NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo);
         if (ret != STATUS_SUCCESS) {
             if (ret == STATUS_LOGON_FAILURE) // observed both for unknonw user and invalid password
