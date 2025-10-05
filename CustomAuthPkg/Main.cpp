@@ -9,8 +9,19 @@
 #include <fstream>
 
 // exported symbols
-#pragma comment(linker, "/export:SpLsaModeInitialize")
-
+#if 1
+  #pragma comment(linker, "/export:SpLsaModeInitialize")
+#else
+  // https://learn.microsoft.com/en-us/windows/win32/secauthn/authentication-functions#functions-implemented-by-authentication-packages
+  #pragma comment(linker, "/export:LsaApCallPackage" )
+  #pragma comment(linker, "/export:LsaApCallPackagePassthrough" )
+  #pragma comment(linker, "/export:LsaApCallPackageUntrusted" )
+  #pragma comment(linker, "/export:LsaApInitializePackage" )
+  #pragma comment(linker, "/export:LsaApLogonTerminated" )
+  #pragma comment(linker, "/export:LsaApLogonUser" )
+  #pragma comment(linker, "/export:LsaApLogonUserEx" )
+  #pragma comment(linker, "/export:LsaApLogonUserEx2" )
+#endif
 
 LSA_SECPKG_FUNCTION_TABLE SecpkgFunctionTable;
 LSA_DISPATCH_TABLE LsaDispatchTable; // never initialized
