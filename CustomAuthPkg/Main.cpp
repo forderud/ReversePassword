@@ -20,10 +20,12 @@ void LogMessage(const char* message) {
 #ifdef NDEBUG
     message;
 #else
-    // append to log
-    std::ofstream logFile("C:\\CustomAuthPkg_log.txt", std::ios_base::app);
-    logFile << message;
-    logFile << "\n";
+    FILE* file = nullptr;
+    fopen_s(&file, "C:\\CustomAuthPkg_log.txt", "a+");
+    // append to log file
+    fprintf(file, message);
+    fprintf(file, "\n");
+    fclose(file);
 #endif
 }
 
@@ -127,7 +129,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
     *SubStatus = STATUS_SUCCESS; // reason for error
     *TokenInformationType = LsaTokenInformationNull;
     *TokenInformation = nullptr;
-    *AccountName = CreateLsaString(L"SomeUser");
+    *AccountName = CreateLsaString(L"SomeUser"); // mandatory
     *AuthenticatingAuthority = nullptr; // optional
     *MachineName = nullptr; // optional
     *PrimaryCredentials = {};
