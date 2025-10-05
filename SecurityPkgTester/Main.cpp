@@ -166,7 +166,7 @@ int wmain(int argc, wchar_t* argv[]) {
 
             wprintf(L"Installed security packages:\n");
             for (ULONG idx = 0; idx < package_count; idx++) {
-                SecPkgInfoA& pkg = packages[idx];
+                auto& pkg = packages[idx];
                 wprintf(L"\n");
                 PrintSecPkgInfo(pkg);
 
@@ -180,7 +180,7 @@ int wmain(int argc, wchar_t* argv[]) {
         wprintf(L"\n");
         wprintf(L"Predefined security packages:\n");
         const char* predefined_packages[] = { NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A, MSV1_0_PACKAGE_NAME };
-        for (const char* package : predefined_packages) {
+        for (auto* package : predefined_packages) {
             ULONG authPkg = GetAuthPackage(lsa, ToUnicode(package).c_str());
             wprintf(L"* Package: %hs\n", package);
             wprintf(L"  AuthPkgID: %u\n", authPkg);
