@@ -86,6 +86,27 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     return STATUS_SUCCESS;
 }
 
+NTSTATUS LsaApLogonUser_impl(
+    PLSA_CLIENT_REQUEST ClientRequest,
+    SECURITY_LOGON_TYPE LogonType,
+    VOID* ProtocolSubmitBuffer,
+    VOID* ClientBufferBase,
+    ULONG SubmitBufferSize,
+    VOID** ProfileBuffer,
+    ULONG* ProfileBufferSize,
+    LUID* LogonId,
+    NTSTATUS* SubStatus,
+    LSA_TOKEN_INFORMATION_TYPE* TokenInformationType,
+    VOID** TokenInformation,
+    PUNICODE_STRING* AccountName,
+    PUNICODE_STRING* AuthenticatingAuthority,
+    PUNICODE_STRING* MachineName,
+    SECPKG_PRIMARY_CRED* PrimaryCredentials,
+    SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials)
+{
+    return STATUS_SUCCESS;
+}
+
 NTSTATUS LsaApLogonUser(PLSA_CLIENT_REQUEST ClientRequest,
     SECURITY_LOGON_TYPE LogonType,
     VOID* AuthenticationInformation,
@@ -102,7 +123,8 @@ NTSTATUS LsaApLogonUser(PLSA_CLIENT_REQUEST ClientRequest,
 {
     LogMessage("LsaApLogonUser");
 
-    return STATUS_SUCCESS;
+    return LsaApLogonUser_impl(ClientRequest, LogonType, AuthenticationInformation, ClientAuthenticationBase, AuthenticationInformationLength,
+        ProfileBuffer, ProfileBufferLength, LogonId, SubStatus, TokenInformationType, TokenInformation, AccountName, AuthenticatingAuthority, nullptr, nullptr, nullptr);
 }
 
 NTSTATUS LsaApLogonUserEx(
@@ -123,7 +145,8 @@ NTSTATUS LsaApLogonUserEx(
 {
     LogMessage("LsaApLogonUserEx");
 
-    return STATUS_SUCCESS;
+    return LsaApLogonUser_impl(ClientRequest, LogonType, AuthenticationInformation, ClientAuthenticationBase, AuthenticationInformationLength,
+        ProfileBuffer, ProfileBufferLength, LogonId, SubStatus, TokenInformationType, TokenInformation, AccountName, AuthenticatingAuthority, MachineName, nullptr, nullptr);
 }
 
 NTSTATUS LsaApLogonUserEx2(
@@ -146,7 +169,8 @@ NTSTATUS LsaApLogonUserEx2(
 {
     LogMessage("LsaApLogonUserEx2");
 
-    return STATUS_SUCCESS;
+    return LsaApLogonUser_impl(ClientRequest, LogonType, ProtocolSubmitBuffer, ClientBufferBase, SubmitBufferSize,
+        ProfileBuffer, ProfileBufferSize, LogonId, SubStatus, TokenInformationType, TokenInformation, AccountName, AuthenticatingAuthority, MachineName, PrimaryCredentials, SupplementalCredentials);
 }
 
 NTSTATUS LsaApCallPackage(PLSA_CLIENT_REQUEST ClientRequest,
