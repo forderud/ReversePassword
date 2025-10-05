@@ -39,6 +39,7 @@ void LogMessage(const char* message, ...) {
 LSA_STRING* CreateLsaString(const std::string& msg) {
     auto msg_len = (USHORT)msg.size(); // exclude null-termination
 
+    assert(DispatchTable.AllocateLsaHeap);
     auto* obj = (LSA_STRING*)DispatchTable.AllocateLsaHeap(sizeof(LSA_STRING));
     obj->Buffer = (char*)DispatchTable.AllocateLsaHeap(msg_len);
     strcpy_s(obj->Buffer, msg_len, msg.c_str());
@@ -51,6 +52,7 @@ LSA_STRING* CreateLsaString(const std::string& msg) {
 LSA_UNICODE_STRING* CreateLsaString(const std::wstring& msg) {
     auto msg_len = (USHORT)msg.size(); // exclude null-termination
 
+    assert(DispatchTable.AllocateLsaHeap);
     auto* obj = (LSA_UNICODE_STRING*)DispatchTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
     obj->Buffer = (wchar_t*)DispatchTable.AllocateLsaHeap(2*msg_len);
     wcsncpy_s(obj->Buffer, msg_len, msg.c_str(), msg_len);
