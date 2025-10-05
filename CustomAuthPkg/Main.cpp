@@ -8,6 +8,8 @@
 #include <cassert>
 #include <fstream>
 
+#define USE_SECPKG_FUNCTION_TABLE
+
 // exported symbols
 #if 1
   #pragma comment(linker, "/export:SpLsaModeInitialize")
@@ -23,8 +25,11 @@
   #pragma comment(linker, "/export:LsaApLogonUserEx2" )
 #endif
 
-LSA_SECPKG_FUNCTION_TABLE SecpkgFunctionTable;
-LSA_DISPATCH_TABLE LsaDispatchTable; // never initialized
+#ifdef USE_SECPKG_FUNCTION_TABLE
+  LSA_SECPKG_FUNCTION_TABLE FunctionTable;
+#else
+  LSA_DISPATCH_TABLE FunctionTable;
+#endif
 
 void LogMessage(const char* message, ...) {
 #ifdef NDEBUG
@@ -49,9 +54,9 @@ void LogMessage(const char* message, ...) {
 LSA_STRING* CreateLsaString(const std::string& msg) {
     auto msg_len = (USHORT)msg.size(); // exclude null-termination
 
-    assert(SecpkgFunctionTable.AllocateLsaHeap);
-    auto* obj = (LSA_STRING*)SecpkgFunctionTable.AllocateLsaHeap(sizeof(LSA_STRING));
-    obj->Buffer = (char*)SecpkgFunctionTable.AllocateLsaHeap(msg_len);
+    assert(FunctionTable.AllocateLsaHeap);
+    auto* obj = (LSA_STRING*)FunctionTable.AllocateLsaHeap(sizeof(LSA_STRING));
+    obj->Buffer = (char*)FunctionTable.AllocateLsaHeap(msg_len);
     memcpy(/*dst*/obj->Buffer, /*src*/msg.c_str(), msg_len);
     obj->Length = msg_len;
     obj->MaximumLength = msg_len;
@@ -62,9 +67,9 @@ LSA_STRING* CreateLsaString(const std::string& msg) {
 LSA_UNICODE_STRING* CreateLsaString(const std::wstring& msg) {
     auto msg_len = (USHORT)msg.size(); // exclude null-termination
 
-    assert(SecpkgFunctionTable.AllocateLsaHeap);
-    auto* obj = (LSA_UNICODE_STRING*)SecpkgFunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
-    obj->Buffer = (wchar_t*)SecpkgFunctionTable.AllocateLsaHeap(2*msg_len);
+    assert(FunctionTable.AllocateLsaHeap);
+    auto* obj = (LSA_UNICODE_STRING*)FunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
+    obj->Buffer = (wchar_t*)FunctionTable.AllocateLsaHeap(2*msg_len);
     memcpy(/*dst*/obj->Buffer, /*src*/msg.c_str(), 2*msg_len);
     obj->Length = 2*msg_len;
     obj->MaximumLength = 2*msg_len;
@@ -84,7 +89,9 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
     assert(!Database);
     assert(!Confidentiality);
     
-    LsaDispatchTable = *lsaDispatchTable; // copy function pointer table
+#ifndef USE_SECPKG_FUNCTION_TABLE
+    FunctionTable = *lsaDispatchTable; // copy function pointer table
+#endif
     *AuthenticationPackageName = CreateLsaString("CustomAuthPkg"); // freed by caller
 
     LogMessage("  return STATUS_SUCCESS");
@@ -92,11 +99,13 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
 }
 
 extern "C"
-NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, LSA_SECPKG_FUNCTION_TABLE* FunctionTable) {
+NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, LSA_SECPKG_FUNCTION_TABLE* functionTable) {
     LogMessage("SpInitialize");
     PackageId;
     Parameters;
-    SecpkgFunctionTable = *FunctionTable; // copy function pointer table
+#ifdef USE_SECPKG_FUNCTION_TABLE
+    FunctionTable = *functionTable; // copy function pointer table
+#endif
 
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
