@@ -9,7 +9,7 @@
 #include <fstream>
 
 // exported symbols
-#pragma comment(linker, "/export:SpLsaModeInitialize" )
+#pragma comment(linker, "/export:SpLsaModeInitialize")
 
 
 LSA_SECPKG_FUNCTION_TABLE SecpkgFunctionTable;
@@ -61,6 +61,7 @@ LSA_UNICODE_STRING* CreateLsaString(const std::wstring& msg) {
 }
 
 // LSA calls LsaApInitializePackage() when loading AuthPkg DLL
+extern "C"
 NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
     LSA_DISPATCH_TABLE* lsaDispatchTable,
     LSA_STRING* Database,
@@ -79,6 +80,7 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
     return STATUS_SUCCESS;
 }
 
+extern "C"
 NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, LSA_SECPKG_FUNCTION_TABLE* FunctionTable) {
     LogMessage("SpInitialize");
     PackageId;
@@ -89,12 +91,14 @@ NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, 
     return STATUS_SUCCESS;
 }
 
+extern "C"
 NTSTATUS NTAPI SpShutDown() {
     LogMessage("SpShutDown");
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
+extern "C"
 NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     LogMessage("SpGetInfo");
 
@@ -155,6 +159,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
     return STATUS_SUCCESS;
 }
 
+extern "C"
 NTSTATUS LsaApLogonUser(
     PLSA_CLIENT_REQUEST ClientRequest,
     SECURITY_LOGON_TYPE LogonType,
@@ -176,6 +181,7 @@ NTSTATUS LsaApLogonUser(
         ProfileBuffer, ProfileBufferLength, LogonId, SubStatus, TokenInformationType, TokenInformation, AccountName, AuthenticatingAuthority, nullptr, nullptr, nullptr);
 }
 
+extern "C"
 NTSTATUS LsaApLogonUserEx(
     PLSA_CLIENT_REQUEST ClientRequest,
     SECURITY_LOGON_TYPE LogonType,
@@ -198,6 +204,7 @@ NTSTATUS LsaApLogonUserEx(
         ProfileBuffer, ProfileBufferLength, LogonId, SubStatus, TokenInformationType, TokenInformation, AccountName, AuthenticatingAuthority, MachineName, nullptr, nullptr);
 }
 
+extern "C"
 NTSTATUS LsaApLogonUserEx2(
     PLSA_CLIENT_REQUEST ClientRequest,
     SECURITY_LOGON_TYPE LogonType,
@@ -222,6 +229,7 @@ NTSTATUS LsaApLogonUserEx2(
         ProfileBuffer, ProfileBufferSize, LogonId, SubStatus, TokenInformationType, TokenInformation, AccountName, AuthenticatingAuthority, MachineName, PrimaryCredentials, SupplementalCredentials);
 }
 
+extern "C"
 NTSTATUS LsaApCallPackage(PLSA_CLIENT_REQUEST ClientRequest,
     VOID* ProtocolSubmitBuffer,
     VOID* ClientBufferBase,
@@ -242,12 +250,14 @@ NTSTATUS LsaApCallPackage(PLSA_CLIENT_REQUEST ClientRequest,
     return STATUS_SUCCESS;
 }
 
+extern "C"
 void LsaApLogonTerminated(LUID* LogonId) {
     LogMessage("LsaApLogonTerminated");
     LogonId;
     LogMessage("  return");
 }
 
+extern "C"
 NTSTATUS LsaApCallPackageUntrusted(
     PLSA_CLIENT_REQUEST ClientRequest,
     VOID*               ProtocolSubmitBuffer,
@@ -269,6 +279,7 @@ NTSTATUS LsaApCallPackageUntrusted(
     return STATUS_SUCCESS;
 }
 
+extern "C"
 NTSTATUS LsaApCallPackagePassthrough(
     PLSA_CLIENT_REQUEST ClientRequest,
     VOID* ProtocolSubmitBuffer,
