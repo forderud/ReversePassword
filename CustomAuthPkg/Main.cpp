@@ -43,7 +43,7 @@ LSA_STRING* CreateLsaString(const std::string& msg) {
     assert(SecpkgFunctionTable.AllocateLsaHeap);
     auto* obj = (LSA_STRING*)SecpkgFunctionTable.AllocateLsaHeap(sizeof(LSA_STRING));
     obj->Buffer = (char*)SecpkgFunctionTable.AllocateLsaHeap(msg_len);
-    strcpy_s(obj->Buffer, msg_len, msg.c_str());
+    memcpy(/*dst*/obj->Buffer, /*src*/msg.c_str(), msg_len);
     obj->Length = msg_len;
     obj->MaximumLength = msg_len;
     return obj;
