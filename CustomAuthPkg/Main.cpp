@@ -77,6 +77,7 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
     LsaDispatchTable = *lsaDispatchTable; // copy function pointer table
     *AuthenticationPackageName = CreateLsaString("CustomAuthPkg"); // freed by caller
 
+    LogMessage("  STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
@@ -85,6 +86,7 @@ NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, 
 
     SecpkgFunctionTable = *FunctionTable; // copy function pointer table
 
+    LogMessage("  STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
@@ -105,6 +107,7 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     PackageInfo->Name = (wchar_t*)L"CustomAuthPkg";
     PackageInfo->Comment = (wchar_t*)L"Custom security package for testing";
 
+    LogMessage("  STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
@@ -322,5 +325,6 @@ NTSTATUS NTAPI SpLsaModeInitialize(ULONG LsaVersion, ULONG* PackageVersion, SECP
     *ppTables = &SecurityPackageFunctionTable;
     *pcTables = 1;
 
+    LogMessage("  STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
