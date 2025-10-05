@@ -24,15 +24,6 @@ inline std::string ToAscii(const std::wstring& w_str) {
     return s_str;
 }
 
-/** Converts ASCII string to unicode */
-inline std::wstring ToUnicode(const std::string& s_str) {
-    std::wstring w_str(s_str.size(), L'\0');
-    size_t charsConverted = 0;
-    auto err = mbstowcs_s(&charsConverted, w_str.data(), w_str.size() + 1, s_str.c_str(), w_str.size());
-    assert(!err); (void)err; // mute unreferenced variable warning
-    return w_str;
-}
-
 class LsaHandle {
 public:
     LsaHandle() {
