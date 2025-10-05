@@ -53,7 +53,7 @@ private:
     HANDLE m_lsa = 0;
 };
 
-ULONG GetAuthPackage(LsaHandle& lsa, const wchar_t* name) {
+NTSTATUS GetAuthPackage(LsaHandle& lsa, const wchar_t* name, /*out*/ULONG* authPkg) {
     std::string name_a = ToAscii(name);
 
     LSA_STRING lsa_name{
@@ -62,17 +62,16 @@ ULONG GetAuthPackage(LsaHandle& lsa, const wchar_t* name) {
         .Buffer = name_a.data(),
     };
 
-    ULONG authPkg = 0;
-    NTSTATUS status = LsaLookupAuthenticationPackage(lsa, &lsa_name, &authPkg);
+    NTSTATUS status = LsaLookupAuthenticationPackage(lsa, &lsa_name, authPkg);
     if (status != STATUS_SUCCESS) {
         if (status == STATUS_NO_SUCH_PACKAGE)
             wprintf(L"ERROR: LsaLookupAuthenticationPackage failed with STATUS_NO_SUCH_PACKAGE\n");
         else
             wprintf(L"ERROR: LsaLookupAuthenticationPackage failed with err: 0x%x\n", status);
-        abort();
+        return status;
     }
 
-    return authPkg;
+    return status;
 }
 
 /** Prepare MSV1_0_INTERACTIVE_LOGON struct to be passed to LsaLogonUser when using authPkg=MSV1_0_PACKAGE_NAME. */
@@ -136,7 +135,10 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         assert(returnLength == sizeof(sourceContext));
     }
 
-    ULONG authPkg = GetAuthPackage(lsa, authPkgName);
+    ULONG authPkg = 0;
+    NTSTATUS status = GetAuthPackage(lsa, authPkgName, &authPkg);
+    if (status != STATUS_SUCCESS)
+        return status;
     
     // output arguments
     void* profileBuffer = nullptr;
@@ -175,8 +177,9 @@ int wmain(int argc, wchar_t* argv[]) {
                 wprintf(L"\n");
                 PrintSecPkgInfo(pkg);
 
-                ULONG authPkg = GetAuthPackage(lsa, ToUnicode(pkg.Name).c_str());
-                wprintf(L"  AuthPkgID: %u\n", authPkg);
+                ULONG authPkg = 0;
+                if (GetAuthPackage(lsa, ToUnicode(pkg.Name).c_str(), &authPkg) == STATUS_SUCCESS)
+                    wprintf(L"  AuthPkgID: %u\n", authPkg);
             }
 
             FreeContextBuffer(packages);
@@ -186,9 +189,10 @@ int wmain(int argc, wchar_t* argv[]) {
         wprintf(L"Predefined security packages:\n");
         const char* predefined_packages[] = { NEGOSSP_NAME_A, MICROSOFT_KERBEROS_NAME_A, MSV1_0_PACKAGE_NAME };
         for (auto* package : predefined_packages) {
-            ULONG authPkg = GetAuthPackage(lsa, ToUnicode(package).c_str());
+            ULONG authPkg = 0;
             wprintf(L"* Package: %hs\n", package);
-            wprintf(L"  AuthPkgID: %u\n", authPkg);
+            if (GetAuthPackage(lsa, ToUnicode(package).c_str(), &authPkg) == STATUS_SUCCESS)
+                wprintf(L"  AuthPkgID: %u\n", authPkg);
         }
     } else if (argc >= 3) {
         size_t argIdx = 1;
