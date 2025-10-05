@@ -63,7 +63,7 @@ ULONG GetAuthPackage(LsaHandle& lsa, const wchar_t* name) {
     ULONG authPkg = 0;
     NTSTATUS status = LsaLookupAuthenticationPackage(lsa, &lsa_name, &authPkg);
     if (status != STATUS_SUCCESS) {
-        wprintf(L"ERROR: LsaLookupAuthenticationPackage failed with err: %u", status);
+        wprintf(L"ERROR: LsaLookupAuthenticationPackage failed with err: 0x%x", status);
         abort();
     }
 
