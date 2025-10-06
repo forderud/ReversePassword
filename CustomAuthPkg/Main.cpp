@@ -50,6 +50,8 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
     
 #ifndef USE_SECPKG_FUNCTION_TABLE
     FunctionTable = *lsaDispatchTable; // copy function pointer table
+#else
+    lsaDispatchTable;
 #endif
     *AuthenticationPackageName = CreateLsaString("CustomAuthPkg"); // freed by caller
 
@@ -130,15 +132,19 @@ NTSTATUS LsaApLogonUserEx2_impl(
             return STATUS_INVALID_PARAMETER;
         }
 
-        // make relative pointers absolute
+        // make relative pointers absolute to ease later access
         logonInfo->LogonDomainName.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->LogonDomainName.Buffer);
         logonInfo->UserName.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->UserName.Buffer);
         logonInfo->Password.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->Password.Buffer);
     }
 
     // assign output arguments
-    *ProfileBuffer = nullptr; // TODO: implement BuildInteractiveProfileBuffer
-    *ProfileBufferSize = 0;
+
+    {
+        // TODO: assign "ProfileBuffer" output argument
+        *ProfileBuffer = nullptr; // TODO: implement BuildInteractiveProfileBuffer
+        *ProfileBufferSize = 0;
+    }
 
     {
         // assign "LogonId" output argument
@@ -158,7 +164,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
     *SubStatus = STATUS_SUCCESS; // reason for error
     
     {
-        // assign "TokenInformation" output argument
+        // TODO: assign "TokenInformation" output argument
         *TokenInformationType = LsaTokenInformationV1;
 
         const LARGE_INTEGER Forever = { 0x7fffffff,0xfffffff };
