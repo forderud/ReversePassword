@@ -156,8 +156,26 @@ NTSTATUS LsaApLogonUserEx2_impl(
     }
 
     *SubStatus = STATUS_SUCCESS; // reason for error
-    *TokenInformationType = LsaTokenInformationV1;
-    *TokenInformation = nullptr;
+    
+    {
+        // assign "TokenInformation" output argument
+        *TokenInformationType = LsaTokenInformationV1;
+
+        const LARGE_INTEGER Forever = { 0x7fffffff,0xfffffff };
+
+        auto* token = (LSA_TOKEN_INFORMATION_V1*)FunctionTable.AllocateLsaHeap(sizeof(LSA_TOKEN_INFORMATION_V1));
+        token->ExpirationTime = Forever;
+        // TODO: Populate SID fields...
+        token->User;
+        token->Groups;
+        token->PrimaryGroup;
+        token->Privileges;
+        token->Owner;
+        token->DefaultDacl;
+
+        *TokenInformation = token;
+    }
+
     {
         // assign "AccountName" output argument
         if (SubmitBufferSize < sizeof(MSV1_0_INTERACTIVE_LOGON)) {
