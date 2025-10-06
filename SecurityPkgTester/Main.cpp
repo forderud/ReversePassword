@@ -179,14 +179,12 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     si.cb = sizeof(si);
     PROCESS_INFORMATION pi = {};
     std::wstring cmd_exe = L"C:\\Windows\\System32\\cmd.exe";
-    if (!CreateProcessAsUserW(token, cmd_exe.c_str(), cmd_exe.data(), /*proc.attr*/nullptr, /*thread attr*/nullptr, false, CREATE_NEW_CONSOLE, /*env*/nullptr, /*cur-dir*/nullptr, &si, &pi)) {
-        wprintf(L"ERROR: Unable to start cmd.exe through the logged in user.\n");
-        return STATUS_FAIL_FAST_EXCEPTION;
+    if (!CreateProcessAsUserW(token, cmd_exe.c_str(), nullptr, /*proc.attr*/nullptr, /*thread attr*/nullptr, /*inherit*/false, CREATE_NEW_CONSOLE, /*env*/nullptr, /*cur-dir*/nullptr, &si, &pi)) {
+        DWORD err = GetLastError();
+        wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (err %u).\n", err);
+        return err;
     }
 
-    CloseHandle(si.hStdInput);
-    CloseHandle(si.hStdOutput);
-    CloseHandle(si.hStdError);
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 #endif
