@@ -96,30 +96,21 @@ NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
         }
         LogMessage("  NumberOfLocalGroups: %u", NumberOfLocalGroups);
 
-        PSID* pGroupSid = (PSID*)FunctionTable.AllocateLsaHeap((NumberOfGroups + NumberOfLocalGroups) * sizeof(PSID));
-        if (!pGroupSid)
-            return STATUS_NO_MEMORY;
-        // populate pGroupSid
-        for (size_t i = 0; i < NumberOfGroups; i++)
-            NameToSid(pGroupInfo[i].grui1_name, &pGroupSid[i]);
-        for (size_t i = 0; i < NumberOfLocalGroups; i++)
-            NameToSid(pLocalGroupInfo[i].grui0_name, &pGroupSid[NumberOfGroups + i]);
-        LogMessage("  pGroupSid populated");
-
         TOKEN_GROUPS* tokenGroups = (TOKEN_GROUPS*)FunctionTable.AllocateLsaHeap(FIELD_OFFSET(TOKEN_GROUPS, Groups[NumberOfGroups + NumberOfLocalGroups]));
         tokenGroups->GroupCount = NumberOfGroups + NumberOfLocalGroups;
         for (size_t i = 0; i < NumberOfGroups; i++) {
+            NameToSid(pGroupInfo[i].grui1_name, &tokenGroups->Groups[i].Sid);
+
             tokenGroups->Groups[i].Attributes = pGroupInfo[i].grui1_attributes;
-            tokenGroups->Groups[i].Sid = pGroupSid[i];
         }
         for (size_t i = 0; i < NumberOfLocalGroups; i++) {
-            // get the attributes of group since the struct doesn't containt attributes
-            if (*GetSidSubAuthority(pGroupSid[NumberOfGroups + i], 0) != SECURITY_BUILTIN_DOMAIN_RID)
+            NameToSid(pLocalGroupInfo[i].grui0_name, &tokenGroups->Groups[NumberOfGroups + i].Sid);
+
+            // get the attributes of group since pLocalGroupInfo doesn't contain attributes
+            if (*GetSidSubAuthority(tokenGroups->Groups[NumberOfGroups + i].Sid, 0) != SECURITY_BUILTIN_DOMAIN_RID)
                 tokenGroups->Groups[NumberOfGroups + i].Attributes = SE_GROUP_ENABLED | SE_GROUP_ENABLED_BY_DEFAULT;
             else
                 tokenGroups->Groups[NumberOfGroups + i].Attributes = 0;
-
-            tokenGroups->Groups[NumberOfGroups + i].Sid = pGroupSid[NumberOfGroups + i];
         }
 
         token->Groups = tokenGroups;
