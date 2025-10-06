@@ -153,8 +153,12 @@ NTSTATUS LsaApLogonUserEx2_impl(
             return STATUS_INVALID_PARAMETER;
         }
 
+        LogMessage("ProtocolSubmitBuffer dump:");
+        for (ULONG i = 0; i < SubmitBufferSize; i++)
+            LogMessage("ProtocolSubmitBuffer[%u] =  %u (%c)", i, ((char*)ProtocolSubmitBuffer)[i], ((char*)ProtocolSubmitBuffer)[i]);
+
         const wchar_t* username = (wchar_t*)logonInfo + (size_t)logonInfo->UserName.Buffer; // make pointer absolute
-        LogMessage("  AccountName: %s", username);
+        LogMessage("  AccountName: %ls", username);
         *AccountName = CreateLsaUnicodeString(username, logonInfo->UserName.Length); // mandatory
     }
     *AuthenticatingAuthority = nullptr; // optional
@@ -168,8 +172,8 @@ NTSTATUS LsaApLogonUserEx2_impl(
             return STATUS_INTERNAL_ERROR;
         }
 
-        LogMessage("  ComputerNameSize: %s", computerNameSize);
-        LogMessage("  MachineName: %s", computerNameBuf);
+        LogMessage("  ComputerNameSize: %u", computerNameSize);
+        LogMessage("  MachineName: %ls", computerNameBuf);
         *MachineName = CreateLsaUnicodeString(computerNameBuf, (USHORT)computerNameSize);
     }
 
