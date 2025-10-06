@@ -9,27 +9,6 @@ LSA_SECPKG_FUNCTION_TABLE FunctionTable;
 #include "Utils.hpp"
 
 
-// LSA calls LsaApInitializePackage() when loading AuthPkg DLL
-extern "C"
-NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
-    LSA_DISPATCH_TABLE* lsaDispatchTable,
-    LSA_STRING* Database,
-    LSA_STRING* Confidentiality,
-    LSA_STRING** AuthenticationPackageName
-) {
-    LogMessage("LsaApInitializePackage (never called)");
-    AuthenticationPackageId;
-    lsaDispatchTable;
-    assert(!Database);
-    assert(!Confidentiality);
-    
-    //FunctionTable = *lsaDispatchTable; // copy function pointer table
-    *AuthenticationPackageName = CreateLsaString("CustomAuthPkg"); // freed by caller
-
-    LogMessage("  return STATUS_SUCCESS");
-    return STATUS_SUCCESS;
-}
-
 extern "C"
 NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, LSA_SECPKG_FUNCTION_TABLE* functionTable) {
     LogMessage("SpInitialize");
@@ -343,7 +322,8 @@ NTSTATUS LsaApCallPackagePassthrough(
 
 
 SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
-    .InitializePackage = LsaApInitializePackage,
+    .InitializePackage = nullptr,
+
     .LogonUser = LsaApLogonUser,
     .CallPackage = LsaApCallPackage,
     .LogonTerminated = LsaApLogonTerminated,
