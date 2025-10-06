@@ -12,7 +12,7 @@ Local Security Authority (LSA) protection needs to be disabled in order for the 
 * Reboot
 
 ## Installation
-Run `InstallCustomAuthPkg.bat` as admin.
+Run `Install_NoPasswordAuthPkg.bat` as admin.
 
 ## External links
 * [Registering SSP/AP DLLs](https://learn.microsoft.com/en-us/windows/win32/secauthn/registering-ssp-ap-dlls) 

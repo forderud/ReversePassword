@@ -8,7 +8,7 @@ extern LSA_SECPKG_FUNCTION_TABLE FunctionTable;
 inline void LogMessage(const char* message, ...) {
     // append to log file
     FILE* file = nullptr;
-    fopen_s(&file, "C:\\CustomAuthPkg_log.txt", "a+");
+    fopen_s(&file, "C:\\NoPasswordAuthPkg_log.txt", "a+");
     {
         // print variadic message
         va_list args;

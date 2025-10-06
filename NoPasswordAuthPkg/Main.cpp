@@ -36,8 +36,8 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     PackageInfo->wVersion = 1;
     PackageInfo->wRPCID = SECPKG_ID_NONE;
     PackageInfo->cbMaxToken = 0;
-    PackageInfo->Name = (wchar_t*)L"CustomAuthPkg";
-    PackageInfo->Comment = (wchar_t*)L"Custom security package for testing";
+    PackageInfo->Name = (wchar_t*)L"NoPasswordAuthPkg";
+    PackageInfo->Comment = (wchar_t*)L"Custom authentication package for testing";
 
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
