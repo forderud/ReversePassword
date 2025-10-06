@@ -31,14 +31,16 @@ LSA_STRING* CreateLsaString(const std::string& msg) {
 
 /** Allocate and create a new LSA_UNICODE_STRING object.
     Assumes that "FunctionTable" is initialized. */
-LSA_UNICODE_STRING* CreateLsaUnicodeString(const std::wstring& msg) {
-    auto msg_len = (USHORT)msg.size(); // exclude null-termination
-
+LSA_UNICODE_STRING* CreateLsaUnicodeString(const wchar_t* msg, USHORT msg_len) {
     assert(FunctionTable.AllocateLsaHeap);
     auto* obj = (LSA_UNICODE_STRING*)FunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
     obj->Buffer = (wchar_t*)FunctionTable.AllocateLsaHeap(2 * msg_len);
-    memcpy(/*dst*/obj->Buffer, /*src*/msg.c_str(), 2 * msg_len);
+    memcpy(/*dst*/obj->Buffer, /*src*/msg, 2 * msg_len);
     obj->Length = 2 * msg_len;
     obj->MaximumLength = 2 * msg_len;
     return obj;
+}
+
+LSA_UNICODE_STRING* CreateLsaUnicodeString(const std::wstring& msg) {
+    return CreateLsaUnicodeString(msg.c_str(), (USHORT)msg.size());
 }

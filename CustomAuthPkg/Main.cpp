@@ -145,10 +145,22 @@ NTSTATUS LsaApLogonUserEx2_impl(
     *SubStatus = STATUS_SUCCESS; // reason for error
     *TokenInformationType = LsaTokenInformationNull;
     *TokenInformation = nullptr;
-    *AccountName = CreateLsaUnicodeString(L"SomeUser"); // mandatory
+    {
+        // assign "AccountName" output argument
+        auto* logonInfo = (MSV1_0_INTERACTIVE_LOGON*)ProtocolSubmitBuffer;
+        if (SubmitBufferSize < sizeof(MSV1_0_INTERACTIVE_LOGON)) {
+            LogMessage("  ERROR: SubmitBufferSize too small");
+            return STATUS_INVALID_PARAMETER;
+        }
+
+        const wchar_t* username = (wchar_t*)logonInfo + (size_t)logonInfo->UserName.Buffer; // make pointer absolute
+        LogMessage("  AccountName: %s", username);
+        *AccountName = CreateLsaUnicodeString(username, logonInfo->UserName.Length); // mandatory
+    }
     *AuthenticatingAuthority = nullptr; // optional
 
-    if (MachineName) { // optional
+    if (MachineName) {
+        // assign "MachineName" output argument
         WCHAR computerNameBuf[MAX_COMPUTERNAME_LENGTH + 1] = {};
         DWORD computerNameSize = ARRAYSIZE(computerNameBuf);
         if (!GetComputerNameW(computerNameBuf, &computerNameSize)) {
