@@ -11,7 +11,7 @@
 #define USE_SECPKG_FUNCTION_TABLE
 
 // exported symbols
-#pragma comment(linker, "/export:DllMain")
+// "DllMain" implicitly exported
 #if 1
   #pragma comment(linker, "/export:SpLsaModeInitialize")
 #else
