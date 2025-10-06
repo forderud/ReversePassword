@@ -123,6 +123,19 @@ NTSTATUS LsaApLogonUserEx2_impl(
         return STATUS_NOT_IMPLEMENTED;
     }
 
+    auto* logonInfo = (MSV1_0_INTERACTIVE_LOGON*)ProtocolSubmitBuffer;
+    {
+        if (SubmitBufferSize < sizeof(MSV1_0_INTERACTIVE_LOGON)) {
+            LogMessage("  ERROR: SubmitBufferSize too small");
+            return STATUS_INVALID_PARAMETER;
+        }
+
+        // make relative pointers absolutes
+        logonInfo->LogonDomainName.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->LogonDomainName.Buffer); // make pointer absolute
+        logonInfo->UserName.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->UserName.Buffer); // make pointer absolute
+        logonInfo->Password.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->Password.Buffer); // make pointer absolute
+    }
+
     // assign output arguments
     *ProfileBuffer = nullptr; // TODO: implement BuildInteractiveProfileBuffer
     *ProfileBufferSize = 0;
@@ -147,27 +160,22 @@ NTSTATUS LsaApLogonUserEx2_impl(
     *TokenInformation = nullptr;
     {
         // assign "AccountName" output argument
-        auto* logonInfo = (MSV1_0_INTERACTIVE_LOGON*)ProtocolSubmitBuffer;
         if (SubmitBufferSize < sizeof(MSV1_0_INTERACTIVE_LOGON)) {
             LogMessage("  ERROR: SubmitBufferSize too small");
             return STATUS_INVALID_PARAMETER;
         }
 
-        auto* username = (const wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->UserName.Buffer); // make pointer absolute
-        LogMessage("  AccountName: %ls", username);
-        *AccountName = CreateLsaUnicodeString(username, logonInfo->UserName.Length); // mandatory
+        LogMessage("  AccountName: %ls", logonInfo->UserName.Buffer);
+        *AccountName = CreateLsaUnicodeString(logonInfo->UserName.Buffer, logonInfo->UserName.Length); // mandatory
     }
 
     if (AuthenticatingAuthority) {
         // assign "AuthenticatingAuthority" output argument
-        auto* logonInfo = (MSV1_0_INTERACTIVE_LOGON*)ProtocolSubmitBuffer;
-        auto* domainname = (const wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->LogonDomainName.Buffer); // make pointer absolute
-
         *AuthenticatingAuthority = (LSA_UNICODE_STRING*)FunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
 
         if (logonInfo->LogonDomainName.Length > 0) {
-            LogMessage("  AuthenticatingAuthority: %ls", domainname);
-            *AuthenticatingAuthority = CreateLsaUnicodeString(domainname, logonInfo->LogonDomainName.Length);
+            LogMessage("  AuthenticatingAuthority: %ls", logonInfo->LogonDomainName.Buffer);
+            *AuthenticatingAuthority = CreateLsaUnicodeString(logonInfo->LogonDomainName.Buffer, logonInfo->LogonDomainName.Length);
         } else {
             LogMessage("  AuthenticatingAuthority: <empty>");
             **AuthenticatingAuthority = {
