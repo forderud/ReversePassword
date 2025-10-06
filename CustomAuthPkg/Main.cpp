@@ -62,6 +62,8 @@ NTSTATUS LsaApLogonUserEx2 (
     SECPKG_PRIMARY_CRED* PrimaryCredentials,
     SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials)
 {
+    LogMessage("LsaApLogonUserEx2");
+
     // input arguments
     ClientRequest;
     LogMessage("  LogonType: %i", LogonType); // Interactive=2
