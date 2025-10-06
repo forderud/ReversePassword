@@ -2,6 +2,8 @@
 #include <cassert>
 #include <fstream>
 
+extern LSA_SECPKG_FUNCTION_TABLE FunctionTable;
+
 
 inline void LogMessage(const char* message, ...) {
     // append to log file
