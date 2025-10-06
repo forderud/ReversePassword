@@ -110,7 +110,7 @@ std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& pass
 }
 
 NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo) {
-    wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
+    //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     const char ORIGIN[] = "SecurityPkgTester";
     LSA_STRING origin {

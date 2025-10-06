@@ -114,8 +114,8 @@ NTSTATUS LsaApLogonUserEx2_impl(
     // input arguments
     ClientRequest;
     LogMessage("  LogonType: %i", LogonType); // Interactive=2
-    LogMessage("  ProtocolSubmitBuffer: 0x%p", ProtocolSubmitBuffer);
-    LogMessage("  ClientBufferBase: 0x%p", ClientBufferBase);
+    //LogMessage("  ProtocolSubmitBuffer: 0x%p", ProtocolSubmitBuffer);
+    //LogMessage("  ClientBufferBase: 0x%p", ClientBufferBase);
     LogMessage("  ProtocolSubmitBuffer size: %i", SubmitBufferSize);
 
     if (LogonType != Interactive) {
