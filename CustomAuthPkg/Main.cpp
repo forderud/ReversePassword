@@ -169,7 +169,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
         }
 
         LogMessage("  MachineName: %ls", computerNameBuf);
-        *MachineName = CreateLsaUnicodeString(computerNameBuf, (USHORT)computerNameSize);
+        *MachineName = CreateLsaUnicodeString(computerNameBuf, (USHORT)computerNameSize*sizeof(wchar_t));
     }
 
     if (PrimaryCredentials)
