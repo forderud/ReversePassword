@@ -4,8 +4,6 @@
 #include <sspi.h>
 #include <NTSecAPI.h>  // for LSA_STRING
 #include <ntsecpkg.h>  // for LSA_DISPATCH_TABLE
-#include <cassert>
-#include <fstream>
 #include "PrepareToken.hpp"
 
 // exported symbols

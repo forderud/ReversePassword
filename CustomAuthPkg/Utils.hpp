@@ -1,4 +1,7 @@
 #pragma once
+#include <cassert>
+#include <fstream>
+
 
 inline void LogMessage(const char* message, ...) {
     // append to log file
