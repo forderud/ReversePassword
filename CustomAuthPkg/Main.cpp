@@ -2,7 +2,6 @@
 #define WIN32_NO_STATUS
 #include <windows.h>
 #include <Lmcons.h>
-#define SECURITY_WIN32 // required by sspi.h
 #include <sspi.h>
 #include <NTSecAPI.h>  // for LSA_STRING
 #include <ntsecpkg.h>  // for LSA_DISPATCH_TABLE
