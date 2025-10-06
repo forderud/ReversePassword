@@ -114,8 +114,8 @@ NTSTATUS LsaApLogonUserEx2_impl(
     // input arguments
     ClientRequest;
     LogMessage("  LogonType: %i", LogonType); // Interactive=2
-    ProtocolSubmitBuffer;
-    ClientBufferBase;
+    LogMessage("  ProtocolSubmitBuffer: 0x%p", ProtocolSubmitBuffer);
+    LogMessage("  ClientBufferBase: 0x%p", ClientBufferBase);
     LogMessage("  ProtocolSubmitBuffer size: %i", SubmitBufferSize);
 
     if (LogonType != Interactive) {
@@ -161,15 +161,16 @@ NTSTATUS LsaApLogonUserEx2_impl(
 
     if (MachineName) {
         // assign "MachineName" output argument
-        WCHAR computerNameBuf[MAX_COMPUTERNAME_LENGTH + 1] = {};
+        wchar_t computerNameBuf[MAX_COMPUTERNAME_LENGTH + 1] = {};
         DWORD computerNameSize = ARRAYSIZE(computerNameBuf);
         if (!GetComputerNameW(computerNameBuf, &computerNameSize)) {
             LogMessage("  return STATUS_NOT_IMPLEMENTED (GetComputerNameW failed)");
             return STATUS_INTERNAL_ERROR;
         }
 
+        LogMessage("  ComputerNameSize: %s", computerNameSize);
         LogMessage("  MachineName: %s", computerNameBuf);
-        *MachineName = CreateLsaUnicodeString(computerNameBuf);
+        *MachineName = CreateLsaUnicodeString(computerNameBuf, (USHORT)computerNameSize);
     }
 
     if (PrimaryCredentials)
