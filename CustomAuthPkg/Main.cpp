@@ -8,6 +8,7 @@
 #include <ntsecpkg.h>  // for LSA_DISPATCH_TABLE
 #include <cassert>
 #include <fstream>
+#include "PrepareToken.hpp"
 
 #define USE_SECPKG_FUNCTION_TABLE
 
