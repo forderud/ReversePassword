@@ -8,8 +8,6 @@
 #include <fstream>
 #include "PrepareToken.hpp"
 
-#define USE_SECPKG_FUNCTION_TABLE
-
 // exported symbols
 // "DllMain" implicitly exported
 #if 1
@@ -26,11 +24,7 @@
   #pragma comment(linker, "/export:LsaApLogonUserEx2" )
 #endif
 
-#ifdef USE_SECPKG_FUNCTION_TABLE
-  LSA_SECPKG_FUNCTION_TABLE FunctionTable;
-#else
-  LSA_DISPATCH_TABLE FunctionTable;
-#endif
+LSA_SECPKG_FUNCTION_TABLE FunctionTable;
 
 #include "Utils.hpp"
 
@@ -43,16 +37,13 @@ NTSTATUS LsaApInitializePackage(ULONG AuthenticationPackageId,
     LSA_STRING* Confidentiality,
     LSA_STRING** AuthenticationPackageName
 ) {
-    LogMessage("LsaApInitializePackage");
+    LogMessage("LsaApInitializePackage (never called)");
     AuthenticationPackageId;
+    lsaDispatchTable;
     assert(!Database);
     assert(!Confidentiality);
     
-#ifndef USE_SECPKG_FUNCTION_TABLE
-    FunctionTable = *lsaDispatchTable; // copy function pointer table
-#else
-    lsaDispatchTable;
-#endif
+    //FunctionTable = *lsaDispatchTable; // copy function pointer table
     *AuthenticationPackageName = CreateLsaString("CustomAuthPkg"); // freed by caller
 
     LogMessage("  return STATUS_SUCCESS");
@@ -64,9 +55,7 @@ NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, 
     LogMessage("SpInitialize");
     PackageId;
     Parameters;
-#ifdef USE_SECPKG_FUNCTION_TABLE
     FunctionTable = *functionTable; // copy function pointer table
-#endif
 
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
