@@ -1,5 +1,7 @@
-# Security Support Provider/Authentication Package (SSP/AP) sample
-Minimal Security Support Provider/Authentication Package (SSP/AP) that does nothing.
+# Authentication Package (SSP/AP) sample
+Minimal Security Support Provider/Authentication Package (SSP/AP) sample project that bypasses the need for entering passwords.
+
+**WARNING**: Do not use as-is in production since it will undermine security!
 
 ## Prerequisite
 Local Security Authority (LSA) protection needs to be disabled in order for the DLL to load.
