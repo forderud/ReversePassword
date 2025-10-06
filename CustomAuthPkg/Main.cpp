@@ -43,7 +43,8 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     return STATUS_SUCCESS;
 }
 
-NTSTATUS LsaApLogonUserEx2_impl(
+extern "C"
+NTSTATUS LsaApLogonUserEx2 (
     PLSA_CLIENT_REQUEST ClientRequest,
     SECURITY_LOGON_TYPE LogonType,
     VOID* ProtocolSubmitBuffer,
@@ -179,76 +180,6 @@ NTSTATUS LsaApLogonUserEx2_impl(
 }
 
 extern "C"
-NTSTATUS LsaApLogonUser(
-    PLSA_CLIENT_REQUEST ClientRequest,
-    SECURITY_LOGON_TYPE LogonType,
-    VOID* AuthenticationInformation,
-    VOID* ClientAuthenticationBase,
-    ULONG AuthenticationInformationLength,
-    VOID** ProfileBuffer,
-    ULONG* ProfileBufferLength,
-    LUID* LogonId,
-    NTSTATUS* SubStatus,
-    LSA_TOKEN_INFORMATION_TYPE* TokenInformationType,
-    VOID** TokenInformation,
-    LSA_UNICODE_STRING** AccountName,
-    LSA_UNICODE_STRING** AuthenticatingAuthority)
-{
-    LogMessage("LsaApLogonUser");
-
-    return LsaApLogonUserEx2_impl(ClientRequest, LogonType, AuthenticationInformation, ClientAuthenticationBase, AuthenticationInformationLength,
-        ProfileBuffer, ProfileBufferLength, LogonId, SubStatus, TokenInformationType, TokenInformation, AccountName, AuthenticatingAuthority, nullptr, nullptr, nullptr);
-}
-
-extern "C"
-NTSTATUS LsaApLogonUserEx(
-    PLSA_CLIENT_REQUEST ClientRequest,
-    SECURITY_LOGON_TYPE LogonType,
-    VOID* AuthenticationInformation,
-    VOID* ClientAuthenticationBase,
-    ULONG AuthenticationInformationLength,
-    VOID** ProfileBuffer,
-    ULONG* ProfileBufferLength,
-    LUID* LogonId,
-    NTSTATUS* SubStatus,
-    LSA_TOKEN_INFORMATION_TYPE* TokenInformationType,
-    VOID** TokenInformation,
-    PUNICODE_STRING* AccountName,
-    PUNICODE_STRING* AuthenticatingAuthority,
-    PUNICODE_STRING* MachineName)
-{
-    LogMessage("LsaApLogonUserEx");
-
-    return LsaApLogonUserEx2_impl(ClientRequest, LogonType, AuthenticationInformation, ClientAuthenticationBase, AuthenticationInformationLength,
-        ProfileBuffer, ProfileBufferLength, LogonId, SubStatus, TokenInformationType, TokenInformation, AccountName, AuthenticatingAuthority, MachineName, nullptr, nullptr);
-}
-
-extern "C"
-NTSTATUS LsaApLogonUserEx2(
-    PLSA_CLIENT_REQUEST ClientRequest,
-    SECURITY_LOGON_TYPE LogonType,
-    VOID* ProtocolSubmitBuffer,
-    VOID* ClientBufferBase,
-    ULONG SubmitBufferSize,
-    VOID** ProfileBuffer,
-    ULONG* ProfileBufferSize,
-    LUID* LogonId,
-    NTSTATUS* SubStatus,
-    LSA_TOKEN_INFORMATION_TYPE* TokenInformationType,
-    VOID** TokenInformation,
-    PUNICODE_STRING* AccountName,
-    PUNICODE_STRING* AuthenticatingAuthority,
-    PUNICODE_STRING* MachineName,
-    SECPKG_PRIMARY_CRED* PrimaryCredentials,
-    SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials)
-{
-    LogMessage("LsaApLogonUserEx2");
-
-    return LsaApLogonUserEx2_impl(ClientRequest, LogonType, ProtocolSubmitBuffer, ClientBufferBase, SubmitBufferSize,
-        ProfileBuffer, ProfileBufferSize, LogonId, SubStatus, TokenInformationType, TokenInformation, AccountName, AuthenticatingAuthority, MachineName, PrimaryCredentials, SupplementalCredentials);
-}
-
-extern "C"
 void LsaApLogonTerminated(LUID* LogonId) {
     LogMessage("LsaApLogonTerminated");
     LogonId;
@@ -257,12 +188,13 @@ void LsaApLogonTerminated(LUID* LogonId) {
 
 SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .InitializePackage = nullptr,
-    .LogonUser = LsaApLogonUser,
+    .LogonUser = nullptr,
     .CallPackage = nullptr,
+
     .LogonTerminated = LsaApLogonTerminated,
     .CallPackageUntrusted = nullptr,
     .CallPackagePassthrough = nullptr,
-    .LogonUserEx = LsaApLogonUserEx,
+    .LogonUserEx = nullptr,
     .LogonUserEx2 = LsaApLogonUserEx2,
     .Initialize = SpInitialize,
     .Shutdown = SpShutDown,
