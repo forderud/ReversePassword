@@ -44,3 +44,7 @@ LSA_UNICODE_STRING* CreateLsaUnicodeString(const wchar_t* msg, USHORT msg_len_by
 LSA_UNICODE_STRING* CreateLsaUnicodeString(const std::wstring& msg) {
     return CreateLsaUnicodeString(msg.c_str(), (USHORT)msg.size()*sizeof(wchar_t));
 }
+
+std::wstring ToWstring(LSA_UNICODE_STRING& lsa_str) {
+    return std::wstring(lsa_str.Buffer, lsa_str.Length/2);
+}

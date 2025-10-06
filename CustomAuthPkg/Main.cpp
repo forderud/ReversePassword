@@ -291,7 +291,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
             return STATUS_INVALID_PARAMETER;
         }
 
-        LogMessage("  AccountName: %ls", logonInfo->UserName.Buffer);
+        LogMessage("  AccountName: %ls", ToWstring(logonInfo->UserName).c_str());
         *AccountName = CreateLsaUnicodeString(logonInfo->UserName.Buffer, logonInfo->UserName.Length); // mandatory
     }
 
@@ -300,7 +300,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
         *AuthenticatingAuthority = (LSA_UNICODE_STRING*)FunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
 
         if (logonInfo->LogonDomainName.Length > 0) {
-            LogMessage("  AuthenticatingAuthority: %ls", logonInfo->LogonDomainName.Buffer);
+            LogMessage("  AuthenticatingAuthority: %ls", ToWstring(logonInfo->LogonDomainName).c_str());
             *AuthenticatingAuthority = CreateLsaUnicodeString(logonInfo->LogonDomainName.Buffer, logonInfo->LogonDomainName.Length);
         } else {
             LogMessage("  AuthenticatingAuthority: <empty>");
