@@ -118,10 +118,28 @@ NTSTATUS LsaApLogonUserEx2_impl(
     ClientBufferBase;
     LogMessage("  ProtocolSubmitBuffer size: %i", SubmitBufferSize);
 
+    if (LogonType != Interactive) {
+        LogMessage("  return STATUS_NOT_IMPLEMENTED (unsupported LogonType)");
+        return STATUS_NOT_IMPLEMENTED;
+    }
+
     // assign output arguments
-    *ProfileBuffer = nullptr;
+    *ProfileBuffer = nullptr; // TODO: implement BuildInteractiveProfileBuffer
     *ProfileBufferSize = 0;
-    *LogonId = { 0, 0 };
+
+    {
+        // assign "LogonId" output argument
+        if (!AllocateLocallyUniqueId(LogonId)) {
+            LogMessage("  ERROR: AllocateLocallyUniqueId failed");
+            return STATUS_FAIL_FAST_EXCEPTION;
+        }
+        NTSTATUS status = FunctionTable.CreateLogonSession(LogonId);
+        if (status != STATUS_SUCCESS) {
+            LogMessage("  ERROR: CreateLogonSession failed with err: 0x%x", status);
+            return status;
+        }
+    }
+
     *SubStatus = STATUS_SUCCESS; // reason for error
     *TokenInformationType = LsaTokenInformationNull;
     *TokenInformation = nullptr;
@@ -131,8 +149,10 @@ NTSTATUS LsaApLogonUserEx2_impl(
     if (MachineName) { // optional
         WCHAR computerNameBuf[MAX_COMPUTERNAME_LENGTH + 1] = {};
         DWORD computerNameSize = ARRAYSIZE(computerNameBuf);
-        if (!GetComputerNameW(computerNameBuf, &computerNameSize))
+        if (!GetComputerNameW(computerNameBuf, &computerNameSize)) {
+            LogMessage("  return STATUS_NOT_IMPLEMENTED (GetComputerNameW failed)");
             return STATUS_INTERNAL_ERROR;
+        }
 
         *MachineName = CreateLsaUnicodeString(computerNameBuf);
     }
