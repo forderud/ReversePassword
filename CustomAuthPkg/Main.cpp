@@ -249,86 +249,19 @@ NTSTATUS LsaApLogonUserEx2(
 }
 
 extern "C"
-NTSTATUS LsaApCallPackage(PLSA_CLIENT_REQUEST ClientRequest,
-    VOID* ProtocolSubmitBuffer,
-    VOID* ClientBufferBase,
-    ULONG SubmitBufferLength,
-    VOID** ProtocolReturnBuffer,
-    ULONG* ReturnBufferLength,
-    NTSTATUS* ProtocolStatus)
-{
-    LogMessage("LsaApCallPackage");
-    ClientRequest;
-    ProtocolSubmitBuffer;
-    ClientBufferBase;
-    SubmitBufferLength;
-    ProtocolReturnBuffer;
-    ReturnBufferLength;
-    ProtocolStatus;
-    LogMessage("  return STATUS_NOT_IMPLEMENTED");
-    return STATUS_NOT_IMPLEMENTED;
-}
-
-extern "C"
 void LsaApLogonTerminated(LUID* LogonId) {
     LogMessage("LsaApLogonTerminated");
     LogonId;
     LogMessage("  return");
 }
 
-extern "C"
-NTSTATUS LsaApCallPackageUntrusted(
-    PLSA_CLIENT_REQUEST ClientRequest,
-    VOID*               ProtocolSubmitBuffer,
-    VOID*               ClientBufferBase,
-    ULONG               SubmitBufferLength,
-    VOID** ProtocolReturnBuffer,
-    ULONG*              ReturnBufferLength,
-    NTSTATUS*           ProtocolStatus)
-{
-    LogMessage("LsaApCallPackageUntrusted");
-    ClientRequest;
-    ProtocolSubmitBuffer;
-    ClientBufferBase;
-    SubmitBufferLength;
-    ProtocolReturnBuffer;
-    ReturnBufferLength;
-    ProtocolStatus;
-    LogMessage("  return STATUS_NOT_IMPLEMENTED");
-    return STATUS_NOT_IMPLEMENTED;
-}
-
-extern "C"
-NTSTATUS LsaApCallPackagePassthrough(
-    PLSA_CLIENT_REQUEST ClientRequest,
-    VOID* ProtocolSubmitBuffer,
-    VOID* ClientBufferBase,
-    ULONG SubmitBufferLength,
-    VOID** ProtocolReturnBuffer,
-    ULONG* ReturnBufferLength,
-    NTSTATUS* ProtocolStatus)
-{
-    LogMessage("LsaApCallPackagePassthrough");
-    ClientRequest;
-    ProtocolSubmitBuffer;
-    ClientBufferBase;
-    SubmitBufferLength;
-    ProtocolReturnBuffer;
-    ReturnBufferLength;
-    ProtocolStatus;
-    LogMessage("  return STATUS_NOT_IMPLEMENTED");
-    return STATUS_NOT_IMPLEMENTED;
-}
-
-
 SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .InitializePackage = nullptr,
-
     .LogonUser = LsaApLogonUser,
-    .CallPackage = LsaApCallPackage,
+    .CallPackage = nullptr,
     .LogonTerminated = LsaApLogonTerminated,
-    .CallPackageUntrusted = LsaApCallPackageUntrusted,
-    .CallPackagePassthrough = LsaApCallPackagePassthrough,
+    .CallPackageUntrusted = nullptr,
+    .CallPackagePassthrough = nullptr,
     .LogonUserEx = LsaApLogonUserEx,
     .LogonUserEx2 = LsaApLogonUserEx2,
     .Initialize = SpInitialize,
