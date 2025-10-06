@@ -1,5 +1,8 @@
 #include "PrepareToken.hpp"
+#include <Lm.h>
 #include "Utils.hpp"
+
+#pragma comment(lib, "Netapi32.lib")
 
 
 bool NameToSid(const wchar_t* username, SID** userSid) {
@@ -31,6 +34,27 @@ void GetPrimaryGroupSidFromUserSid(SID* userSID, PSID* primaryGroupSID) {
     // last SubAuthority = RID
     *GetSidSubAuthority(*primaryGroupSID, SubAuthorityCount - 1) = DOMAIN_GROUP_RID_USERS;
 }
+
+bool GetGroups(wchar_t* UserName, GROUP_USERS_INFO_1** lpGroupInfo, DWORD* pTotalEntries) {
+    DWORD NumberOfEntries = 0;
+    DWORD status = NetUserGetGroups(NULL, UserName, 1, (LPBYTE*)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
+    if (status != NERR_Success) {
+        LogMessage("ERROR: NetUserGetGroups failed with error %u", status );
+        return false;
+    }
+    return true;
+}
+
+bool GetLocalGroups(wchar_t* UserName, GROUP_USERS_INFO_0** lpGroupInfo, DWORD* pTotalEntries) {
+    DWORD NumberOfEntries = 0;
+    DWORD status = NetUserGetLocalGroups(NULL, UserName, 0, 0, (LPBYTE*)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
+    if (status != NERR_Success) {
+        LogMessage("ERROR: NetUserGetLocalGroups failed with error %u", status);
+        return false;
+    }
+    return true;
+}
+
 
 NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
     __out LSA_TOKEN_INFORMATION_V1** Token,
