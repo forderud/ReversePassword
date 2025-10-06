@@ -24,6 +24,10 @@ inline std::string ToAscii(const std::wstring& w_str) {
     return s_str;
 }
 
+inline std::wstring ToWstring(LSA_UNICODE_STRING& lsa_str) {
+    return std::wstring(lsa_str.Buffer, lsa_str.Length / 2);
+}
+
 class LsaHandle {
 public:
     LsaHandle() {
@@ -144,6 +148,27 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
 
     wprintf(L"profileBufferLen: %u\n", profileBufferLen);
+    if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
+        auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer;
+
+        // print MSV1_0_INTERACTIVE_PROFILE fields to console
+        wprintf(L"MessageType: %u (MsV1_0InteractiveProfile=2)\n", profile->MessageType);
+        wprintf(L"LogonCount: %u\n", profile->LogonCount);
+        wprintf(L"BadPasswordCount: %u\n", profile->BadPasswordCount);
+        wprintf(L"LogonTime: Low=0x%x, High=0x%x\n", profile->LogonTime.LowPart, profile->LogonTime.HighPart);
+        wprintf(L"LogoffTime: Low=0x%x, High=0x%x\n", profile->LogoffTime.LowPart, profile->LogoffTime.HighPart);
+        wprintf(L"KickOffTime: Low=0x%x, High=0x%x\n", profile->KickOffTime.LowPart, profile->KickOffTime.HighPart);
+        wprintf(L"PasswordLastSet: Low=0x%x, High=0x%x\n", profile->PasswordLastSet.LowPart, profile->PasswordLastSet.HighPart);
+        wprintf(L"PasswordCanChange: Low=0x%x, High=0x%x\n", profile->PasswordCanChange.LowPart, profile->PasswordCanChange.HighPart);
+        wprintf(L"PasswordMustChange: Low=0x%x, High=0x%x\n", profile->PasswordMustChange.LowPart, profile->PasswordMustChange.HighPart);
+        wprintf(L"LogonScript: %s\n", ToWstring(profile->LogonScript).c_str());
+        wprintf(L"HomeDirectory: %s\n", ToWstring(profile->HomeDirectory).c_str());
+        wprintf(L"FullName: %s\n", ToWstring(profile->FullName).c_str());
+        wprintf(L"ProfilePath: %s\n", ToWstring(profile->ProfilePath).c_str());
+        wprintf(L"HomeDirectoryDrive: %s\n", ToWstring(profile->HomeDirectoryDrive).c_str());
+        wprintf(L"LogonServer: %s\n", ToWstring(profile->LogonServer).c_str());
+        wprintf(L"UserFlags: %u\n", profile->UserFlags);
+    }
 
     LsaFreeReturnBuffer(profileBuffer);
 
