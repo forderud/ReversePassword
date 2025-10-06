@@ -166,8 +166,10 @@ NTSTATUS LsaApLogonUserEx2_impl(
         *AuthenticatingAuthority = (LSA_UNICODE_STRING*)FunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
 
         if (logonInfo->LogonDomainName.Length > 0) {
+            LogMessage("  AuthenticatingAuthority: %ls", domainname);
             *AuthenticatingAuthority = CreateLsaUnicodeString(domainname, logonInfo->LogonDomainName.Length);
         } else {
+            LogMessage("  AuthenticatingAuthority: <empty>");
             **AuthenticatingAuthority = {
                 .Length = 0,
                 .MaximumLength = 0,
