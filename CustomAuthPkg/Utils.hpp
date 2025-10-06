@@ -1,6 +1,6 @@
 #pragma once
 
-void LogMessage(const char* message, ...) {
+inline void LogMessage(const char* message, ...) {
     // append to log file
     FILE* file = nullptr;
     fopen_s(&file, "C:\\CustomAuthPkg_log.txt", "a+");
@@ -17,7 +17,7 @@ void LogMessage(const char* message, ...) {
 
 /** Allocate and create a new LSA_STRING object.
     Assumes that "FunctionTable" is initialized. */
-LSA_STRING* CreateLsaString(const std::string& msg) {
+inline LSA_STRING* CreateLsaString(const std::string& msg) {
     auto msg_len = (USHORT)msg.size(); // exclude null-termination
 
     assert(FunctionTable.AllocateLsaHeap);
@@ -31,7 +31,7 @@ LSA_STRING* CreateLsaString(const std::string& msg) {
 
 /** Allocate and create a new LSA_UNICODE_STRING object.
     Assumes that "FunctionTable" is initialized. */
-LSA_UNICODE_STRING* CreateLsaUnicodeString(const wchar_t* msg, USHORT msg_len_bytes) {
+inline LSA_UNICODE_STRING* CreateLsaUnicodeString(const wchar_t* msg, USHORT msg_len_bytes) {
     assert(FunctionTable.AllocateLsaHeap);
     auto* obj = (LSA_UNICODE_STRING*)FunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
     obj->Buffer = (wchar_t*)FunctionTable.AllocateLsaHeap(msg_len_bytes);
@@ -41,10 +41,10 @@ LSA_UNICODE_STRING* CreateLsaUnicodeString(const wchar_t* msg, USHORT msg_len_by
     return obj;
 }
 
-LSA_UNICODE_STRING* CreateLsaUnicodeString(const std::wstring& msg) {
+inline LSA_UNICODE_STRING* CreateLsaUnicodeString(const std::wstring& msg) {
     return CreateLsaUnicodeString(msg.c_str(), (USHORT)msg.size()*sizeof(wchar_t));
 }
 
-std::wstring ToWstring(LSA_UNICODE_STRING& lsa_str) {
+inline std::wstring ToWstring(LSA_UNICODE_STRING& lsa_str) {
     return std::wstring(lsa_str.Buffer, lsa_str.Length/2);
 }
