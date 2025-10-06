@@ -1,9 +1,6 @@
 #pragma once
 
 void LogMessage(const char* message, ...) {
-#ifdef NDEBUG
-    message;
-#else
     // append to log file
     FILE* file = nullptr;
     fopen_s(&file, "C:\\CustomAuthPkg_log.txt", "a+");
@@ -16,7 +13,6 @@ void LogMessage(const char* message, ...) {
     }
     fprintf(file, "\n");
     fclose(file);
-#endif
 }
 
 /** Allocate and create a new LSA_STRING object.
