@@ -164,14 +164,51 @@ NTSTATUS LsaApLogonUserEx2_impl(
         const LARGE_INTEGER Forever = { 0x7fffffff,0xfffffff };
 
         auto* token = (LSA_TOKEN_INFORMATION_V1*)FunctionTable.AllocateLsaHeap(sizeof(LSA_TOKEN_INFORMATION_V1));
+        
         token->ExpirationTime = Forever;
+        
         // TODO: Populate SID fields...
-        token->User;
-        token->Groups;
-        token->PrimaryGroup;
-        token->Privileges;
-        token->Owner;
-        token->DefaultDacl;
+        token->User.User = {
+            .Sid = {},
+            .Attributes = {},
+        };
+
+#if 1
+        token->Groups = nullptr;
+#else
+        token->Groups = (TOKEN_GROUPS*)FunctionTable.AllocateLsaHeap(sizeof(TOKEN_GROUPS));
+        *token->Groups = {
+            .GroupCount = 0,
+            .Groups = {},
+        };
+#endif
+
+        token->PrimaryGroup.PrimaryGroup = (PSID)nullptr;
+        
+#if 1
+        token->Privileges = nullptr;
+#else
+        token->Privileges = (TOKEN_PRIVILEGES*)FunctionTable.AllocateLsaHeap(sizeof(TOKEN_PRIVILEGES));
+        *token->Privileges = {
+            .PrivilegeCount = 0,
+            .Privileges = {},
+        };
+#endif
+
+        token->Owner.Owner = (PSID)nullptr;
+
+#if 1
+        token->DefaultDacl.DefaultDacl = nullptr;
+#else
+        token->DefaultDacl.DefaultDacl = (ACL*)FunctionTable.AllocateLsaHeap(sizeof(ACL));
+        *token->DefaultDacl.DefaultDacl = ACL{
+            .AclRevision = 0,
+            .Sbz1 = 0,
+            .AclSize = 0,
+            .AceCount = 0,
+            .Sbz2 = 0,
+        };
+#endif
 
         *TokenInformation = token;
     }
