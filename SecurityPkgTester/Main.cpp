@@ -175,7 +175,9 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     LsaFreeReturnBuffer(profileBuffer);
 
 #if 0
-    // start command prompt
+    // Start command prompt.
+    // NOTE: The process that calls the CreateProcessAsUser function must have the SE_INCREASE_QUOTA_NAME privilege
+    // and may require the SE_ASSIGNPRIMARYTOKEN_NAME privilege if the token is not assignable.
     STARTUPINFOW si = {};
     si.cb = sizeof(si);
     PROCESS_INFORMATION pi = {};
