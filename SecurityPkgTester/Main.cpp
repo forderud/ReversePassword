@@ -146,6 +146,8 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     NTSTATUS subStatus = 0;
 
     NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
+    if (ret != STATUS_SUCCESS)
+        return ret;
 
     wprintf(L"profileBufferLen: %u\n", profileBufferLen);
     if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
@@ -171,6 +173,23 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 
     LsaFreeReturnBuffer(profileBuffer);
+
+#if 0
+    STARTUPINFOW si = {};
+    si.cb = sizeof(si);
+    PROCESS_INFORMATION pi = {};
+    std::wstring cmd_exe = L"C:\\Windows\\System32\\cmd.exe";
+    if (!CreateProcessAsUserW(token, cmd_exe.c_str(), cmd_exe.data(), /*proc.attr*/nullptr, /*thread attr*/nullptr, false, CREATE_NEW_CONSOLE, /*env*/nullptr, /*cur-dir*/nullptr, &si, &pi)) {
+        wprintf(L"ERROR: Unable to start cmd.exe through the logged in user.\n");
+        return STATUS_FAIL_FAST_EXCEPTION;
+    }
+
+    CloseHandle(si.hStdInput);
+    CloseHandle(si.hStdOutput);
+    CloseHandle(si.hStdError);
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+#endif
 
     return ret;
 }
