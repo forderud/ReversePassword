@@ -6,4 +6,7 @@
   <ItemGroup>
     <None Include="README.md" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Utils.hpp" />
+  </ItemGroup>
 </Project>
