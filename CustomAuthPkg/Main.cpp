@@ -143,7 +143,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
     }
 
     *SubStatus = STATUS_SUCCESS; // reason for error
-    *TokenInformationType = LsaTokenInformationNull;
+    *TokenInformationType = LsaTokenInformationV1;
     *TokenInformation = nullptr;
     {
         // assign "AccountName" output argument
@@ -157,14 +157,31 @@ NTSTATUS LsaApLogonUserEx2_impl(
         LogMessage("  AccountName: %ls", username);
         *AccountName = CreateLsaUnicodeString(username, logonInfo->UserName.Length); // mandatory
     }
-    *AuthenticatingAuthority = nullptr; // optional
+
+    if (AuthenticatingAuthority) {
+        // assign "AuthenticatingAuthority" output argument
+        auto* logonInfo = (MSV1_0_INTERACTIVE_LOGON*)ProtocolSubmitBuffer;
+        auto* domainname = (const wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->LogonDomainName.Buffer); // make pointer absolute
+
+        *AuthenticatingAuthority = (LSA_UNICODE_STRING*)FunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
+
+        if (logonInfo->LogonDomainName.Length > 0) {
+            *AuthenticatingAuthority = CreateLsaUnicodeString(domainname, logonInfo->LogonDomainName.Length);
+        } else {
+            **AuthenticatingAuthority = {
+                .Length = 0,
+                .MaximumLength = 0,
+                .Buffer = nullptr,
+            };
+        }
+    }
 
     if (MachineName) {
         // assign "MachineName" output argument
         wchar_t computerNameBuf[MAX_COMPUTERNAME_LENGTH + 1] = {};
         DWORD computerNameSize = ARRAYSIZE(computerNameBuf);
         if (!GetComputerNameW(computerNameBuf, &computerNameSize)) {
-            LogMessage("  return STATUS_NOT_IMPLEMENTED (GetComputerNameW failed)");
+            LogMessage("  return STATUS_INTERNAL_ERROR (GetComputerNameW failed)");
             return STATUS_INTERNAL_ERROR;
         }
 
