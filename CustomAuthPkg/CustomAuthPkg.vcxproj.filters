@@ -2,11 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PrepareToken.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.hpp" />
+    <ClInclude Include="PrepareToken.hpp" />
   </ItemGroup>
 </Project>
