@@ -1,6 +1,7 @@
 #include <ntstatus.h>
 #define WIN32_NO_STATUS
 #include <windows.h>
+#include <Lmcons.h>
 #define SECURITY_WIN32 // required by sspi.h
 #include <sspi.h>
 #include <NTSecAPI.h>  // for LSA_STRING
@@ -95,20 +96,65 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     return STATUS_SUCCESS;
 }
 
-NTSTATUS UserNameToToken(__in PLSA_UNICODE_STRING AccountName,
+bool NameToSid(wchar_t* username, SID** userSid) {
+    DWORD lengthSid = 0;
+    SID_NAME_USE Use = {};
+    DWORD referencedDomainNameLen = 0;
+    BOOL res = LookupAccountNameW(nullptr, username, nullptr, &lengthSid, nullptr, &referencedDomainNameLen, &Use);
+
+    //LogMessage("  Allocating SID with size %u", lengthSid);
+    *userSid = (SID*)FunctionTable.AllocateLsaHeap(lengthSid);
+    wchar_t* referencedDomainName = (wchar_t*)FunctionTable.AllocateLsaHeap(sizeof(wchar_t)*referencedDomainNameLen);
+    res = LookupAccountNameW(nullptr, username, *userSid, &lengthSid, referencedDomainName, &referencedDomainNameLen, &Use);
+    if (!res) {
+        DWORD err = GetLastError();
+        LogMessage("  LookupAccountNameW failed (err %u)", err);
+        return false;
+    }
+
+    FunctionTable.FreeLsaHeap(referencedDomainName);
+    return true;
+}
+
+void GetPrimaryGroupSidFromUserSid(SID* userSID, PSID* primaryGroupSID) {
+    // duplicate the user sid and replace the last subauthority by DOMAIN_GROUP_RID_USERS
+    // cf http://msdn.microsoft.com/en-us/library/aa379649.aspx
+    *primaryGroupSID = (PSID)FunctionTable.AllocateLsaHeap(GetLengthSid(userSID));
+    CopySid(GetLengthSid(userSID), *primaryGroupSID, userSID);
+    UCHAR SubAuthorityCount = *GetSidSubAuthorityCount(*primaryGroupSID);
+    // last SubAuthority = RID
+    *GetSidSubAuthority(*primaryGroupSID, SubAuthorityCount - 1) = DOMAIN_GROUP_RID_USERS;
+}
+
+NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
     __out LSA_TOKEN_INFORMATION_V1** Token,
     __out PNTSTATUS SubStatus) {
     const LARGE_INTEGER Forever = { 0x7fffffff,0xfffffff };
 
+    // convert username to zero-terminated string
+    if (AccountName->Length / 2 > UNLEN) {
+        LogMessage("  ERROR: AccountName too large");
+        return STATUS_FAIL_FAST_EXCEPTION;
+    }
+    wchar_t username[UNLEN + 1] = {};
+    memcpy(username, AccountName->Buffer, AccountName->Length);
+    LogMessage("  UserNameToToken username %ls", username);
+
+    LogMessage("  Allocating Token...");
     auto* token = (LSA_TOKEN_INFORMATION_V1*)FunctionTable.AllocateLsaHeap(sizeof(LSA_TOKEN_INFORMATION_V1));
 
     token->ExpirationTime = Forever;
 
-    // TODO: Populate SID fields...
-    token->User.User = {
-        .Sid = {},
-        .Attributes = {},
-    };
+    SID* userSid = nullptr;
+    {
+        if (!NameToSid(username, &userSid))
+            return STATUS_FAIL_FAST_EXCEPTION;
+
+        token->User.User = {
+            .Sid = userSid,
+            .Attributes = 0,
+        };
+    }
 
 #if 1
     token->Groups = nullptr;
@@ -120,7 +166,7 @@ NTSTATUS UserNameToToken(__in PLSA_UNICODE_STRING AccountName,
     };
 #endif
 
-    token->PrimaryGroup.PrimaryGroup = (PSID)nullptr;
+    GetPrimaryGroupSidFromUserSid(userSid, &token->PrimaryGroup.PrimaryGroup);
 
 #if 1
     token->Privileges = nullptr;
@@ -148,7 +194,7 @@ NTSTATUS UserNameToToken(__in PLSA_UNICODE_STRING AccountName,
 #endif
 
     // assign outputs
-    * Token = token;
+    *Token = token;
     *SubStatus = STATUS_SUCCESS;
     return STATUS_SUCCESS;
 }
