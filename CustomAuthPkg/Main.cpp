@@ -138,6 +138,8 @@ NTSTATUS LsaApLogonUserEx2_impl(
             LogMessage("  ERROR: CreateLogonSession failed with err: 0x%x", status);
             return status;
         }
+
+        LogMessage("  LogonId: LowPart=%x , HighPart:%x", LogonId->LowPart, LogonId->HighPart);
     }
 
     *SubStatus = STATUS_SUCCESS; // reason for error
