@@ -1,5 +1,5 @@
 # Authentication Package (SSP/AP) sample
-Minimal Security Support Provider/Authentication Package (SSP/AP) sample project that bypasses the need for entering passwords.
+Minimal Security Support Provider/Authentication Package (SSP/AP) sample project that bypasses the need for entering passwords for _interactive_ logons.
 
 **WARNING**: Do not use as-is in production since it will undermine security!
 
