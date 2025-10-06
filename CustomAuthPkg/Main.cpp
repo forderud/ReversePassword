@@ -154,6 +154,7 @@ NTSTATUS LsaApLogonUserEx2_impl(
             return STATUS_INTERNAL_ERROR;
         }
 
+        LogMessage("  MachineName: %s", computerNameBuf);
         *MachineName = CreateLsaUnicodeString(computerNameBuf);
     }
 
