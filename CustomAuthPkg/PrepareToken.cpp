@@ -5,14 +5,14 @@
 #pragma comment(lib, "Netapi32.lib")
 
 
-bool NameToSid(const wchar_t* username, SID** userSid) {
+bool NameToSid(const wchar_t* username, PSID* userSid) {
     DWORD lengthSid = 0;
     SID_NAME_USE Use = {};
     DWORD referencedDomainNameLen = 0;
     BOOL res = LookupAccountNameW(nullptr, username, nullptr, &lengthSid, nullptr, &referencedDomainNameLen, &Use);
 
     //LogMessage("  Allocating SID with size %u", lengthSid);
-    *userSid = (SID*)FunctionTable.AllocateLsaHeap(lengthSid);
+    *userSid = (PSID)FunctionTable.AllocateLsaHeap(lengthSid);
     wchar_t* referencedDomainName = (wchar_t*)FunctionTable.AllocateLsaHeap(sizeof(wchar_t) * referencedDomainNameLen);
     res = LookupAccountNameW(nullptr, username, *userSid, &lengthSid, referencedDomainName, &referencedDomainNameLen, &Use);
     if (!res) {
@@ -25,7 +25,7 @@ bool NameToSid(const wchar_t* username, SID** userSid) {
     return true;
 }
 
-void GetPrimaryGroupSidFromUserSid(SID* userSID, PSID* primaryGroupSID) {
+void GetPrimaryGroupSidFromUserSid(PSID userSID, PSID* primaryGroupSID) {
     // duplicate the user sid and replace the last subauthority by DOMAIN_GROUP_RID_USERS
     // cf http://msdn.microsoft.com/en-us/library/aa379649.aspx
     *primaryGroupSID = (PSID)FunctionTable.AllocateLsaHeap(GetLengthSid(userSID));
@@ -35,7 +35,7 @@ void GetPrimaryGroupSidFromUserSid(SID* userSID, PSID* primaryGroupSID) {
     *GetSidSubAuthority(*primaryGroupSID, SubAuthorityCount - 1) = DOMAIN_GROUP_RID_USERS;
 }
 
-bool GetGroups(wchar_t* UserName, GROUP_USERS_INFO_1** lpGroupInfo, DWORD* pTotalEntries) {
+bool GetGroups(const wchar_t* UserName, GROUP_USERS_INFO_1** lpGroupInfo, DWORD* pTotalEntries) {
     DWORD NumberOfEntries = 0;
     DWORD status = NetUserGetGroups(NULL, UserName, 1, (LPBYTE*)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
     if (status != NERR_Success) {
@@ -45,7 +45,7 @@ bool GetGroups(wchar_t* UserName, GROUP_USERS_INFO_1** lpGroupInfo, DWORD* pTota
     return true;
 }
 
-bool GetLocalGroups(wchar_t* UserName, GROUP_USERS_INFO_0** lpGroupInfo, DWORD* pTotalEntries) {
+bool GetLocalGroups(const wchar_t* UserName, GROUP_USERS_INFO_0** lpGroupInfo, DWORD* pTotalEntries) {
     DWORD NumberOfEntries = 0;
     DWORD status = NetUserGetLocalGroups(NULL, UserName, 0, 0, (LPBYTE*)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
     if (status != NERR_Success) {
@@ -70,7 +70,7 @@ NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
 
     token->ExpirationTime = Forever;
 
-    SID* userSid = nullptr;
+    PSID userSid = nullptr;
     {
         if (!NameToSid(username.c_str(), &userSid))
             return STATUS_FAIL_FAST_EXCEPTION;
