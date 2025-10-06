@@ -105,9 +105,9 @@ NTSTATUS LsaApLogonUserEx2_impl(
     NTSTATUS* SubStatus,
     LSA_TOKEN_INFORMATION_TYPE* TokenInformationType,
     VOID** TokenInformation,
-    PUNICODE_STRING* AccountName,
-    PUNICODE_STRING* AuthenticatingAuthority,
-    PUNICODE_STRING* MachineName,
+    LSA_UNICODE_STRING** AccountName,
+    LSA_UNICODE_STRING** AuthenticatingAuthority,
+    LSA_UNICODE_STRING** MachineName,
     SECPKG_PRIMARY_CRED* PrimaryCredentials,
     SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials)
 {
@@ -125,12 +125,21 @@ NTSTATUS LsaApLogonUserEx2_impl(
     *SubStatus = STATUS_SUCCESS; // reason for error
     *TokenInformationType = LsaTokenInformationNull;
     *TokenInformation = nullptr;
-    *AccountName = CreateLsaString(L"SomeUser"); // mandatory
+    *AccountName = CreateLsaUnicodeString(L"SomeUser"); // mandatory
     *AuthenticatingAuthority = nullptr; // optional
-    if (MachineName)
-        *MachineName = nullptr; // optional
+
+    if (MachineName) { // optional
+        WCHAR computerNameBuf[MAX_COMPUTERNAME_LENGTH + 1] = {};
+        DWORD computerNameSize = ARRAYSIZE(computerNameBuf);
+        if (!GetComputerNameW(computerNameBuf, &computerNameSize))
+            return STATUS_INTERNAL_ERROR;
+
+        *MachineName = CreateLsaUnicodeString(computerNameBuf);
+    }
+
     if (PrimaryCredentials)
         *PrimaryCredentials = {};
+
     if (SupplementalCredentials)
         *SupplementalCredentials = nullptr;
 

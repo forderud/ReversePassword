@@ -31,7 +31,7 @@ LSA_STRING* CreateLsaString(const std::string& msg) {
 
 /** Allocate and create a new LSA_UNICODE_STRING object.
     Assumes that "FunctionTable" is initialized. */
-LSA_UNICODE_STRING* CreateLsaString(const std::wstring& msg) {
+LSA_UNICODE_STRING* CreateLsaUnicodeString(const std::wstring& msg) {
     auto msg_len = (USHORT)msg.size(); // exclude null-termination
 
     assert(FunctionTable.AllocateLsaHeap);
