@@ -9,7 +9,6 @@ LSA_SECPKG_FUNCTION_TABLE FunctionTable;
 #include "Utils.hpp"
 
 
-extern "C"
 NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, LSA_SECPKG_FUNCTION_TABLE* functionTable) {
     LogMessage("SpInitialize");
     PackageId;
@@ -20,14 +19,12 @@ NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, 
     return STATUS_SUCCESS;
 }
 
-extern "C"
 NTSTATUS NTAPI SpShutDown() {
     LogMessage("SpShutDown");
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
 
-extern "C"
 NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     LogMessage("SpGetInfo");
 
@@ -43,7 +40,6 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     return STATUS_SUCCESS;
 }
 
-extern "C"
 NTSTATUS LsaApLogonUserEx2 (
     PLSA_CLIENT_REQUEST ClientRequest,
     SECURITY_LOGON_TYPE LogonType,
@@ -181,7 +177,6 @@ NTSTATUS LsaApLogonUserEx2 (
     return STATUS_SUCCESS;
 }
 
-extern "C"
 void LsaApLogonTerminated(LUID* LogonId) {
     LogMessage("LsaApLogonTerminated");
     LogonId;
