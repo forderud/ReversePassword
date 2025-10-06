@@ -143,6 +143,8 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
     NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
 
+    wprintf(L"profileBufferLen: %u\n", profileBufferLen);
+
     LsaFreeReturnBuffer(profileBuffer);
 
     return ret;
