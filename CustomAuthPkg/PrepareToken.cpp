@@ -81,15 +81,50 @@ NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
         };
     }
 
-#if 1
-    token->Groups = nullptr;
-#else
-    token->Groups = (TOKEN_GROUPS*)FunctionTable.AllocateLsaHeap(sizeof(TOKEN_GROUPS));
-    *Token->Groups = {
-        .GroupCount = 0,
-        .Groups = {},
-    };
-#endif
+    {
+        DWORD NumberOfGroups = 0;
+        GROUP_USERS_INFO_1* pGroupInfo = nullptr;
+        if (!GetGroups(username.c_str(), &pGroupInfo, &NumberOfGroups)) {
+            return STATUS_FAIL_FAST_EXCEPTION;
+        }
+        LogMessage("  NumberOfGroups: %u", NumberOfGroups);
+
+        DWORD NumberOfLocalGroups = 0;
+        GROUP_USERS_INFO_0* pLocalGroupInfo = nullptr;
+        if (!GetLocalGroups(username.c_str(), &pLocalGroupInfo, &NumberOfLocalGroups)) {
+            return STATUS_FAIL_FAST_EXCEPTION;
+        }
+        LogMessage("  NumberOfLocalGroups: %u", NumberOfLocalGroups);
+
+        PSID* pGroupSid = (PSID*)FunctionTable.AllocateLsaHeap((NumberOfGroups + NumberOfLocalGroups) * sizeof(PSID));
+        if (!pGroupSid)
+            return STATUS_NO_MEMORY;
+        // populate pGroupSid
+        for (size_t i = 0; i < NumberOfGroups; i++)
+            NameToSid(pGroupInfo[i].grui1_name, &pGroupSid[i]);
+        for (size_t i = 0; i < NumberOfLocalGroups; i++)
+            NameToSid(pLocalGroupInfo[i].grui0_name, &pGroupSid[NumberOfGroups + i]);
+        LogMessage("  pGroupSid populated");
+
+        TOKEN_GROUPS* tokenGroups = (TOKEN_GROUPS*)FunctionTable.AllocateLsaHeap(FIELD_OFFSET(TOKEN_GROUPS, Groups[NumberOfGroups + NumberOfLocalGroups]));
+        tokenGroups->GroupCount = NumberOfGroups + NumberOfLocalGroups;
+        for (size_t i = 0; i < NumberOfGroups; i++) {
+            tokenGroups->Groups[i].Attributes = pGroupInfo[i].grui1_attributes;
+            tokenGroups->Groups[i].Sid = pGroupSid[i];
+        }
+        for (size_t i = 0; i < NumberOfLocalGroups; i++) {
+            // get the attributes of group since the struct doesn't containt attributes
+            if (*GetSidSubAuthority(pGroupSid[NumberOfGroups + i], 0) != SECURITY_BUILTIN_DOMAIN_RID)
+                tokenGroups->Groups[NumberOfGroups + i].Attributes = SE_GROUP_ENABLED | SE_GROUP_ENABLED_BY_DEFAULT;
+            else
+                tokenGroups->Groups[NumberOfGroups + i].Attributes = 0;
+
+            tokenGroups->Groups[NumberOfGroups + i].Sid = pGroupSid[NumberOfGroups + i];
+        }
+
+        token->Groups = tokenGroups;
+        LogMessage("  token->Groups populated");
+    }
 
     GetPrimaryGroupSidFromUserSid(userSid, &token->PrimaryGroup.PrimaryGroup);
 
