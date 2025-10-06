@@ -265,8 +265,8 @@ NTSTATUS LsaApCallPackage(PLSA_CLIENT_REQUEST ClientRequest,
     ProtocolReturnBuffer;
     ReturnBufferLength;
     ProtocolStatus;
-    LogMessage("  return STATUS_SUCCESS");
-    return STATUS_SUCCESS;
+    LogMessage("  return STATUS_NOT_IMPLEMENTED");
+    return STATUS_NOT_IMPLEMENTED;
 }
 
 extern "C"
@@ -294,8 +294,8 @@ NTSTATUS LsaApCallPackageUntrusted(
     ProtocolReturnBuffer;
     ReturnBufferLength;
     ProtocolStatus;
-    LogMessage("  return STATUS_SUCCESS");
-    return STATUS_SUCCESS;
+    LogMessage("  return STATUS_NOT_IMPLEMENTED");
+    return STATUS_NOT_IMPLEMENTED;
 }
 
 extern "C"
@@ -316,8 +316,8 @@ NTSTATUS LsaApCallPackagePassthrough(
     ProtocolReturnBuffer;
     ReturnBufferLength;
     ProtocolStatus;
-    LogMessage("  return STATUS_SUCCESS");
-    return STATUS_SUCCESS;
+    LogMessage("  return STATUS_NOT_IMPLEMENTED");
+    return STATUS_NOT_IMPLEMENTED;
 }
 
 
