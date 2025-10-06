@@ -96,7 +96,7 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     return STATUS_SUCCESS;
 }
 
-bool NameToSid(wchar_t* username, SID** userSid) {
+bool NameToSid(const wchar_t* username, SID** userSid) {
     DWORD lengthSid = 0;
     SID_NAME_USE Use = {};
     DWORD referencedDomainNameLen = 0;
@@ -132,13 +132,8 @@ NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
     const LARGE_INTEGER Forever = { 0x7fffffff,0xfffffff };
 
     // convert username to zero-terminated string
-    if (AccountName->Length / 2 > UNLEN) {
-        LogMessage("  ERROR: AccountName too large");
-        return STATUS_FAIL_FAST_EXCEPTION;
-    }
-    wchar_t username[UNLEN + 1] = {};
-    memcpy(username, AccountName->Buffer, AccountName->Length);
-    LogMessage("  UserNameToToken username %ls", username);
+    std::wstring username = ToWstring(*AccountName);
+    LogMessage("  UserNameToToken username %ls", username.c_str());
 
     LogMessage("  Allocating Token...");
     auto* token = (LSA_TOKEN_INFORMATION_V1*)FunctionTable.AllocateLsaHeap(sizeof(LSA_TOKEN_INFORMATION_V1));
@@ -147,7 +142,7 @@ NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
 
     SID* userSid = nullptr;
     {
-        if (!NameToSid(username, &userSid))
+        if (!NameToSid(username.c_str(), &userSid))
             return STATUS_FAIL_FAST_EXCEPTION;
 
         token->User.User = {
