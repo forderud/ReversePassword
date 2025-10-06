@@ -95,6 +95,65 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     return STATUS_SUCCESS;
 }
 
+NTSTATUS UserNameToToken(__in PLSA_UNICODE_STRING AccountName,
+    __out LSA_TOKEN_INFORMATION_V1** Token,
+    __out PNTSTATUS SubStatus) {
+    const LARGE_INTEGER Forever = { 0x7fffffff,0xfffffff };
+
+    auto* token = (LSA_TOKEN_INFORMATION_V1*)FunctionTable.AllocateLsaHeap(sizeof(LSA_TOKEN_INFORMATION_V1));
+
+    token->ExpirationTime = Forever;
+
+    // TODO: Populate SID fields...
+    token->User.User = {
+        .Sid = {},
+        .Attributes = {},
+    };
+
+#if 1
+    token->Groups = nullptr;
+#else
+    token->Groups = (TOKEN_GROUPS*)FunctionTable.AllocateLsaHeap(sizeof(TOKEN_GROUPS));
+    *Token->Groups = {
+        .GroupCount = 0,
+        .Groups = {},
+    };
+#endif
+
+    token->PrimaryGroup.PrimaryGroup = (PSID)nullptr;
+
+#if 1
+    token->Privileges = nullptr;
+#else
+    token->Privileges = (TOKEN_PRIVILEGES*)FunctionTable.AllocateLsaHeap(sizeof(TOKEN_PRIVILEGES));
+    *Token->Privileges = {
+        .PrivilegeCount = 0,
+        .Privileges = {},
+    };
+#endif
+
+    token->Owner.Owner = (PSID)nullptr;
+
+#if 1
+    token->DefaultDacl.DefaultDacl = nullptr;
+#else
+    token->DefaultDacl.DefaultDacl = (ACL*)FunctionTable.AllocateLsaHeap(sizeof(ACL));
+    *token->DefaultDacl.DefaultDacl = ACL{
+        .AclRevision = 0,
+        .Sbz1 = 0,
+        .AclSize = 0,
+        .AceCount = 0,
+        .Sbz2 = 0,
+    };
+#endif
+
+    // assign outputs
+    * Token = token;
+    *SubStatus = STATUS_SUCCESS;
+    return STATUS_SUCCESS;
+}
+
+
 NTSTATUS LsaApLogonUserEx2_impl(
     PLSA_CLIENT_REQUEST ClientRequest,
     SECURITY_LOGON_TYPE LogonType,
@@ -163,61 +222,20 @@ NTSTATUS LsaApLogonUserEx2_impl(
     }
 
     *SubStatus = STATUS_SUCCESS; // reason for error
-    
+
     {
-        // TODO: assign "TokenInformation" output argument
+        // Assign "TokenInformation" output argument
+        LSA_TOKEN_INFORMATION_V2* MyTokenInformation = nullptr;
+        NTSTATUS subStatus = 0;
+        NTSTATUS status = UserNameToToken(&logonInfo->UserName, &MyTokenInformation, &subStatus);
+        if (status != STATUS_SUCCESS) {
+            LogMessage("ERROR: UserNameToToken failed with err: 0x%x", status);
+            *SubStatus = subStatus;
+            return status;
+        }
+
         *TokenInformationType = LsaTokenInformationV1;
-
-        const LARGE_INTEGER Forever = { 0x7fffffff,0xfffffff };
-
-        auto* token = (LSA_TOKEN_INFORMATION_V1*)FunctionTable.AllocateLsaHeap(sizeof(LSA_TOKEN_INFORMATION_V1));
-        
-        token->ExpirationTime = Forever;
-        
-        // TODO: Populate SID fields...
-        token->User.User = {
-            .Sid = {},
-            .Attributes = {},
-        };
-
-#if 1
-        token->Groups = nullptr;
-#else
-        token->Groups = (TOKEN_GROUPS*)FunctionTable.AllocateLsaHeap(sizeof(TOKEN_GROUPS));
-        *token->Groups = {
-            .GroupCount = 0,
-            .Groups = {},
-        };
-#endif
-
-        token->PrimaryGroup.PrimaryGroup = (PSID)nullptr;
-        
-#if 1
-        token->Privileges = nullptr;
-#else
-        token->Privileges = (TOKEN_PRIVILEGES*)FunctionTable.AllocateLsaHeap(sizeof(TOKEN_PRIVILEGES));
-        *token->Privileges = {
-            .PrivilegeCount = 0,
-            .Privileges = {},
-        };
-#endif
-
-        token->Owner.Owner = (PSID)nullptr;
-
-#if 1
-        token->DefaultDacl.DefaultDacl = nullptr;
-#else
-        token->DefaultDacl.DefaultDacl = (ACL*)FunctionTable.AllocateLsaHeap(sizeof(ACL));
-        *token->DefaultDacl.DefaultDacl = ACL{
-            .AclRevision = 0,
-            .Sbz1 = 0,
-            .AclSize = 0,
-            .AceCount = 0,
-            .Sbz2 = 0,
-        };
-#endif
-
-        *TokenInformation = token;
+        *TokenInformation = MyTokenInformation;
     }
 
     {
