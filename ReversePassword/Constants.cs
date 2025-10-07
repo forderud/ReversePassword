@@ -30,28 +30,28 @@
             {
                 // from <winerror.h>
                 case ERROR_ACCESS_DENIED:
-                    return "ERROR_ACCESS_DENIED";
+                    return "ACCESS_DENIED";
                 case ERROR_INVALID_PASSWORD:
-                    return "ERROR_INVALID_PASSWORD";
+                    return "INVALID_PASSWORD";
                 case ERROR_CANT_ACCESS_DOMAIN_INFO:
-                    return "ERROR_CANT_ACCESS_DOMAIN_INFO";
+                    return "CANT_ACCESS_DOMAIN_INFO";
                 // from <ntstatus.h>
                 case STATUS_SUCCESS:
-                    return "STATUS_SUCCESS";
+                    return "SUCCESS";
                 case STATUS_NOT_IMPLEMENTED:
-                    return "STATUS_NOT_IMPLEMENTED";
+                    return "NOT_IMPLEMENTED";
                 case STATUS_LOGON_FAILURE:
-                    return "STATUS_LOGON_FAILURE";
+                    return "LOGON_FAILURE";
                 case STATUS_INTERNAL_ERROR:
-                    return "STATUS_INTERNAL_ERROR";
+                    return "INTERNAL_ERROR";
                 // from <lmerr.h>
                 // NERR_Success already covered by STATUS_SUCCESS
                 case NERR_BASE:
                     return "NERR_BASE";
                 case NERR_UserNotFound:
-                    return "NERR_UserNotFound";
+                    return "UserNotFound";
                 case NERR_PasswordTooShort:
-                    return "NERR_PasswordTooShort";
+                    return "PasswordTooShort";
             }
 
             return $"0x{status:X}";
