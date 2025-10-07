@@ -228,18 +228,6 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 
     if (hasIncreaseQuta) {
-#if 0
-        PROFILEINFOW profile{
-            .dwSize = sizeof(profile),
-            .lpUserName = (wchar_t*)username.c_str(),
-        };
-        if (!LoadUserProfileW(token, &profile))
-            abort();
-
-        void* userEnvironment = nullptr;
-        if (!CreateEnvironmentBlock(&userEnvironment, token, /*inherit*/false))
-            abort();
-#endif
         // Start command prompt.
         STARTUPINFOW si = {
             .cb = sizeof(si),
@@ -262,7 +250,6 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
-        //DestroyEnvironmentBlock(userEnvironment);
     }
 
     CloseHandle(token);
