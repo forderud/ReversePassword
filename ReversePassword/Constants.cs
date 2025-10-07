@@ -23,5 +23,38 @@
         public const uint NERR_BASE = 2100;
         public const uint NERR_UserNotFound = (NERR_BASE + 121);
         public const uint NERR_PasswordTooShort = (NERR_BASE + 145);
+
+        public static string ToString (uint status)
+        {
+            switch (status)
+            {
+                // from <winerror.h>
+                case ERROR_ACCESS_DENIED:
+                    return "ERROR_ACCESS_DENIED";
+                case ERROR_INVALID_PASSWORD:
+                    return "ERROR_INVALID_PASSWORD";
+                case ERROR_CANT_ACCESS_DOMAIN_INFO:
+                    return "ERROR_CANT_ACCESS_DOMAIN_INFO";
+                // from <ntstatus.h>
+                case STATUS_SUCCESS:
+                    return "STATUS_SUCCESS";
+                case STATUS_NOT_IMPLEMENTED:
+                    return "STATUS_NOT_IMPLEMENTED";
+                case STATUS_LOGON_FAILURE:
+                    return "STATUS_LOGON_FAILURE";
+                case STATUS_INTERNAL_ERROR:
+                    return "STATUS_INTERNAL_ERROR";
+                // from <lmerr.h>
+                // NERR_Success already covered by STATUS_SUCCESS
+                case NERR_BASE:
+                    return "NERR_BASE";
+                case NERR_UserNotFound:
+                    return "NERR_UserNotFound";
+                case NERR_PasswordTooShort:
+                    return "NERR_PasswordTooShort";
+            }
+
+            return $"0x{status:X}";
+        }
     }
 }

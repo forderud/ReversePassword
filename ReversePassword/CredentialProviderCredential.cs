@@ -319,10 +319,7 @@ namespace ReversePassword
             optionalStatusText = "";
             if ((uint)status != Constants.STATUS_SUCCESS)
             {
-                if ((uint)status == Constants.STATUS_NOT_IMPLEMENTED)
-                    optionalStatusText = $"ntsStatus: STATUS_NOT_IMPLEMENTED; ntsSubstatus: 0x{ntsSubstatus:X}";
-                else
-                    optionalStatusText = $"ntsStatus: 0x{status:X}; ntsSubstatus: 0x{ntsSubstatus:X}";
+                optionalStatusText = "ntsStatus: " + Constants.ToString((uint)status) + "; ntsSubstatus: " + Constants.ToString((uint)ntsSubstatus);
             }
 
             Logger.Write(optionalStatusText);
