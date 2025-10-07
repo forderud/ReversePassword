@@ -14,6 +14,7 @@
 
         // from <ntstatus.h>
         public const uint STATUS_SUCCESS = 0x00000000;
+        public const uint STATUS_NOT_IMPLEMENTED = 0xC0000002;
 
         // from <lmerr.h>
         public const uint NERR_Success = 0;
