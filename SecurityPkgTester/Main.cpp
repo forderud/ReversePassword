@@ -153,6 +153,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
     wprintf(L"profileBufferLen: %u\n", profileBufferLen);
     if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
+        static_assert(sizeof(MSV1_0_INTERACTIVE_PROFILE) == 160);
         auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer;
 
         // print MSV1_0_INTERACTIVE_PROFILE fields to console
