@@ -218,7 +218,6 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
                 hasIncreaseQuta = true;
             if (IsEqual(privileges->Privileges[i].Luid, ASSIGNPRIMARYTOKEN))
                 hasAssignPrimaryToken = true;
-
         }
 
         if (!hasIncreaseQuta)
