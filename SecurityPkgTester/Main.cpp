@@ -231,6 +231,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     // and may require the SE_ASSIGNPRIMARYTOKEN_NAME privilege if the token is not assignable.
     STARTUPINFOW si = {
         .cb = sizeof(si),
+        //.lpDesktop = (wchar_t*)L"winsta0\\default",
     };
     PROCESS_INFORMATION pi = {};
     std::wstring cmd_exe = L"cmd.exe";
