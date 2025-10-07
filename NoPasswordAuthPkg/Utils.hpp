@@ -51,5 +51,7 @@ inline LSA_UNICODE_STRING* CreateLsaUnicodeString(const std::wstring& msg) {
 }
 
 inline std::wstring ToWstring(LSA_UNICODE_STRING& lsa_str) {
+    if (lsa_str.Length == 0)
+        return L"<empty>";
     return std::wstring(lsa_str.Buffer, lsa_str.Length/2);
 }
