@@ -153,7 +153,7 @@ static bool IsEqual (LUID left, LUID right) {
     return (left.LowPart == right.LowPart) && (left.HighPart == right.HighPart);
 }
 
-NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::vector<std::wstring>& environment) {
+NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     const char ORIGIN[] = "SecurityPkgTester";
@@ -260,6 +260,13 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
             wprintf(L"WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
     }
 
+    PROFILEINFOW profile{
+        .dwSize = sizeof(profile),
+        .lpUserName = (wchar_t*)username.c_str(),
+    };
+    if (!LoadUserProfileW(token, &profile))
+        abort();
+
     void* userEnvironment = nullptr;
     if (!CreateEnvironmentBlock(&userEnvironment, token, /*inherit*/false))
         abort();
@@ -352,8 +359,7 @@ int wmain(int argc, wchar_t* argv[]) {
         else
             authInfo = PrepareLogon_MSV1_0(username, password); // TODO: Replace with suitable authInfo for the selected authPkg
 
-        std::vector<std::wstring> environment = CreateUserEnvironment(username);
-        NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo, environment);
+        NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo, username);
         if (ret != STATUS_SUCCESS) {
             if (ret == STATUS_INVALID_PARAMETER)
                 wprintf(L"ERROR: LsaLogonUser failed with STATUS_INVALID_PARAMETER\n");
