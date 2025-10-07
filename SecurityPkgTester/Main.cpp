@@ -248,7 +248,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         PROCESS_INFORMATION pi = {};
         std::wstring cmd_exe = L"cmd.exe";
         wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
-        DWORD creationFlags = CREATE_NEW_CONSOLE; // | CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT;
+        DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP; // | CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT;
         if (!CreateProcessWithTokenW(token, LOGON_WITH_PROFILE, nullptr, cmd_exe.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi)) {
             DWORD err = GetLastError();
             if (err == ERROR_PRIVILEGE_NOT_HELD)
