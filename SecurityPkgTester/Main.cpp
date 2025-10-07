@@ -50,6 +50,38 @@ private:
     HANDLE m_lsa = 0;
 };
 
+std::vector<std::wstring> CreateUserEnvironment(std::wstring username) {
+    wchar_t*  env = GetEnvironmentStringsW();
+    std::vector<std::wstring> result;
+
+    
+    for (const wchar_t* ptr = env; *ptr;) {
+        std::wstring entry = ptr;
+        size_t separatorIdx = entry.find(L'=');
+        std::wstring key = entry.substr(0, separatorIdx);
+        std::wstring value = entry.substr(separatorIdx+1);
+
+        // modify user-specific env. variables
+        if (key == L"APPDATA")
+            value = L"C:\\Users\\" + username + L"\\AppData\\Roaming";
+        else if (key == L"HOMEPATH")
+            value = L"\\Users\\" + username;
+        else if (key == L"LOCALAPPDATA")
+            value = L"C:\\Users\\" + username + L"\\AppData\\Local";
+        else if (key == L"USERNAME")
+            value = username;
+        else if (key == L"USERPROFILE")
+            value = L"C:\\Users\\" + username;
+
+        result.push_back(key + L"=" + value);
+        ptr += entry.size() + 1;
+    }
+
+    FreeEnvironmentStringsW(env);
+    return result;
+}
+
+
 NTSTATUS GetAuthPackage(LsaHandle& lsa, const wchar_t* name, /*out*/ULONG* authPkg) {
     std::string name_a = ToAscii(name);
 
@@ -119,7 +151,7 @@ static bool IsEqual (LUID left, LUID right) {
     return (left.LowPart == right.LowPart) && (left.HighPart == right.HighPart);
 }
 
-NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo) {
+NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::vector<std::wstring>& environment) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     const char ORIGIN[] = "SecurityPkgTester";
@@ -310,7 +342,8 @@ int wmain(int argc, wchar_t* argv[]) {
         else
             authInfo = PrepareLogon_MSV1_0(username, password); // TODO: Replace with suitable authInfo for the selected authPkg
 
-        NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo);
+        std::vector<std::wstring> environment = CreateUserEnvironment(username);
+        NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo, environment);
         if (ret != STATUS_SUCCESS) {
             if (ret == STATUS_INVALID_PARAMETER)
                 wprintf(L"ERROR: LsaLogonUser failed with STATUS_INVALID_PARAMETER\n");
