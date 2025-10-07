@@ -121,7 +121,7 @@ static bool IsEqual (LUID left, LUID right) {
     return (left.LowPart == right.LowPart) && (left.HighPart == right.HighPart);
 }
 
-NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username) {
+NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     const char ORIGIN[] = "SecurityPkgTester";
@@ -153,9 +153,25 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     QUOTA_LIMITS quotas{};
     NTSTATUS subStatus = 0;
 
+    LOGON32_PROVIDER_DEFAULT;
+    LOGON32_PROVIDER_WINNT50;
+
+#if 0
+    {
+        PSID logonSid = nullptr;
+        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, LOGON32_PROVIDER_DEFAULT, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
+        if (!ok) {
+            DWORD err = GetLastError();
+            wprintf(L"LogonUserExW failed with err: %u\n", err);
+            abort();
+        }
+        FreeSid(logonSid);
+    }
+#else
     NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
     if (ret != STATUS_SUCCESS)
         return ret;
+#endif
 
     wprintf(L"profileBufferLen: %u\n", profileBufferLen);
     if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
@@ -253,7 +269,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 
     CloseHandle(token);
-    return ret;
+    return STATUS_SUCCESS;
 }
 
 
@@ -313,7 +329,7 @@ int wmain(int argc, wchar_t* argv[]) {
         else
             authInfo = PrepareLogon_MSV1_0(username, password); // TODO: Replace with suitable authInfo for the selected authPkg
 
-        NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo, username);
+        NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo, username, password);
         if (ret != STATUS_SUCCESS) {
             if (ret == STATUS_INVALID_PARAMETER)
                 wprintf(L"ERROR: LsaLogonUser failed with STATUS_INVALID_PARAMETER\n");
