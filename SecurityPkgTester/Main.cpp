@@ -183,7 +183,6 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
     LsaFreeReturnBuffer(profileBuffer);
 
-#if 0
     {
         // verify that "token" type is TokenPrimary
         TOKEN_TYPE tokenType = {};
@@ -196,6 +195,8 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         }
     }
 
+    bool hasIncreaseQuta = false;
+    bool hasAssignPrimaryToken = false;
     {
         // current process privilege check
         LUID INCREASE_QUOTA{};
@@ -212,8 +213,6 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         privilegesBuffer.resize(privilegesLength);
         auto* privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
 
-        bool hasIncreaseQuta = false;
-        bool hasAssignPrimaryToken = false;
         wprintf(L"Inspecting all %u token privileges...\n", privileges->PrivilegeCount);
         for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
             if (IsEqual(privileges->Privileges[i].Luid, INCREASE_QUOTA))
@@ -228,43 +227,44 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
             wprintf(L"WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
     }
 
-    PROFILEINFOW profile{
-        .dwSize = sizeof(profile),
-        .lpUserName = (wchar_t*)username.c_str(),
-    };
-    if (!LoadUserProfileW(token, &profile))
-        abort();
+    if (hasIncreaseQuta) {
+        PROFILEINFOW profile{
+            .dwSize = sizeof(profile),
+            .lpUserName = (wchar_t*)username.c_str(),
+        };
+        if (!LoadUserProfileW(token, &profile))
+            abort();
 
-    void* userEnvironment = nullptr;
-    if (!CreateEnvironmentBlock(&userEnvironment, token, /*inherit*/false))
-        abort();
+        void* userEnvironment = nullptr;
+        if (!CreateEnvironmentBlock(&userEnvironment, token, /*inherit*/false))
+            abort();
 
-    // Start command prompt.
-    // NOTE: The process that calls the CreateProcessAsUser function must have the SE_INCREASE_QUOTA_NAME privilege
-    // and may require the SE_ASSIGNPRIMARYTOKEN_NAME privilege if the token is not assignable.
-    STARTUPINFOW si = {
-        .cb = sizeof(si),
-        //.lpDesktop = (wchar_t*)L"winsta0\\default",
-    };
-    PROCESS_INFORMATION pi = {};
-    std::wstring cmd_exe = L"cmd.exe";
-    wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
-    DWORD creationFlags = CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE; // | CREATE_SUSPENDED;
-    if (!CreateProcessAsUserW(token, nullptr, cmd_exe.data(), /*proc.attr*/nullptr, /*thread attr*/nullptr, /*inherit*/false, creationFlags, userEnvironment, /*cur-dir*/L"C:\\", &si, &pi)) {
-        DWORD err = GetLastError();
-        if (err == ERROR_PRIVILEGE_NOT_HELD)
-            wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_PRIVILEGE_NOT_HELD).\n");
-        else if (err == ERROR_INVALID_PARAMETER)
-            wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_INVALID_PARAMETER).\n");
-        else
-            wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (err %u).\n", err);
-        return err;
+        // Start command prompt.
+        // NOTE: The process that calls the CreateProcessAsUser function must have the SE_INCREASE_QUOTA_NAME privilege
+        // and may require the SE_ASSIGNPRIMARYTOKEN_NAME privilege if the token is not assignable.
+        STARTUPINFOW si = {
+            .cb = sizeof(si),
+            //.lpDesktop = (wchar_t*)L"winsta0\\default",
+        };
+        PROCESS_INFORMATION pi = {};
+        std::wstring cmd_exe = L"cmd.exe";
+        wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
+        DWORD creationFlags = CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE; // | CREATE_SUSPENDED;
+        if (!CreateProcessAsUserW(token, nullptr, cmd_exe.data(), /*proc.attr*/nullptr, /*thread attr*/nullptr, /*inherit*/false, creationFlags, userEnvironment, /*cur-dir*/L"C:\\", &si, &pi)) {
+            DWORD err = GetLastError();
+            if (err == ERROR_PRIVILEGE_NOT_HELD)
+                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_PRIVILEGE_NOT_HELD).\n");
+            else if (err == ERROR_INVALID_PARAMETER)
+                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_INVALID_PARAMETER).\n");
+            else
+                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (err %u).\n", err);
+            return err;
+        }
+
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+        DestroyEnvironmentBlock(userEnvironment);
     }
-
-    CloseHandle(pi.hProcess);
-    CloseHandle(pi.hThread);
-    DestroyEnvironmentBlock(userEnvironment);
-#endif
 
     CloseHandle(token);
     return ret;
