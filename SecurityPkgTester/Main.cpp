@@ -178,6 +178,18 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     LsaFreeReturnBuffer(profileBuffer);
 
 #if 0
+    {
+        // verify that "token" type is TokenPrimary
+        TOKEN_TYPE tokenType = {};
+        DWORD tokenLen = 0;
+        if (!GetTokenInformation(token, TokenType, &tokenType, sizeof(tokenType), &tokenLen))
+            abort();
+        if (tokenType != TokenPrimary) {
+            wprintf(L"ERROR: Incorrect process token type. Need primary token.\n");
+            return ERROR_PRIVILEGE_NOT_HELD;
+        }
+    }
+
     // Start command prompt.
     // NOTE: The process that calls the CreateProcessAsUser function must have the SE_INCREASE_QUOTA_NAME privilege
     // and may require the SE_ASSIGNPRIMARYTOKEN_NAME privilege if the token is not assignable.
