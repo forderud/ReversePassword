@@ -244,6 +244,21 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 
     if (hasIncreaseQuta) {
+#if 0
+        {
+            // replace "token" with the primary token for the current user
+            // useful for verifying the CreateProcessWithTokenW call below
+            HANDLE procToken = 0;
+            if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &procToken))
+                abort();
+
+            // copy impersonation token
+            token = 0;
+            if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenImpersonation, &token))
+                abort();
+        }
+#endif
+
         // Start command prompt.
         STARTUPINFOW si = {
             .cb = sizeof(si),
