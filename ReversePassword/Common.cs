@@ -29,8 +29,6 @@ namespace ReversePassword
             // close LSA handle
             PInvoke.LsaDeregisterLogonProcess(lsaHandle);
 
-            Logger.Write($"Using authentication package id: {authPackage}");
-
             return status;
         }
 

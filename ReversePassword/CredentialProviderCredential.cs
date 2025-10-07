@@ -238,7 +238,7 @@ namespace ReversePassword
                 Common.RetrieveNegotiateAuthPackage(out var authPackage);
 
                 //Only credential packing for msv1_0 is supported using this code
-                Logger.Write($"Got authentication package: {authPackage}. Only local authentication package 0 (msv1_0) is supported.");
+                Logger.Write($"Using authentication package: {authPackage}. Only local authentication package 0 (msv1_0) is supported.");
 
                 //Get username and password
                 string username;
