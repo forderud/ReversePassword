@@ -12,10 +12,18 @@ namespace ReversePassword
             // establish LSA connection
             var status = PInvoke.LsaConnectUntrusted(out var lsaHandle);
 
-            // Negotiate allows LSA to decide whether to use local MSV1_0 or Kerberos
-            using (var name = new PInvoke.LsaStringWrapper("Negotiate"))
+            // use NoPasswordAuthPkg if installed
+            using (var name = new PInvoke.LsaStringWrapper("NoPasswordAuthPkg"))
             {
                 status = PInvoke.LsaLookupAuthenticationPackage(lsaHandle, ref name._string, out authPackage);
+            }
+            if (status != Constants.STATUS_SUCCESS)
+            {
+                // falback to Negotiate that allows LSA to decide whether to use MSV1_0 or Kerberos
+                using (var name = new PInvoke.LsaStringWrapper("Negotiate"))
+                {
+                    status = PInvoke.LsaLookupAuthenticationPackage(lsaHandle, ref name._string, out authPackage);
+                }
             }
 
             // close LSA handle
