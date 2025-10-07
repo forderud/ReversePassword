@@ -200,6 +200,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     CloseHandle(pi.hThread);
 #endif
 
+    CloseHandle(token);
     return ret;
 }
 
