@@ -52,38 +52,6 @@ private:
     HANDLE m_lsa = 0;
 };
 
-std::vector<std::wstring> CreateUserEnvironment(std::wstring username) {
-    wchar_t*  env = GetEnvironmentStringsW();
-    std::vector<std::wstring> result;
-
-    
-    for (const wchar_t* ptr = env; *ptr;) {
-        std::wstring entry = ptr;
-        size_t separatorIdx = entry.find(L'=');
-        std::wstring key = entry.substr(0, separatorIdx);
-        std::wstring value = entry.substr(separatorIdx+1);
-
-        // modify user-specific env. variables
-        if (key == L"APPDATA")
-            value = L"C:\\Users\\" + username + L"\\AppData\\Roaming";
-        else if (key == L"HOMEPATH")
-            value = L"\\Users\\" + username;
-        else if (key == L"LOCALAPPDATA")
-            value = L"C:\\Users\\" + username + L"\\AppData\\Local";
-        else if (key == L"USERNAME")
-            value = username;
-        else if (key == L"USERPROFILE")
-            value = L"C:\\Users\\" + username;
-
-        result.push_back(key + L"=" + value);
-        ptr += entry.size() + 1;
-    }
-
-    FreeEnvironmentStringsW(env);
-    return result;
-}
-
-
 NTSTATUS GetAuthPackage(LsaHandle& lsa, const wchar_t* name, /*out*/ULONG* authPkg) {
     std::string name_a = ToAscii(name);
 
@@ -281,7 +249,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     PROCESS_INFORMATION pi = {};
     std::wstring cmd_exe = L"cmd.exe";
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
-    DWORD creationFlags = CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE; // CREATE_SUSPENDED
+    DWORD creationFlags = CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE; // | CREATE_SUSPENDED;
     if (!CreateProcessAsUserW(token, nullptr, cmd_exe.data(), /*proc.attr*/nullptr, /*thread attr*/nullptr, /*inherit*/false, creationFlags, userEnvironment, /*cur-dir*/L"C:\\", &si, &pi)) {
         DWORD err = GetLastError();
         if (err == ERROR_PRIVILEGE_NOT_HELD)
