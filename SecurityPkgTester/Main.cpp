@@ -274,7 +274,8 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     PROCESS_INFORMATION pi = {};
     std::wstring cmd_exe = L"cmd.exe";
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
-    if (!CreateProcessAsUserW(token, nullptr, cmd_exe.data(), /*proc.attr*/nullptr, /*thread attr*/nullptr, /*inherit*/false, CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE, userEnvironment, /*cur-dir*/L"C:\\", &si, &pi)) {
+    DWORD creationFlags = CREATE_UNICODE_ENVIRONMENT | CREATE_NEW_CONSOLE; // CREATE_SUSPENDED
+    if (!CreateProcessAsUserW(token, nullptr, cmd_exe.data(), /*proc.attr*/nullptr, /*thread attr*/nullptr, /*inherit*/false, creationFlags, userEnvironment, /*cur-dir*/L"C:\\", &si, &pi)) {
         DWORD err = GetLastError();
         if (err == ERROR_PRIVILEGE_NOT_HELD)
             wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_PRIVILEGE_NOT_HELD).\n");
