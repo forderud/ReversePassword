@@ -15,6 +15,8 @@
         // from <ntstatus.h>
         public const uint STATUS_SUCCESS = 0x00000000;
         public const uint STATUS_NOT_IMPLEMENTED = 0xC0000002;
+        public const uint STATUS_LOGON_FAILURE = 0xC000006D;
+        public const uint STATUS_INTERNAL_ERROR = 0xC00000E5;
 
         // from <lmerr.h>
         public const uint NERR_Success = 0;
