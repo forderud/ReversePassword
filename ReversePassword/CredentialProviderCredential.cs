@@ -316,12 +316,16 @@ namespace ReversePassword
             out string optionalStatusText,
             out _CREDENTIAL_PROVIDER_STATUS_ICON optionalStatusIcon)
         {
-            if ((uint)status == Constants.STATUS_NOT_IMPLEMENTED)
-                Logger.Write($"ntsStatus: STATUS_NOT_IMPLEMENTED; ntsSubstatus: 0x{ntsSubstatus:X}");
-            else
-                Logger.Write($"ntsStatus: 0x{status:X}; ntsSubstatus: 0x{ntsSubstatus:X}");
-
             optionalStatusText = "";
+            if ((uint)status != Constants.STATUS_SUCCESS)
+            {
+                if ((uint)status == Constants.STATUS_NOT_IMPLEMENTED)
+                    optionalStatusText = $"ntsStatus: STATUS_NOT_IMPLEMENTED; ntsSubstatus: 0x{ntsSubstatus:X}";
+                else
+                    optionalStatusText = $"ntsStatus: 0x{status:X}; ntsSubstatus: 0x{ntsSubstatus:X}";
+            }
+
+            Logger.Write(optionalStatusText);
             optionalStatusIcon = _CREDENTIAL_PROVIDER_STATUS_ICON.CPSI_NONE;
         }
 
