@@ -25,6 +25,8 @@ inline std::string ToAscii(const std::wstring& w_str) {
 }
 
 inline std::wstring ToWstring(LSA_UNICODE_STRING& lsa_str) {
+    if (lsa_str.Length == 0)
+        return L"<empty>";
     return std::wstring(lsa_str.Buffer, lsa_str.Length / 2);
 }
 
