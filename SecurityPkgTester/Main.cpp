@@ -255,7 +255,9 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP; // | CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT;
         if (!CreateProcessWithTokenW(token, LOGON_WITH_PROFILE, nullptr, cmd_exe.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi)) {
             DWORD err = GetLastError();
-            if (err == ERROR_PRIVILEGE_NOT_HELD)
+            if (err == ERROR_INVALID_HANDLE)
+                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_INVALID_HANDLE).\n");
+            else if (err == ERROR_PRIVILEGE_NOT_HELD)
                 wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_PRIVILEGE_NOT_HELD).\n");
             else if (err == ERROR_INVALID_PARAMETER)
                 wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_INVALID_PARAMETER).\n");
