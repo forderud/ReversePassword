@@ -6,6 +6,7 @@
 #include <NTSecAPI.h> // for MSV1_0_PACKAGE_NAME
 #include <ntstatus.h>
 #include <SubAuth.h>
+#include <userenv.h> // for CreateEnvironmentBlock
 #include <cassert>
 #include <iostream>
 #include <tuple>
@@ -13,6 +14,7 @@
 #include "PrintInfo.hpp"
 
 #pragma comment(lib, "Secur32.lib")
+#pragma comment(lib, "Userenv.lib")
 
 
 /** Converts unicode string to ASCII */
@@ -258,6 +260,10 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
             wprintf(L"WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
     }
 
+    void* userEnvironment = nullptr;
+    if (!CreateEnvironmentBlock(&userEnvironment, token, /*inherit*/false))
+        abort();
+
     // Start command prompt.
     // NOTE: The process that calls the CreateProcessAsUser function must have the SE_INCREASE_QUOTA_NAME privilege
     // and may require the SE_ASSIGNPRIMARYTOKEN_NAME privilege if the token is not assignable.
@@ -268,7 +274,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     PROCESS_INFORMATION pi = {};
     std::wstring cmd_exe = L"cmd.exe";
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
-    if (!CreateProcessAsUserW(token, nullptr, cmd_exe.data(), /*proc.attr*/nullptr, /*thread attr*/nullptr, /*inherit*/false, CREATE_NEW_CONSOLE, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi)) {
+    if (!CreateProcessAsUserW(token, nullptr, cmd_exe.data(), /*proc.attr*/nullptr, /*thread attr*/nullptr, /*inherit*/false, CREATE_NEW_CONSOLE, userEnvironment, /*cur-dir*/L"C:\\", &si, &pi)) {
         DWORD err = GetLastError();
         if (err == ERROR_PRIVILEGE_NOT_HELD)
             wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_PRIVILEGE_NOT_HELD).\n");
@@ -279,6 +285,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
+    DestroyEnvironmentBlock(userEnvironment);
 #endif
 
     CloseHandle(token);
