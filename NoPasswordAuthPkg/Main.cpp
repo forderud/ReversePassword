@@ -86,12 +86,41 @@ NTSTATUS LsaApLogonUserEx2 (
         logonInfo->Password.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->Password.Buffer);
     }
 
+    wchar_t computerNameBuf[MAX_COMPUTERNAME_LENGTH + 1] = {};
+    DWORD computerNameSize = ARRAYSIZE(computerNameBuf);
+    if (!GetComputerNameW(computerNameBuf, &computerNameSize)) {
+        LogMessage("  return STATUS_INTERNAL_ERROR (GetComputerNameW failed)");
+        return STATUS_INTERNAL_ERROR;
+    }
+
     // assign output arguments
 
     {
-        // TODO: assign "ProfileBuffer" output argument
-        *ProfileBuffer = nullptr; // TODO: implement BuildInteractiveProfileBuffer
-        *ProfileBufferSize = 0;
+        // assign "ProfileBuffer" output argument
+        // TODO: Also include string members
+        ULONG profileSize = sizeof(MSV1_0_INTERACTIVE_PROFILE);
+        auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)FunctionTable.AllocateLsaHeap(*ProfileBufferSize);
+        profile->MessageType = MsV1_0InteractiveProfile;
+        profile->LogonCount = 42;
+        profile->BadPasswordCount = 0;
+        profile->LogonTime;
+        profile->LogoffTime = { 0xffffffff, 0x7fffffff };
+        profile->KickOffTime = { 0xffffffff, 0x7fffffff };
+        profile->PasswordLastSet;
+        profile->PasswordCanChange;
+        profile->PasswordMustChange;
+        profile->LogonScript; // observed to be empty
+        profile->HomeDirectory; // observed to be empty
+        //AssignLsaUnicodeString(logonInfo->UserName, profile->FullName);
+        profile->FullName;
+        profile->ProfilePath; // observed to be empty
+        profile->HomeDirectoryDrive; // observed to be empty
+        //AssignLsaUnicodeString(*CreateLsaUnicodeString(computerNameBuf), profile->LogonServer); // TODO: remove leak
+        profile->LogonServer;
+        profile->UserFlags = 0;
+
+        *ProfileBuffer = profile;
+        *ProfileBufferSize = profileSize;
     }
 
     {
@@ -156,13 +185,6 @@ NTSTATUS LsaApLogonUserEx2 (
 
     if (MachineName) {
         // assign "MachineName" output argument
-        wchar_t computerNameBuf[MAX_COMPUTERNAME_LENGTH + 1] = {};
-        DWORD computerNameSize = ARRAYSIZE(computerNameBuf);
-        if (!GetComputerNameW(computerNameBuf, &computerNameSize)) {
-            LogMessage("  return STATUS_INTERNAL_ERROR (GetComputerNameW failed)");
-            return STATUS_INTERNAL_ERROR;
-        }
-
         LogMessage("  MachineName: %ls", computerNameBuf);
         *MachineName = CreateLsaUnicodeString(computerNameBuf, (USHORT)computerNameSize*sizeof(wchar_t));
     }

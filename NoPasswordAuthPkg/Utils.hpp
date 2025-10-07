@@ -55,3 +55,14 @@ inline std::wstring ToWstring(LSA_UNICODE_STRING& lsa_str) {
         return L"<empty>";
     return std::wstring(lsa_str.Buffer, lsa_str.Length/2);
 }
+
+inline void AssignLsaUnicodeString(const LSA_UNICODE_STRING& source, LSA_UNICODE_STRING& dest) {
+    assert(FunctionTable.AllocateLsaHeap);
+    if (dest.Buffer)
+        FunctionTable.FreeLsaHeap(dest.Buffer);
+
+    dest.Buffer = (wchar_t*)FunctionTable.AllocateLsaHeap(source.Length);
+    memcpy(/*dst*/dest.Buffer, /*src*/source.Buffer, source.Length);
+    dest.Length = source.Length;
+    dest.MaximumLength = source.Length;
+}
