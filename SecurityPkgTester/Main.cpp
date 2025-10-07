@@ -195,7 +195,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 
     {
-        // privilege check
+        // current process privilege check
         LUID INCREASE_QUOTA{};
         BOOL ok = LookupPrivilegeValueW(nullptr, SE_INCREASE_QUOTA_NAME, &INCREASE_QUOTA);
         assert(ok);
@@ -205,7 +205,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
         std::vector<BYTE> privilegesBuffer(1024, (BYTE)0);
         DWORD privilegesLength = 0;
-        ok = GetTokenInformation(token, TokenPrivileges, privilegesBuffer.data(), (DWORD)privilegesBuffer.size(), &privilegesLength);
+        ok = GetTokenInformation(GetCurrentProcessToken(), TokenPrivileges, privilegesBuffer.data(), (DWORD)privilegesBuffer.size(), &privilegesLength);
         assert(ok);
         privilegesBuffer.resize(privilegesLength);
         auto* privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
