@@ -12,6 +12,9 @@
         public const uint ERROR_INVALID_PASSWORD = 86;
         public const uint ERROR_CANT_ACCESS_DOMAIN_INFO = 1351;
 
+        // from <ntstatus.h>
+        public const uint STATUS_SUCCESS = 0x00000000;
+
         // from <lmerr.h>
         public const uint NERR_Success = 0;
         public const uint NERR_BASE = 2100;
