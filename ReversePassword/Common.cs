@@ -12,7 +12,7 @@ namespace ReversePassword
             // establish LSA connection
             var status = PInvoke.LsaConnectUntrusted(out var lsaHandle);
 
-            // use Negotiate to allow LSA to decide whether to use local or Kerberos authentication package
+            // Negotiate allows LSA to decide whether to use local MSV1_0 or Kerberos
             using (var name = new PInvoke.LsaStringWrapper("Negotiate"))
             {
                 status = PInvoke.LsaLookupAuthenticationPackage(lsaHandle, ref name._string, out authPackage);
