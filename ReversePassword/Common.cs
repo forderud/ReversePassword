@@ -5,7 +5,7 @@ namespace ReversePassword
     static class Common
     {
         //Determine authentication package required
-        public static int RetrieveNegotiateAuthPackage(out uint authPackage)
+        public static uint RetrieveNegotiateAuthPackage(out uint authPackage)
         {
             Logger.Write();
 
@@ -23,7 +23,7 @@ namespace ReversePassword
 
             Logger.Write($"Using authentication package id: {authPackage}");
 
-            return (int)status;
+            return status;
         }
 
         public static string GetNameFromSid(string value)
