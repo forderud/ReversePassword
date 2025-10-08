@@ -76,6 +76,7 @@ NTSTATUS LsaApLogonUserEx2 (
         return STATUS_NOT_IMPLEMENTED;
     }
 
+    // authentication credentials passed by client
     auto* logonInfo = (MSV1_0_INTERACTIVE_LOGON*)ProtocolSubmitBuffer;
     {
         if (SubmitBufferSize < sizeof(MSV1_0_INTERACTIVE_LOGON)) {
@@ -101,7 +102,7 @@ NTSTATUS LsaApLogonUserEx2 (
     {
         // assign "ProfileBuffer" output argument
         *ProfileBufferSize = GetProfileBufferSize(computerNameBuf, *logonInfo);
-        FunctionTable.AllocateClientBuffer(ClientRequest, *ProfileBufferSize, ProfileBuffer);
+        FunctionTable.AllocateClientBuffer(ClientRequest, *ProfileBufferSize, ProfileBuffer); // will update *ProfileBuffer
 
         std::vector<BYTE> profileBuffer = PrepareProfileBuffer(computerNameBuf, *logonInfo, (BYTE*)*ProfileBuffer);
         FunctionTable.CopyToClientBuffer(ClientRequest, (ULONG)profileBuffer.size(), *ProfileBuffer, profileBuffer.data()); // copy to caller process
