@@ -248,6 +248,8 @@ namespace ReversePassword
                     username = Common.GetNameFromSid(_sid); // implicit
 
                 var password = (string)_view.GetField(2).Value;
+                if (password == null)
+                        password = "";
                 password = Reverse(password);
 
                 Logger.Write($"Preparing to serialise credential with username: {username} and password: {password}");
