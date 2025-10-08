@@ -1,6 +1,8 @@
-Example Windows Credential Provider that require your password to by typed backwards. Written in C#.
+Projects:
+* **ReversePassword**: Sample Windows Credential Provider that require your password to by typed backwards. Written in C#.
+* **NoPasswordAuthPkg**: Sample authentication package to avoid interactive logon without having to type the password.
 
-## Design
+## ReversePassword design
 Overall class diagram:  
 ![class diagram](class_diagram.svg)
 
@@ -30,7 +32,7 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 * Right click on `UNREGISTER.bat` and select "Run as administrator".
 
 
-## Authentication and logon APIs
+## Authentication and logon documentation
 
 #### User session and authentication
 * Show authentication dialog: [CredUIPromptForWindowsCredentials](https://learn.microsoft.com/en-us/windows/win32/api/wincred/nf-wincred-creduipromptforwindowscredentialsw)
@@ -46,7 +48,7 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 
 The project is heavily based on the no longer maintained [CredProvider.NET](https://github.com/SteveSyfuhs/CredProvider.NET)
 
-#### Authentication packages
-* [LSA Authentication Model](https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-authentication-model) (mentions _custom authentication packages_)
+#### Security and authentication packages
+* [LSA Authentication Model](https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-authentication-model)
 * [Creating Custom Security Packages](https://learn.microsoft.com/en-us/windows/win32/secauthn/creating-custom-security-packages)
-* [MSV1_0 Authentication Package](https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package) that's used for local machine logons (Kerberos is used for network logons).
+* [MSV1_0 Authentication Package](https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package) is used for local machine logons (Kerberos is used for network logons).
