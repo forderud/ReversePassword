@@ -230,7 +230,7 @@ NTSTATUS LsaApLogonUserEx2 (
 
 void LsaApLogonTerminated(LUID* LogonId) {
     LogMessage("LsaApLogonTerminated");
-    LogonId;
+    LogMessage("  LogonId: LowPart=%x , HighPart:%x", LogonId->LowPart, LogonId->HighPart);
     LogMessage("  return");
 }
 
