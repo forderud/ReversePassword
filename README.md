@@ -17,7 +17,7 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 * Copy the build artifacts to the test environment.
 * Run `REGISTER_ReversePassword.bat` as administrator.
 * Log screen, log out or restart the computer.
-* Observe that there's now a new "RP" sign-in option:  
+* Observe that there's now a new "RP" sign-in option that requires the password to be typed backwards:  
 ![screenshot](Screenshot.png)  
 
 * `CredUITester.exe` can also be used for testing the credential provider:  
