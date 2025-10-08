@@ -1,12 +1,11 @@
 #include "PrepareToken.hpp"
 #include "PrepareProfile.hpp"
+#include "Utils.hpp"
 
 // exported symbols
 #pragma comment(linker, "/export:SpLsaModeInitialize")
 
 LSA_SECPKG_FUNCTION_TABLE FunctionTable;
-
-#include "Utils.hpp"
 
 
 NTSTATUS NTAPI SpInitialize(_In_ ULONG_PTR PackageId, _In_ SECPKG_PARAMETERS* Parameters, _In_ LSA_SECPKG_FUNCTION_TABLE* functionTable) {
