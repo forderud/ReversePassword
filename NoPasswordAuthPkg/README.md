@@ -1,4 +1,4 @@
-# Authentication Package (SSP/AP) sample
+# Authentication Package sample
 Minimal Security Support Provider/Authentication Package (SSP/AP) sample project that bypasses the need for entering passwords for _interactive_ logons.
 
 ### Security warning
