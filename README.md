@@ -6,17 +6,20 @@ Projects:
 It's recommended to **test in a disposable Virtual Machine (VM)**, since credential provider problems might break the windows logon screen. You don't want to risk that on your main computer.
 
 #### Build steps
-* Open solution in Visual Studio and build in release or debug mode.
+* Open solution in Visual Studio and build the projects in release or debug mode.
 
 #### Installation steps
 * Install [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet)
-* Right click on `REGISTER_ReversePassword.bat` and select "Run as administrator".
+* Copy the build artifacts to the test environment.
+* Run `REGISTER_ReversePassword.bat` as administrator.
 * Log screen, log out or restart the computer.
 * Observe that there's now a new "RP" sign-in option:  
 ![screenshot](Screenshot.png)  
 
 * `CredUITester.exe` can also be used for testing the credential provider:  
 ![CredUIPrompt](CredUIPrompt.png)  
+
+Password entering can be avoided altogether if NoPasswordAuthPkg is also installed. This can be done by running `Install_NoPasswordAuthPkg.bat` as administrator and restarting afterwards.
 
 #### Uninstallation steps
 * Right click on `UNREGISTER_ReversePassword.bat` and select "Run as administrator".
