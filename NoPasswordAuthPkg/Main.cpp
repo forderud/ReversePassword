@@ -232,7 +232,12 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
 
 /** LSA calls SpLsaModeInitialize() when loading SSP/AP DLLs. */
 extern "C"
-NTSTATUS NTAPI SpLsaModeInitialize(ULONG LsaVersion, ULONG* PackageVersion, SECPKG_FUNCTION_TABLE** ppTables, ULONG* pcTables) {
+NTSTATUS NTAPI SpLsaModeInitialize(
+    _In_ ULONG LsaVersion,
+    _Out_ ULONG* PackageVersion,
+    _Out_ SECPKG_FUNCTION_TABLE** ppTables,
+    _Out_ ULONG* pcTables
+) {
     LogMessage("SpLsaModeInitialize");
     LogMessage("  LsaVersion %u", LsaVersion);
 
