@@ -6,6 +6,10 @@ extern LSA_SECPKG_FUNCTION_TABLE FunctionTable;
 
 
 inline void LogMessage(const char* message, ...) {
+#ifdef NDEBUG
+    // don't log to file in release builds
+    message;
+#else
     // append to log file
     FILE* file = nullptr;
     fopen_s(&file, "C:\\NoPasswordAuthPkg_log.txt", "a+");
@@ -18,6 +22,7 @@ inline void LogMessage(const char* message, ...) {
     }
     fprintf(file, "\n");
     fclose(file);
+#endif
 }
 
 /** Allocate and create a new LSA_STRING object.
