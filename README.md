@@ -20,7 +20,7 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 * `CredUITester.exe` can also be used for testing the credential provider:  
 ![CredUIPrompt](CredUIPrompt.png)  
 
-Password entering can be avoided altogether if NoPasswordAuthPkg is also installed. This can be done by running `Install_NoPasswordAuthPkg.bat` as administrator and restarting afterwards.
+Password entering can be avoided altogether if NoPasswordAuthPkg is also installed. This can be done by running `Install_NoPasswordAuthPkg.ps1` as administrator and restarting afterwards.
 
 #### Uninstallation steps
 * Right click on `UNREGISTER_ReversePassword.bat` and select "Run as administrator".
