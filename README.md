@@ -1,5 +1,6 @@
 | Project | Description |
 |---------|-------------|
+| [**BluetoothSubauthPkg**](BluetoothSubauthPkg/) | Sample MSV1_0 subauthentication package that will deny login if Bluetooth is enabled. |
 | [**ReversePassword**](ReversePassword/) | Sample Windows Credential Provider that require the password to by typed backwards. Written in C#. |
 | [**NoPasswordAuthPkg**](NoPasswordAuthPkg/) | Sample authentication package to allow interactive logon without having to type the password. |
 
