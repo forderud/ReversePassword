@@ -13,6 +13,8 @@ inline void LogMessage(const char* message, ...) {
     // append to log file
     FILE* file = nullptr;
     fopen_s(&file, "C:\\NoPasswordAuthPkg_log.txt", "a+");
+    if (!file)
+        return;
     {
         // print variadic message
         va_list args;
