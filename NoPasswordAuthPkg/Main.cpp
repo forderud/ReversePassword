@@ -40,24 +40,27 @@ NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
     return STATUS_SUCCESS;
 }
 
+
+/* Authenticate a user logon attempt.
+   Returns STATUS_SUCCESS if the login attempt succeeded. */
 NTSTATUS LsaApLogonUserEx2 (
-    PLSA_CLIENT_REQUEST ClientRequest,
-    SECURITY_LOGON_TYPE LogonType,
-    VOID* ProtocolSubmitBuffer,
-    VOID* ClientBufferBase,
-    ULONG SubmitBufferSize,
-    VOID** ProfileBuffer,
-    ULONG* ProfileBufferSize,
-    LUID* LogonId,
-    NTSTATUS* SubStatus,
-    LSA_TOKEN_INFORMATION_TYPE* TokenInformationType,
-    VOID** TokenInformation,
-    LSA_UNICODE_STRING** AccountName,
-    LSA_UNICODE_STRING** AuthenticatingAuthority,
-    LSA_UNICODE_STRING** MachineName,
-    SECPKG_PRIMARY_CRED* PrimaryCredentials,
-    SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials)
-{
+    _In_ PLSA_CLIENT_REQUEST ClientRequest,
+    _In_ SECURITY_LOGON_TYPE LogonType,
+    _In_reads_bytes_(SubmitBufferSize) VOID* ProtocolSubmitBuffer,
+    _In_ VOID* ClientBufferBase,
+    _In_ ULONG SubmitBufferSize,
+    _Outptr_result_bytebuffer_(*ProfileBufferSize) VOID** ProfileBuffer,
+    _Out_ ULONG* ProfileBufferSize,
+    _Out_ LUID* LogonId,
+    _Out_ NTSTATUS* SubStatus,
+    _Out_ LSA_TOKEN_INFORMATION_TYPE* TokenInformationType,
+    _Outptr_ VOID** TokenInformation,
+    _Out_ LSA_UNICODE_STRING** AccountName,
+    _Out_ LSA_UNICODE_STRING** AuthenticatingAuthority,
+    _Out_ LSA_UNICODE_STRING** MachineName,
+    _Out_ SECPKG_PRIMARY_CRED* PrimaryCredentials,
+    _Outptr_ SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials
+) {
     LogMessage("LsaApLogonUserEx2");
 
     // input arguments
