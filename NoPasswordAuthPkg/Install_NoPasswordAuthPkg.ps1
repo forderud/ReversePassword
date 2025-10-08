@@ -5,15 +5,13 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 }
 
 
-Write-Host "Copying NoPasswordAuthPkg.dll to %SYSTEMROOT%\System32..."
+Write-Host "Installing NoPasswordAuthPkg.dll to %SYSTEMROOT%\System32..."
 Copy-Item "$PSScriptRoot\NoPasswordAuthPkg.dll" -Destination "$env:SystemRoot\System32"
 
-Write-Host "Registering DLL as a security package..."
-# Read "Security Packages" REG_MULTI_SZ list from registry
+Write-Host "Registering security package..."
+# Add DLL to "Security Packages" list in registry
 $path = "HKLM:\System\CurrentControlSet\Control\Lsa"
 $name = "Security Packages"
-$secPkgList = (Get-ItemProperty -Path $path).$name
-# Add NoPasswordAuthPkg to list
+$secPkgList = (Get-ItemProperty -Path $path).$name # REG_MULTI_SZ list
 $secPkgList += "NoPasswordAuthPkg"
-# Write modified registry value back
 Set-ItemProperty -Path $path -Name $name -Value $secPkgList -Type MultiString
