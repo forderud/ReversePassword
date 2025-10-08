@@ -2,7 +2,7 @@
 Sample MSV1_0 subauthentication package that **will deny login if Bluetooth is enabled** on the machine.
 
 ### Limitation
-The `Msv1_0SubAuthenticationFilter` function only appear to be called _after_ the inbuilt MSV1_0 authentication package. This only facilitates adding of extra checks, while it doesn't seem to be possible to bypass password checking performed by MSV1_0.
+The `Msv1_0SubAuthenticationFilter` function only appear to be called _after_ the inbuilt MSV1_0 authentication package. This enables adding of extra checks, but it doesn't seem to be possible to bypass password checking performed by MSV1_0.
 
 
 ## Prerequisite
