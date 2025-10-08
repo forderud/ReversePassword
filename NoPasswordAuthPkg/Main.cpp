@@ -97,9 +97,11 @@ NTSTATUS LsaApLogonUserEx2 (
 
     {
         // assign "ProfileBuffer" output argument
-        std::vector<BYTE> profileBuffer = PrepareProfileBuffer(computerNameBuf, *logonInfo, ClientRequest, ProfileBuffer);
+        *ProfileBufferSize = GetProfileBufferSize(computerNameBuf, *logonInfo);
+        FunctionTable.AllocateClientBuffer(ClientRequest, *ProfileBufferSize, ProfileBuffer);
+
+        std::vector<BYTE> profileBuffer = PrepareProfileBuffer(computerNameBuf, *logonInfo, (BYTE*)*ProfileBuffer);
         FunctionTable.CopyToClientBuffer(ClientRequest, (ULONG)profileBuffer.size(), *ProfileBuffer, profileBuffer.data()); // copy to caller process
-        *ProfileBufferSize = (ULONG)profileBuffer.size();
     }
 
     {

@@ -3,13 +3,12 @@
 #include "PrepareProfile.hpp"
 #include "Utils.hpp"
 
+ULONG GetProfileBufferSize(const std::wstring& computername, const MSV1_0_INTERACTIVE_LOGON& logonInfo) {
+    return sizeof(MSV1_0_INTERACTIVE_PROFILE) + logonInfo.UserName.Length + (ULONG)(2 * computername.size());
+}
 
-std::vector<BYTE> PrepareProfileBuffer(const std::wstring& computername, const MSV1_0_INTERACTIVE_LOGON& logonInfo, PLSA_CLIENT_REQUEST ClientRequest, VOID** ProfileBuffer) {
-    ULONG profileSize = sizeof(MSV1_0_INTERACTIVE_PROFILE) + logonInfo.UserName.Length + (ULONG)(2 * computername.size());
-
-    FunctionTable.AllocateClientBuffer(ClientRequest, (ULONG)profileSize, ProfileBuffer);
-
-    std::vector<BYTE> profileBuffer(profileSize, (BYTE)0);
+std::vector<BYTE> PrepareProfileBuffer(const std::wstring& computername, const MSV1_0_INTERACTIVE_LOGON& logonInfo, BYTE* hostProfileAddress) {
+    std::vector<BYTE> profileBuffer(GetProfileBufferSize(computername, logonInfo), (BYTE)0);
     auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer.data();
     size_t offset = sizeof(MSV1_0_INTERACTIVE_PROFILE); // offset to string parameters
 
@@ -31,7 +30,7 @@ std::vector<BYTE> PrepareProfileBuffer(const std::wstring& computername, const M
         LSA_UNICODE_STRING tmp = {
             .Length = logonInfo.UserName.Length,
             .MaximumLength = logonInfo.UserName.MaximumLength,
-            .Buffer = (wchar_t*)((BYTE*)*ProfileBuffer + offset),
+            .Buffer = (wchar_t*)(hostProfileAddress + offset),
         };
         profile->FullName = tmp;
 
@@ -46,7 +45,7 @@ std::vector<BYTE> PrepareProfileBuffer(const std::wstring& computername, const M
         LSA_UNICODE_STRING tmp = {
             .Length = (USHORT)(2 * computername.size()),
             .MaximumLength = (USHORT)(2 * computername.size()),
-            .Buffer = (wchar_t*)((BYTE*)*ProfileBuffer + offset),
+            .Buffer = (wchar_t*)(hostProfileAddress + offset),
         };
         profile->LogonServer = tmp;
 
