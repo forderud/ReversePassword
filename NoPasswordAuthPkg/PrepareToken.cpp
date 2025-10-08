@@ -5,7 +5,7 @@
 #pragma comment(lib, "Netapi32.lib")
 
 
-bool NameToSid(const wchar_t* username, PSID* userSid) {
+static bool NameToSid(const wchar_t* username, PSID* userSid) {
     DWORD lengthSid = 0;
     SID_NAME_USE Use = {};
     DWORD referencedDomainNameLen = 0;
@@ -25,7 +25,7 @@ bool NameToSid(const wchar_t* username, PSID* userSid) {
     return true;
 }
 
-void GetPrimaryGroupSidFromUserSid(PSID userSID, PSID* primaryGroupSID) {
+static void GetPrimaryGroupSidFromUserSid(PSID userSID, PSID* primaryGroupSID) {
     // duplicate the user sid and replace the last subauthority by DOMAIN_GROUP_RID_USERS
     // cf http://msdn.microsoft.com/en-us/library/aa379649.aspx
     *primaryGroupSID = (PSID)FunctionTable.AllocateLsaHeap(GetLengthSid(userSID));
@@ -35,7 +35,7 @@ void GetPrimaryGroupSidFromUserSid(PSID userSID, PSID* primaryGroupSID) {
     *GetSidSubAuthority(*primaryGroupSID, SubAuthorityCount - 1) = DOMAIN_GROUP_RID_USERS;
 }
 
-bool GetGroups(const wchar_t* UserName, GROUP_USERS_INFO_1** lpGroupInfo, DWORD* pTotalEntries) {
+static bool GetGroups(const wchar_t* UserName, GROUP_USERS_INFO_1** lpGroupInfo, DWORD* pTotalEntries) {
     DWORD NumberOfEntries = 0;
     DWORD status = NetUserGetGroups(NULL, UserName, 1, (LPBYTE*)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
     if (status != NERR_Success) {
@@ -45,7 +45,7 @@ bool GetGroups(const wchar_t* UserName, GROUP_USERS_INFO_1** lpGroupInfo, DWORD*
     return true;
 }
 
-bool GetLocalGroups(const wchar_t* UserName, GROUP_USERS_INFO_0** lpGroupInfo, DWORD* pTotalEntries) {
+static bool GetLocalGroups(const wchar_t* UserName, GROUP_USERS_INFO_0** lpGroupInfo, DWORD* pTotalEntries) {
     DWORD NumberOfEntries = 0;
     DWORD status = NetUserGetLocalGroups(NULL, UserName, 0, 0, (LPBYTE*)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
     if (status != NERR_Success) {
@@ -72,6 +72,7 @@ NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
 
     PSID userSid = nullptr;
     {
+        // configure "User"
         if (!NameToSid(username.c_str(), &userSid))
             return STATUS_FAIL_FAST_EXCEPTION;
 
@@ -82,6 +83,7 @@ NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
     }
 
     {
+        // configure "Groups"
         DWORD NumberOfGroups = 0;
         GROUP_USERS_INFO_1* pGroupInfo = nullptr;
         if (!GetGroups(username.c_str(), &pGroupInfo, &NumberOfGroups)) {
@@ -119,30 +121,14 @@ NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
 
     GetPrimaryGroupSidFromUserSid(userSid, &token->PrimaryGroup.PrimaryGroup);
 
-#if 1
+    // TOKEN_PRIVILEGES Privileges not currently configured
     token->Privileges = nullptr;
-#else
-    token->Privileges = (TOKEN_PRIVILEGES*)FunctionTable.AllocateLsaHeap(sizeof(TOKEN_PRIVILEGES));
-    *Token->Privileges = {
-        .PrivilegeCount = 0,
-        .Privileges = {},
-    };
-#endif
 
+    // PSID Owner not currently configured
     token->Owner.Owner = (PSID)nullptr;
 
-#if 1
+    // PACL DefaultDacl not currently configured
     token->DefaultDacl.DefaultDacl = nullptr;
-#else
-    token->DefaultDacl.DefaultDacl = (ACL*)FunctionTable.AllocateLsaHeap(sizeof(ACL));
-    *token->DefaultDacl.DefaultDacl = ACL{
-        .AclRevision = 0,
-        .Sbz1 = 0,
-        .AclSize = 0,
-        .AceCount = 0,
-        .Sbz2 = 0,
-    };
-#endif
 
     // assign outputs
     * Token = token;
