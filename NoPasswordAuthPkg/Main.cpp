@@ -98,11 +98,13 @@ NTSTATUS LsaApLogonUserEx2 (
 
     {
         // assign "ProfileBuffer" output argument
-        // TODO: Also include string members
-        ULONG profileSize = sizeof(MSV1_0_INTERACTIVE_PROFILE) + logonInfo->UserName.Length;
+        std::wstring computerName(computerNameBuf);
+
+        ULONG profileSize = sizeof(MSV1_0_INTERACTIVE_PROFILE) + logonInfo->UserName.Length + (ULONG)(2*computerName.size());
         FunctionTable.AllocateClientBuffer(ClientRequest, (ULONG)profileSize, ProfileBuffer);
         std::vector<BYTE> profileBuffer(profileSize, (BYTE)0);
         auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer.data();
+        size_t offset = sizeof(MSV1_0_INTERACTIVE_PROFILE); // offset to string parameters
 
         profile->MessageType = MsV1_0InteractiveProfile;
         profile->LogonCount = 42;
@@ -117,7 +119,6 @@ NTSTATUS LsaApLogonUserEx2 (
         profile->HomeDirectory; // observed to be empty
         {
             // set "UserName"
-            size_t offset = sizeof(MSV1_0_INTERACTIVE_PROFILE);
             memcpy(/*dst*/profileBuffer.data() + offset, /*src*/logonInfo->UserName.Buffer, logonInfo->UserName.MaximumLength);
 
             LSA_UNICODE_STRING tmp = {
@@ -126,12 +127,24 @@ NTSTATUS LsaApLogonUserEx2 (
                 .Buffer = (wchar_t*)((BYTE*)*ProfileBuffer + offset),
             };
             profile->FullName = tmp;
-        }
 
+            offset += profile->FullName.MaximumLength;
+        }
         profile->ProfilePath; // observed to be empty
         profile->HomeDirectoryDrive; // observed to be empty
-        //AssignLsaUnicodeString(*CreateLsaUnicodeString(computerNameBuf), profile->LogonServer); // TODO: remove leak
-        profile->LogonServer;
+        {
+            // set "LogonServer"
+            memcpy(/*dst*/profileBuffer.data() + offset, /*src*/computerName.data(), computerName.size());
+
+            LSA_UNICODE_STRING tmp = {
+                .Length = (USHORT)(2*computerName.size()),
+                .MaximumLength = (USHORT)(2*computerName.size()),
+                .Buffer = (wchar_t*)((BYTE*)*ProfileBuffer + offset),
+            };
+            profile->LogonServer = tmp;
+
+            offset += profile->LogonServer.MaximumLength;
+        }
         profile->UserFlags = 0;
 
         // copy profile buffer to caller
