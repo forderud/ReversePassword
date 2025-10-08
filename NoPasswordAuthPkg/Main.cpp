@@ -1,5 +1,5 @@
 #include "PrepareToken.hpp"
-#include <vector>
+#include "PrepareProfile.hpp"
 
 // exported symbols
 #pragma comment(linker, "/export:SpLsaModeInitialize")
@@ -61,7 +61,6 @@ NTSTATUS LsaApLogonUserEx2 (
     LogMessage("LsaApLogonUserEx2");
 
     // input arguments
-    ClientRequest;
     LogMessage("  LogonType: %i", LogonType); // Interactive=2, RemoteInteractive=10
     //LogMessage("  ProtocolSubmitBuffer: 0x%p", ProtocolSubmitBuffer);
     ClientBufferBase;
@@ -98,57 +97,8 @@ NTSTATUS LsaApLogonUserEx2 (
 
     {
         // assign "ProfileBuffer" output argument
-        std::wstring computerName(computerNameBuf);
-
-        ULONG profileSize = sizeof(MSV1_0_INTERACTIVE_PROFILE) + logonInfo->UserName.Length + (ULONG)(2*computerName.size());
-        FunctionTable.AllocateClientBuffer(ClientRequest, (ULONG)profileSize, ProfileBuffer);
-        std::vector<BYTE> profileBuffer(profileSize, (BYTE)0);
-        auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer.data();
-        size_t offset = sizeof(MSV1_0_INTERACTIVE_PROFILE); // offset to string parameters
-
-        profile->MessageType = MsV1_0InteractiveProfile;
-        profile->LogonCount = 42;
-        profile->BadPasswordCount = 0;
-        profile->LogonTime;
-        profile->LogoffTime = { 0xffffffff, 0x7fffffff };
-        profile->KickOffTime = { 0xffffffff, 0x7fffffff };
-        profile->PasswordLastSet;
-        profile->PasswordCanChange;
-        profile->PasswordMustChange;
-        profile->LogonScript; // observed to be empty
-        profile->HomeDirectory; // observed to be empty
-        {
-            // set "UserName"
-            memcpy(/*dst*/profileBuffer.data() + offset, /*src*/logonInfo->UserName.Buffer, logonInfo->UserName.MaximumLength);
-
-            LSA_UNICODE_STRING tmp = {
-                .Length = logonInfo->UserName.Length,
-                .MaximumLength = logonInfo->UserName.MaximumLength,
-                .Buffer = (wchar_t*)((BYTE*)*ProfileBuffer + offset),
-            };
-            profile->FullName = tmp;
-
-            offset += profile->FullName.MaximumLength;
-        }
-        profile->ProfilePath; // observed to be empty
-        profile->HomeDirectoryDrive; // observed to be empty
-        {
-            // set "LogonServer"
-            memcpy(/*dst*/profileBuffer.data() + offset, /*src*/computerName.data(), computerName.size());
-
-            LSA_UNICODE_STRING tmp = {
-                .Length = (USHORT)(2*computerName.size()),
-                .MaximumLength = (USHORT)(2*computerName.size()),
-                .Buffer = (wchar_t*)((BYTE*)*ProfileBuffer + offset),
-            };
-            profile->LogonServer = tmp;
-
-            offset += profile->LogonServer.MaximumLength;
-        }
-        profile->UserFlags = 0;
-
-        // copy profile buffer to caller
-        FunctionTable.CopyToClientBuffer(ClientRequest, (ULONG)profileBuffer.size(), *ProfileBuffer, profileBuffer.data());
+        std::vector<BYTE> profileBuffer = PrepareProfileBuffer(computerNameBuf, *logonInfo, ClientRequest, ProfileBuffer);
+        FunctionTable.CopyToClientBuffer(ClientRequest, (ULONG)profileBuffer.size(), *ProfileBuffer, profileBuffer.data()); // copy to caller process
         *ProfileBufferSize = (ULONG)profileBuffer.size();
     }
 
