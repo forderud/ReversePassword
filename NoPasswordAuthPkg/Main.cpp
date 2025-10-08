@@ -9,7 +9,7 @@ LSA_SECPKG_FUNCTION_TABLE FunctionTable;
 #include "Utils.hpp"
 
 
-NTSTATUS NTAPI SpInitialize(ULONG_PTR PackageId, SECPKG_PARAMETERS* Parameters, LSA_SECPKG_FUNCTION_TABLE* functionTable) {
+NTSTATUS NTAPI SpInitialize(_In_ ULONG_PTR PackageId, _In_ SECPKG_PARAMETERS* Parameters, _In_ LSA_SECPKG_FUNCTION_TABLE* functionTable) {
     LogMessage("SpInitialize");
     PackageId;
     Parameters;
@@ -25,7 +25,7 @@ NTSTATUS NTAPI SpShutDown() {
     return STATUS_SUCCESS;
 }
 
-NTSTATUS NTAPI SpGetInfo(SecPkgInfoW* PackageInfo) {
+NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
     LogMessage("SpGetInfo");
 
     // return security package metadata
@@ -179,7 +179,7 @@ NTSTATUS LsaApLogonUserEx2 (
     return STATUS_SUCCESS;
 }
 
-void LsaApLogonTerminated(LUID* LogonId) {
+void LsaApLogonTerminated(_In_ LUID* LogonId) {
     LogMessage("LsaApLogonTerminated");
     LogMessage("  LogonId: LowPart=%x , HighPart:%x", LogonId->LowPart, LogonId->HighPart);
     LogMessage("  return");
@@ -189,7 +189,6 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .InitializePackage = nullptr,
     .LogonUser = nullptr,
     .CallPackage = nullptr,
-
     .LogonTerminated = LsaApLogonTerminated,
     .CallPackageUntrusted = nullptr,
     .CallPackagePassthrough = nullptr,
@@ -198,7 +197,6 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .Initialize = SpInitialize,
     .Shutdown = SpShutDown,
     .GetInfo = SpGetInfo,
-
     .AcceptCredentials = nullptr,
     .AcquireCredentialsHandle = nullptr,
     .QueryCredentialsAttributes = nullptr,
