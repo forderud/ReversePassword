@@ -62,6 +62,25 @@ NTSTATUS LsaApLogonUserEx2 (
 ) {
     LogMessage("LsaApLogonUserEx2");
 
+    {
+        // clear output arguments first in case of failure
+        *ProfileBuffer = nullptr;
+        *ProfileBufferSize = 0;
+        *LogonId = {};
+        *SubStatus = 0;
+        *TokenInformationType = {};
+        *TokenInformation = nullptr;
+        *AccountName = nullptr;
+        if (AuthenticatingAuthority)
+            *AuthenticatingAuthority = nullptr;
+        if (MachineName)
+            *MachineName = nullptr;
+        if (PrimaryCredentials)
+            *PrimaryCredentials = {};
+        if (SupplementalCredentials)
+            *SupplementalCredentials = nullptr;
+    }
+
     // input arguments
     LogMessage("  LogonType: %i", LogonType); // Interactive=2, RemoteInteractive=10
     //LogMessage("  ProtocolSubmitBuffer: 0x%p", ProtocolSubmitBuffer);
@@ -168,11 +187,9 @@ NTSTATUS LsaApLogonUserEx2 (
         *MachineName = CreateLsaUnicodeString(computerName, (USHORT)computerNameSize*sizeof(wchar_t));
     }
 
-    if (PrimaryCredentials)
-        *PrimaryCredentials = {};
-
-    if (SupplementalCredentials)
-        *SupplementalCredentials = nullptr;
+    // Output arguments not assigned:
+    // - PrimaryCredentials
+    // - SupplementalCredentials
 
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
