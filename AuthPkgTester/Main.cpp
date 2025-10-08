@@ -124,7 +124,7 @@ bool IsEqual (LUID left, LUID right) {
 NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
-    const char ORIGIN[] = "SecurityPkgTester";
+    const char ORIGIN[] = "AuthPkgTester";
     LSA_STRING origin {
         .Length = (USHORT)strlen(ORIGIN),
         .MaximumLength = (USHORT)strlen(ORIGIN),
@@ -363,7 +363,7 @@ int wmain(int argc, wchar_t* argv[]) {
         }
     } else {
         wprintf(L"USAGE:\n");
-        wprintf(L"  List security packages: SecurityPkgTester.exe\n");
-        wprintf(L"  Attempt MSV1_0 login: SecurityPkgTester.exe [auth-package] <username> <password>\n");
+        wprintf(L"  List security packages: AuthPkgTester.exe\n");
+        wprintf(L"  Attempt MSV1_0 login: AuthPkgTester.exe [auth-package] <username> <password>\n");
     }
 }
