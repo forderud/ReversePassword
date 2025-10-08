@@ -1,4 +1,9 @@
-# Installing and registering NoPasswordAuthPkg.dll
+# Always run script as admin
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Start-Process powershell.exe -Verb RunAs -ArgumentList "-File `"$($MyInvocation.MyCommand.Path)`" -ExecutionPolicy Bypass"
+    exit
+}
+
 
 Write-Host "Copying NoPasswordAuthPkg.dll to %SYSTEMROOT%\System32..."
 copy "$PSScriptRoot\NoPasswordAuthPkg.dll" "$env:SystemRoot\System32"
