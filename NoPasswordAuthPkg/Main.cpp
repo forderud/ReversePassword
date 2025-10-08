@@ -90,9 +90,9 @@ NTSTATUS LsaApLogonUserEx2 (
         logonInfo->Password.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->Password.Buffer);
     }
 
-    wchar_t computerNameBuf[MAX_COMPUTERNAME_LENGTH + 1] = {};
-    DWORD computerNameSize = ARRAYSIZE(computerNameBuf);
-    if (!GetComputerNameW(computerNameBuf, &computerNameSize)) {
+    wchar_t computerName[MAX_COMPUTERNAME_LENGTH + 1] = {};
+    DWORD computerNameSize = ARRAYSIZE(computerName);
+    if (!GetComputerNameW(computerName, &computerNameSize)) {
         LogMessage("  return STATUS_INTERNAL_ERROR (GetComputerNameW failed)");
         return STATUS_INTERNAL_ERROR;
     }
@@ -101,10 +101,10 @@ NTSTATUS LsaApLogonUserEx2 (
 
     {
         // assign "ProfileBuffer" output argument
-        *ProfileBufferSize = GetProfileBufferSize(computerNameBuf, *logonInfo);
+        *ProfileBufferSize = GetProfileBufferSize(computerName, *logonInfo);
         FunctionTable.AllocateClientBuffer(ClientRequest, *ProfileBufferSize, ProfileBuffer); // will update *ProfileBuffer
 
-        std::vector<BYTE> profileBuffer = PrepareProfileBuffer(computerNameBuf, *logonInfo, (BYTE*)*ProfileBuffer);
+        std::vector<BYTE> profileBuffer = PrepareProfileBuffer(computerName, *logonInfo, (BYTE*)*ProfileBuffer);
         FunctionTable.CopyToClientBuffer(ClientRequest, (ULONG)profileBuffer.size(), *ProfileBuffer, profileBuffer.data()); // copy to caller process
     }
 
@@ -165,8 +165,8 @@ NTSTATUS LsaApLogonUserEx2 (
 
     if (MachineName) {
         // assign "MachineName" output argument
-        LogMessage("  MachineName: %ls", computerNameBuf);
-        *MachineName = CreateLsaUnicodeString(computerNameBuf, (USHORT)computerNameSize*sizeof(wchar_t));
+        LogMessage("  MachineName: %ls", computerName);
+        *MachineName = CreateLsaUnicodeString(computerName, (USHORT)computerNameSize*sizeof(wchar_t));
     }
 
     if (PrimaryCredentials)
