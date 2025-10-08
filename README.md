@@ -10,7 +10,7 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 
 #### Installation steps
 * Install [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet)
-* Right click on `REGISTER.bat` and select "Run as administrator".
+* Right click on `REGISTER_ReversePassword.bat` and select "Run as administrator".
 * Log screen, log out or restart the computer.
 * Observe that there's now a new "RP" sign-in option:  
 ![screenshot](Screenshot.png)  
@@ -19,7 +19,7 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 ![CredUIPrompt](CredUIPrompt.png)  
 
 #### Uninstallation steps
-* Right click on `UNREGISTER.bat` and select "Run as administrator".
+* Right click on `UNREGISTER_ReversePassword.bat` and select "Run as administrator".
 
 
 ## Authentication and logon documentation
