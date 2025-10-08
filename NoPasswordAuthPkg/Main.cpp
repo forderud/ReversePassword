@@ -142,11 +142,6 @@ NTSTATUS LsaApLogonUserEx2 (
 
     {
         // assign "AccountName" output argument
-        if (SubmitBufferSize < sizeof(MSV1_0_INTERACTIVE_LOGON)) {
-            LogMessage("  ERROR: SubmitBufferSize too small");
-            return STATUS_INVALID_PARAMETER;
-        }
-
         LogMessage("  AccountName: %ls", ToWstring(logonInfo->UserName).c_str());
         *AccountName = CreateLsaUnicodeString(logonInfo->UserName.Buffer, logonInfo->UserName.Length); // mandatory
     }
