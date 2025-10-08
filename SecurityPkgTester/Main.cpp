@@ -117,7 +117,7 @@ std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& pass
     return authInfo;
 }
 
-static bool IsEqual (LUID left, LUID right) {
+bool IsEqual (LUID left, LUID right) {
     return (left.LowPart == right.LowPart) && (left.HighPart == right.HighPart);
 }
 
@@ -199,6 +199,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
     LsaFreeReturnBuffer(profileBuffer);
 
+#if 0
     {
         // verify that "token" type is TokenPrimary
         TOKEN_TYPE tokenType = {};
@@ -284,6 +285,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
     }
+#endif
 
     CloseHandle(token);
     return STATUS_SUCCESS;
