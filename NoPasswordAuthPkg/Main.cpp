@@ -119,6 +119,7 @@ NTSTATUS LsaApLogonUserEx2 (
         profile->LogonServer;
         profile->UserFlags = 0;
 
+        FunctionTable.AllocateClientBuffer(ClientRequest, profileSize, ProfileBuffer);
         FunctionTable.CopyToClientBuffer(ClientRequest, profileSize, *ProfileBuffer, profile);
         *ProfileBufferSize = profileSize;
     }
