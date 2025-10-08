@@ -63,13 +63,13 @@ NTSTATUS LsaApLogonUserEx2 (
 
     // input arguments
     ClientRequest;
-    LogMessage("  LogonType: %i", LogonType); // Interactive=2
+    LogMessage("  LogonType: %i", LogonType); // Interactive=2, RemoteInteractive=10
     //LogMessage("  ProtocolSubmitBuffer: 0x%p", ProtocolSubmitBuffer);
     ClientBufferBase;
     //LogMessage("  ClientBufferBase: 0x%p", ClientBufferBase);
     LogMessage("  ProtocolSubmitBuffer size: %i", SubmitBufferSize);
 
-    if (LogonType != Interactive) {
+    if ((LogonType != Interactive) && (LogonType != RemoteInteractive)) {
         LogMessage("  return STATUS_NOT_IMPLEMENTED (unsupported LogonType)");
         return STATUS_NOT_IMPLEMENTED;
     }
