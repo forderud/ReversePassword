@@ -68,6 +68,7 @@ NTSTATUS LsaApLogonUserEx2 (
     //LogMessage("  ClientBufferBase: 0x%p", ClientBufferBase);
     LogMessage("  ProtocolSubmitBuffer size: %i", SubmitBufferSize);
 
+    // deliberately restrict supported logontypes
     if ((LogonType != Interactive) && (LogonType != RemoteInteractive)) {
         LogMessage("  return STATUS_NOT_IMPLEMENTED (unsupported LogonType)");
         return STATUS_NOT_IMPLEMENTED;
@@ -281,11 +282,12 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .ExtractTargetInfo = nullptr,
 };
 
-// LSA calls SpLsaModeInitialize() when loading SSP DLL
+/** LSA calls SpLsaModeInitialize() when loading SSP/AP DLLs. */
 extern "C"
 NTSTATUS NTAPI SpLsaModeInitialize(ULONG LsaVersion, ULONG* PackageVersion, SECPKG_FUNCTION_TABLE** ppTables, ULONG* pcTables) {
     LogMessage("SpLsaModeInitialize");
-    LsaVersion;
+    LogMessage("  LsaVersion %u", LsaVersion);
+
     *PackageVersion = SECPKG_INTERFACE_VERSION;
     *ppTables = &SecurityPackageFunctionTable;
     *pcTables = 1;
