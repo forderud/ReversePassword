@@ -1,4 +1,5 @@
 #include "PrepareToken.hpp"
+#include <vector>
 
 // exported symbols
 // "DllMain" implicitly exported
@@ -99,7 +100,9 @@ NTSTATUS LsaApLogonUserEx2 (
         // assign "ProfileBuffer" output argument
         // TODO: Also include string members
         ULONG profileSize = sizeof(MSV1_0_INTERACTIVE_PROFILE);
-        auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)FunctionTable.AllocateLsaHeap(*ProfileBufferSize);
+        std::vector<BYTE> profileBuffer(profileSize, (BYTE)0);
+        auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer.data();
+
         profile->MessageType = MsV1_0InteractiveProfile;
         profile->LogonCount = 42;
         profile->BadPasswordCount = 0;
@@ -119,9 +122,10 @@ NTSTATUS LsaApLogonUserEx2 (
         profile->LogonServer;
         profile->UserFlags = 0;
 
-        FunctionTable.AllocateClientBuffer(ClientRequest, profileSize, ProfileBuffer);
-        FunctionTable.CopyToClientBuffer(ClientRequest, profileSize, *ProfileBuffer, profile);
-        *ProfileBufferSize = profileSize;
+        // allocate & copy profile buffer to caller
+        FunctionTable.AllocateClientBuffer(ClientRequest, (ULONG)profileBuffer.size(), ProfileBuffer);
+        FunctionTable.CopyToClientBuffer(ClientRequest, (ULONG)profileBuffer.size(), *ProfileBuffer, profileBuffer.data());
+        *ProfileBufferSize = (ULONG)profileBuffer.size();
     }
 
     {
