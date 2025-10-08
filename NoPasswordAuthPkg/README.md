@@ -2,7 +2,9 @@
 Minimal Security Support Provider/Authentication Package (SSP/AP) sample project that bypasses the need for entering passwords for _interactive_ logons.
 
 ### Security warning
-This is a sample project that demostrates how Windows LSA athentication can be customized with authentication packages. **Do _not_ use the project as-is in production, since it will undermine security by allowing anyone to log in without passwords!** Intstead, use the project as a starting point for developing authentication packages that relies on secure sources of identity, such as biometrics, HW authentication devices, online authentication or similar.
+This is a sample project that demostrates how Windows LSA athentication can be customized with authentication packages. Do _not_ use the project as-is for anything serious, since it **will undermine security by allowing anyone to log in without passwords!**
+
+Intstead, use the project as a starting point for developing authentication packages that relies on secure sources of identity, such as biometrics, HW authentication devices, online authentication or similar.
 
 ## Prerequisite
 Local Security Authority (LSA) protection needs to be disabled in order for the DLL to load.
