@@ -1,7 +1,7 @@
 | Project | Description |
 |---------|-------------|
 | [**ReversePassword**](ReversePassword/) | Sample Windows Credential Provider that require the password to by typed backwards. Written in C#. |
-| [**NoPasswordAuthPkg**](NoPasswordAuthPkg/) | Sample authentication package to avoid interactive logon without having to type the password. |
+| [**NoPasswordAuthPkg**](NoPasswordAuthPkg/) | Sample authentication package to allow interactive logon without having to type the password. |
 
 ## How to test
 It's recommended to **test in a disposable Virtual Machine (VM)**, since credential provider problems might break the windows logon screen. You don't want to risk that on your main computer.
