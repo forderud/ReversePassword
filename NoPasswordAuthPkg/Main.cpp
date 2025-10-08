@@ -99,7 +99,8 @@ NTSTATUS LsaApLogonUserEx2 (
     {
         // assign "ProfileBuffer" output argument
         // TODO: Also include string members
-        ULONG profileSize = sizeof(MSV1_0_INTERACTIVE_PROFILE);
+        ULONG profileSize = sizeof(MSV1_0_INTERACTIVE_PROFILE) + logonInfo->UserName.Length;
+        FunctionTable.AllocateClientBuffer(ClientRequest, (ULONG)profileSize, ProfileBuffer);
         std::vector<BYTE> profileBuffer(profileSize, (BYTE)0);
         auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer.data();
 
@@ -114,16 +115,26 @@ NTSTATUS LsaApLogonUserEx2 (
         profile->PasswordMustChange;
         profile->LogonScript; // observed to be empty
         profile->HomeDirectory; // observed to be empty
-        //AssignLsaUnicodeString(logonInfo->UserName, profile->FullName);
-        profile->FullName;
+        {
+            // set "UserName"
+            size_t offset = sizeof(MSV1_0_INTERACTIVE_PROFILE);
+            memcpy(/*dst*/profileBuffer.data() + offset, /*src*/logonInfo->UserName.Buffer, logonInfo->UserName.MaximumLength);
+
+            LSA_UNICODE_STRING tmp = {
+                .Length = logonInfo->UserName.Length,
+                .MaximumLength = logonInfo->UserName.MaximumLength,
+                .Buffer = (wchar_t*)((BYTE*)*ProfileBuffer + offset),
+            };
+            profile->FullName = tmp;
+        }
+
         profile->ProfilePath; // observed to be empty
         profile->HomeDirectoryDrive; // observed to be empty
         //AssignLsaUnicodeString(*CreateLsaUnicodeString(computerNameBuf), profile->LogonServer); // TODO: remove leak
         profile->LogonServer;
         profile->UserFlags = 0;
 
-        // allocate & copy profile buffer to caller
-        FunctionTable.AllocateClientBuffer(ClientRequest, (ULONG)profileBuffer.size(), ProfileBuffer);
+        // copy profile buffer to caller
         FunctionTable.CopyToClientBuffer(ClientRequest, (ULONG)profileBuffer.size(), *ProfileBuffer, profileBuffer.data());
         *ProfileBufferSize = (ULONG)profileBuffer.size();
     }
