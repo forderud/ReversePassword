@@ -133,7 +133,7 @@ NTSTATUS UserNameToToken(
     token->DefaultDacl.DefaultDacl = nullptr;
 
     // assign outputs
-    * Token = token;
+    *Token = token;
     *SubStatus = STATUS_SUCCESS;
     return STATUS_SUCCESS;
 }
