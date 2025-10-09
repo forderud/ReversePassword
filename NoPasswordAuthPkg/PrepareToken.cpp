@@ -60,13 +60,15 @@ NTSTATUS UserNameToToken(
     __out LSA_TOKEN_INFORMATION_V1** Token,
     __out PNTSTATUS SubStatus
 ) {
-    const LARGE_INTEGER Forever = { 0x7fffffff,0xfffffff };
+    const LARGE_INTEGER Forever {
+        .LowPart = 0xFFFFFFFF, // unsigned
+        .HighPart = 0x7FFFFFFF, // signed
+    };
 
     // convert username to zero-terminated string
     std::wstring username = ToWstring(*AccountName);
     LogMessage("  UserNameToToken username %ls", username.c_str());
 
-    LogMessage("  Allocating Token...");
     auto* token = (LSA_TOKEN_INFORMATION_V1*)FunctionTable.AllocateLsaHeap(sizeof(LSA_TOKEN_INFORMATION_V1));
 
     token->ExpirationTime = Forever;
