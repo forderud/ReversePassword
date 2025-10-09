@@ -5,8 +5,8 @@
 
 LARGE_INTEGER InfiniteFuture() {
     LARGE_INTEGER val{};
-    val.HighPart = 0x7FFFFFFF;
-    val.LowPart = 0xFFFFFFFF;
+    val.HighPart = 0x7FFFFFFF; // signed
+    val.LowPart = 0xFFFFFFFF; // unsigned
     return val;
 }
 
