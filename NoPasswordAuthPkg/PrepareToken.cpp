@@ -12,7 +12,7 @@ static bool NameToSid(const wchar_t* username, PSID* userSid) {
     BOOL res = LookupAccountNameW(nullptr, username, nullptr, &lengthSid, nullptr, &referencedDomainNameLen, &Use);
 
     *userSid = (PSID)FunctionTable.AllocateLsaHeap(lengthSid);
-    wchar_t* referencedDomainName = (wchar_t*)FunctionTable.AllocateLsaHeap(sizeof(wchar_t) * referencedDomainNameLen);
+    wchar_t* referencedDomainName = (wchar_t*)FunctionTable.AllocateLsaHeap(sizeof(wchar_t) * referencedDomainNameLen); // throwaway string
     res = LookupAccountNameW(nullptr, username, *userSid, &lengthSid, referencedDomainName, &referencedDomainNameLen, &Use);
     if (!res) {
         DWORD err = GetLastError();
