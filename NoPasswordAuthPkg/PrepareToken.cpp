@@ -25,12 +25,14 @@ static bool NameToSid(const wchar_t* username, PSID* userSid) {
 }
 
 static void GetPrimaryGroupSidFromUserSid(PSID userSID, PSID* primaryGroupSID) {
-    // duplicate the user sid and replace the last subauthority by DOMAIN_GROUP_RID_USERS
-    // cf http://msdn.microsoft.com/en-us/library/aa379649.aspx
+    // duplicate the user sid
     *primaryGroupSID = (PSID)FunctionTable.AllocateLsaHeap(GetLengthSid(userSID));
     CopySid(GetLengthSid(userSID), *primaryGroupSID, userSID);
+
+    // replace the last subauthority by DOMAIN_GROUP_RID_USERS
+    // https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers (last SubAuthority = RID
+    // https://learn.microsoft.com/nb-no/windows/win32/secauthz/well-known-sids
     UCHAR SubAuthorityCount = *GetSidSubAuthorityCount(*primaryGroupSID);
-    // last SubAuthority = RID
     *GetSidSubAuthority(*primaryGroupSID, SubAuthorityCount - 1) = DOMAIN_GROUP_RID_USERS;
 }
 
