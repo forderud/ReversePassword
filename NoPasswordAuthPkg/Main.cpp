@@ -165,7 +165,7 @@ NTSTATUS LsaApLogonUser (
             return status;
         }
 
-        LogMessage("  LogonId: LowPart=%x , HighPart:%x", LogonId->LowPart, LogonId->HighPart);
+        LogMessage("  LogonId: Low=0x%x , High=0x%x", LogonId->LowPart, LogonId->HighPart);
     }
 
     *SubStatus = STATUS_SUCCESS; // reason for error
@@ -214,7 +214,7 @@ NTSTATUS LsaApLogonUser (
 
 void LsaApLogonTerminated(_In_ LUID* LogonId) {
     LogMessage("LsaApLogonTerminated");
-    LogMessage("  LogonId: LowPart=%x , HighPart:%x", LogonId->LowPart, LogonId->HighPart);
+    LogMessage("  LogonId: Low=0x%x , High=0x%x", LogonId->LowPart, LogonId->HighPart);
     LogMessage("  return");
 }
 
