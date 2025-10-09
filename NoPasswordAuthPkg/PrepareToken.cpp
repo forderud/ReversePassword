@@ -56,9 +56,11 @@ static bool GetLocalGroups(const wchar_t* UserName, GROUP_USERS_INFO_0** lpGroup
 }
 
 
-NTSTATUS UserNameToToken(__in LSA_UNICODE_STRING* AccountName,
+NTSTATUS UserNameToToken(
+    __in LSA_UNICODE_STRING* AccountName,
     __out LSA_TOKEN_INFORMATION_V1** Token,
-    __out PNTSTATUS SubStatus) {
+    __out PNTSTATUS SubStatus
+) {
     const LARGE_INTEGER Forever = { 0x7fffffff,0xfffffff };
 
     // convert username to zero-terminated string
