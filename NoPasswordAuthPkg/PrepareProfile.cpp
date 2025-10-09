@@ -30,7 +30,7 @@ std::vector<BYTE> PrepareProfileBuffer(const std::wstring& computername, const M
     size_t offset = sizeof(MSV1_0_INTERACTIVE_PROFILE); // offset to string parameters
     
     profile->MessageType = MsV1_0InteractiveProfile;
-    profile->LogonCount = 42;
+    profile->LogonCount = 0; // unknown
     profile->BadPasswordCount = 0;
     profile->LogonTime = CurrentTime();
     profile->LogoffTime = InfiniteFuture(); // logoff reminder
