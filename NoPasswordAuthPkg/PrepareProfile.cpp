@@ -4,9 +4,10 @@
 #include "Utils.hpp"
 
 static LARGE_INTEGER InfiniteFuture() {
-    LARGE_INTEGER val{};
-    val.HighPart = 0x7FFFFFFF; // signed
-    val.LowPart = 0xFFFFFFFF; // unsigned
+    LARGE_INTEGER val{
+        .LowPart = 0xFFFFFFFF, // unsigned
+        .HighPart = 0x7FFFFFFF, // signed
+    };
     return val;
 }
 
