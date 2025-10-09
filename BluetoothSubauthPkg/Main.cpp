@@ -3,7 +3,7 @@
 
 #ifdef _WINDLL
 
-LARGE_INTEGER InfiniteFuture() {
+static LARGE_INTEGER InfiniteFuture() {
     LARGE_INTEGER val{};
     val.HighPart = 0x7FFFFFFF; // signed
     val.LowPart = 0xFFFFFFFF; // unsigned

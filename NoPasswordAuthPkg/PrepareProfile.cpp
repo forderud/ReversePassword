@@ -3,6 +3,13 @@
 #include "PrepareProfile.hpp"
 #include "Utils.hpp"
 
+static LARGE_INTEGER InfiniteFuture() {
+    LARGE_INTEGER val{};
+    val.HighPart = 0x7FFFFFFF; // signed
+    val.LowPart = 0xFFFFFFFF; // unsigned
+    return val;
+}
+
 ULONG GetProfileBufferSize(const std::wstring& computername, const MSV1_0_INTERACTIVE_LOGON& logonInfo) {
     return sizeof(MSV1_0_INTERACTIVE_PROFILE) + logonInfo.UserName.Length + (ULONG)(2 * computername.size());
 }
@@ -16,8 +23,8 @@ std::vector<BYTE> PrepareProfileBuffer(const std::wstring& computername, const M
     profile->LogonCount = 42;
     profile->BadPasswordCount = 0;
     profile->LogonTime;
-    profile->LogoffTime = { 0xffffffff, 0x7fffffff };
-    profile->KickOffTime = { 0xffffffff, 0x7fffffff };
+    profile->LogoffTime = InfiniteFuture(); //never
+    profile->KickOffTime = InfiniteFuture(); //never
     profile->PasswordLastSet;
     profile->PasswordCanChange;
     profile->PasswordMustChange;
