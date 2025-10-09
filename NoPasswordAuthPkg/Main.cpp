@@ -64,7 +64,7 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
     LogMessage("SpGetInfo");
 
     // return security package metadata
-    PackageInfo->fCapabilities = SECPKG_FLAG_LOGON | SECPKG_FLAG_CONNECTION;
+    PackageInfo->fCapabilities = SECPKG_FLAG_LOGON;
     PackageInfo->wVersion = 1; // always 1 for SecPkgInfoW
     PackageInfo->wRPCID = SECPKG_ID_NONE; // no DCE/RPC support
     PackageInfo->cbMaxToken = 0;
