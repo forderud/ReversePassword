@@ -11,7 +11,6 @@ static bool NameToSid(const wchar_t* username, PSID* userSid) {
     DWORD referencedDomainNameLen = 0;
     BOOL res = LookupAccountNameW(nullptr, username, nullptr, &lengthSid, nullptr, &referencedDomainNameLen, &Use);
 
-    //LogMessage("  Allocating SID with size %u", lengthSid);
     *userSid = (PSID)FunctionTable.AllocateLsaHeap(lengthSid);
     wchar_t* referencedDomainName = (wchar_t*)FunctionTable.AllocateLsaHeap(sizeof(wchar_t) * referencedDomainNameLen);
     res = LookupAccountNameW(nullptr, username, *userSid, &lengthSid, referencedDomainName, &referencedDomainNameLen, &Use);
@@ -37,7 +36,7 @@ static void GetPrimaryGroupSidFromUserSid(PSID userSID, PSID* primaryGroupSID) {
 
 static bool GetGroups(const wchar_t* UserName, GROUP_USERS_INFO_1** lpGroupInfo, DWORD* pTotalEntries) {
     DWORD NumberOfEntries = 0;
-    DWORD status = NetUserGetGroups(NULL, UserName, 1, (LPBYTE*)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
+    DWORD status = NetUserGetGroups(NULL, UserName, 1, (BYTE**)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
     if (status != NERR_Success) {
         LogMessage("ERROR: NetUserGetGroups failed with error %u", status );
         return false;
@@ -47,7 +46,7 @@ static bool GetGroups(const wchar_t* UserName, GROUP_USERS_INFO_1** lpGroupInfo,
 
 static bool GetLocalGroups(const wchar_t* UserName, GROUP_USERS_INFO_0** lpGroupInfo, DWORD* pTotalEntries) {
     DWORD NumberOfEntries = 0;
-    DWORD status = NetUserGetLocalGroups(NULL, UserName, 0, 0, (LPBYTE*)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
+    DWORD status = NetUserGetLocalGroups(NULL, UserName, 0, 0, (BYTE**)lpGroupInfo, MAX_PREFERRED_LENGTH, &NumberOfEntries, pTotalEntries);
     if (status != NERR_Success) {
         LogMessage("ERROR: NetUserGetLocalGroups failed with error %u", status);
         return false;
