@@ -69,7 +69,6 @@ NTSTATUS UserNameToToken(
 
     // convert username to zero-terminated string
     std::wstring username = ToWstring(*AccountName);
-    LogMessage("  UserNameToToken username %ls", username.c_str());
 
     auto* token = (LSA_TOKEN_INFORMATION_V1*)FunctionTable.AllocateLsaHeap(sizeof(LSA_TOKEN_INFORMATION_V1));
 
@@ -81,6 +80,7 @@ NTSTATUS UserNameToToken(
         if (!NameToSid(username.c_str(), &userSid))
             return STATUS_FAIL_FAST_EXCEPTION;
 
+        LogMessage("  User.User: %ls", username.c_str());
         token->User.User = {
             .Sid = userSid,
             .Attributes = 0,
@@ -121,7 +121,6 @@ NTSTATUS UserNameToToken(
         }
 
         token->Groups = tokenGroups;
-        LogMessage("  token->Groups populated");
     }
 
     GetPrimaryGroupSidFromUserSid(userSid, &token->PrimaryGroup.PrimaryGroup);
