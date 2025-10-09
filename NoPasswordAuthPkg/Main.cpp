@@ -42,7 +42,7 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
 
 /* Authenticate a user logon attempt.
    Returns STATUS_SUCCESS if the login attempt succeeded. */
-NTSTATUS LsaApLogonUserEx (
+NTSTATUS LsaApLogonUser (
     _In_ PLSA_CLIENT_REQUEST ClientRequest,
     _In_ SECURITY_LOGON_TYPE LogonType,
     _In_reads_bytes_(SubmitBufferSize) VOID* ProtocolSubmitBuffer,
@@ -55,10 +55,9 @@ NTSTATUS LsaApLogonUserEx (
     _Out_ LSA_TOKEN_INFORMATION_TYPE* TokenInformationType,
     _Outptr_ VOID** TokenInformation,
     _Out_ LSA_UNICODE_STRING** AccountName,
-    _Out_ LSA_UNICODE_STRING** AuthenticatingAuthority,
-    _Out_ LSA_UNICODE_STRING** MachineName
+    _Out_ LSA_UNICODE_STRING** AuthenticatingAuthority
 ) {
-    LogMessage("LsaApLogonUserEx");
+    LogMessage("LsaApLogonUser");
 
     {
         // clear output arguments first in case of failure
@@ -71,8 +70,6 @@ NTSTATUS LsaApLogonUserEx (
         *AccountName = nullptr;
         if (AuthenticatingAuthority)
             *AuthenticatingAuthority = nullptr;
-        if (MachineName)
-            *MachineName = nullptr;
     }
 
     // input arguments
@@ -102,16 +99,16 @@ NTSTATUS LsaApLogonUserEx (
         logonInfo->Password.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->Password.Buffer);
     }
 
-    wchar_t computerName[MAX_COMPUTERNAME_LENGTH + 1] = {};
-    DWORD computerNameSize = ARRAYSIZE(computerName);
-    if (!GetComputerNameW(computerName, &computerNameSize)) {
-        LogMessage("  return STATUS_INTERNAL_ERROR (GetComputerNameW failed)");
-        return STATUS_INTERNAL_ERROR;
-    }
-
     // assign output arguments
 
     {
+        wchar_t computerName[MAX_COMPUTERNAME_LENGTH + 1] = {};
+        DWORD computerNameSize = ARRAYSIZE(computerName);
+        if (!GetComputerNameW(computerName, &computerNameSize)) {
+            LogMessage("  return STATUS_INTERNAL_ERROR (GetComputerNameW failed)");
+            return STATUS_INTERNAL_ERROR;
+        }
+
         // assign "ProfileBuffer" output argument
         *ProfileBufferSize = GetProfileBufferSize(computerName, *logonInfo);
         FunctionTable.AllocateClientBuffer(ClientRequest, *ProfileBufferSize, ProfileBuffer); // will update *ProfileBuffer
@@ -175,12 +172,6 @@ NTSTATUS LsaApLogonUserEx (
         }
     }
 
-    if (MachineName) {
-        // assign "MachineName" output argument
-        LogMessage("  MachineName: %ls", computerName);
-        *MachineName = CreateLsaUnicodeString(computerName, (USHORT)computerNameSize*sizeof(wchar_t));
-    }
-
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
@@ -193,12 +184,12 @@ void LsaApLogonTerminated(_In_ LUID* LogonId) {
 
 SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .InitializePackage = nullptr,
-    .LogonUser = nullptr,
+    .LogonUser = LsaApLogonUser,
     .CallPackage = nullptr,
     .LogonTerminated = LsaApLogonTerminated,
     .CallPackageUntrusted = nullptr,
     .CallPackagePassthrough = nullptr,
-    .LogonUserEx = LsaApLogonUserEx,
+    .LogonUserEx = nullptr,
     .LogonUserEx2 = nullptr,
     .Initialize = SpInitialize,
     .Shutdown = SpShutDown,
