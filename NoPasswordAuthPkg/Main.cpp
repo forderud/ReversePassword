@@ -64,9 +64,9 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
     LogMessage("SpGetInfo");
 
     // return security package metadata
-    PackageInfo->fCapabilities = SECPKG_FLAG_ACCEPT_WIN32_NAME | SECPKG_FLAG_CONNECTION;
-    PackageInfo->wVersion = 1;
-    PackageInfo->wRPCID = SECPKG_ID_NONE;
+    PackageInfo->fCapabilities = SECPKG_FLAG_ACCEPT_WIN32_NAME | SECPKG_FLAG_CONNECTION; // investigate if SECPKG_FLAG_LOGON should also be set
+    PackageInfo->wVersion = 1; // always 1 for SecPkgInfoW
+    PackageInfo->wRPCID = SECPKG_ID_NONE; // no DCE/RPC support
     PackageInfo->cbMaxToken = 0;
     PackageInfo->Name = (wchar_t*)L"NoPasswordAuthPkg";
     PackageInfo->Comment = (wchar_t*)L"Custom authentication package for testing";
