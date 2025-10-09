@@ -110,9 +110,7 @@ NTSTATUS LsaApLogonUser (
 
     // input arguments
     LogMessage("  LogonType: %i", LogonType); // Interactive=2, RemoteInteractive=10
-    //LogMessage("  ProtocolSubmitBuffer: 0x%p", ProtocolSubmitBuffer);
     ClientBufferBase;
-    //LogMessage("  ClientBufferBase: 0x%p", ClientBufferBase);
     LogMessage("  ProtocolSubmitBuffer size: %i", SubmitBufferSize);
 
     // deliberately restrict supported logontypes
