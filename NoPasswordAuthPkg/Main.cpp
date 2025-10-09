@@ -145,9 +145,9 @@ NTSTATUS LsaApLogonUserEx2 (
 
     {
         // Assign "TokenInformation" output argument
-        LSA_TOKEN_INFORMATION_V2* MyTokenInformation = nullptr;
+        LSA_TOKEN_INFORMATION_V2* tokenInfo = nullptr;
         NTSTATUS subStatus = 0;
-        NTSTATUS status = UserNameToToken(&logonInfo->UserName, &MyTokenInformation, &subStatus);
+        NTSTATUS status = UserNameToToken(&logonInfo->UserName, &tokenInfo, &subStatus);
         if (status != STATUS_SUCCESS) {
             LogMessage("ERROR: UserNameToToken failed with err: 0x%x", status);
             *SubStatus = subStatus;
@@ -155,7 +155,7 @@ NTSTATUS LsaApLogonUserEx2 (
         }
 
         *TokenInformationType = LsaTokenInformationV1;
-        *TokenInformation = MyTokenInformation;
+        *TokenInformation = tokenInfo;
     }
 
     {
