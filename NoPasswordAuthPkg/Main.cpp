@@ -42,7 +42,7 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
 
 /* Authenticate a user logon attempt.
    Returns STATUS_SUCCESS if the login attempt succeeded. */
-NTSTATUS LsaApLogonUserEx2 (
+NTSTATUS LsaApLogonUserEx (
     _In_ PLSA_CLIENT_REQUEST ClientRequest,
     _In_ SECURITY_LOGON_TYPE LogonType,
     _In_reads_bytes_(SubmitBufferSize) VOID* ProtocolSubmitBuffer,
@@ -56,11 +56,9 @@ NTSTATUS LsaApLogonUserEx2 (
     _Outptr_ VOID** TokenInformation,
     _Out_ LSA_UNICODE_STRING** AccountName,
     _Out_ LSA_UNICODE_STRING** AuthenticatingAuthority,
-    _Out_ LSA_UNICODE_STRING** MachineName,
-    _Out_ SECPKG_PRIMARY_CRED* PrimaryCredentials,
-    _Outptr_ SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials
+    _Out_ LSA_UNICODE_STRING** MachineName
 ) {
-    LogMessage("LsaApLogonUserEx2");
+    LogMessage("LsaApLogonUserEx");
 
     {
         // clear output arguments first in case of failure
@@ -75,10 +73,6 @@ NTSTATUS LsaApLogonUserEx2 (
             *AuthenticatingAuthority = nullptr;
         if (MachineName)
             *MachineName = nullptr;
-        if (PrimaryCredentials)
-            *PrimaryCredentials = {};
-        if (SupplementalCredentials)
-            *SupplementalCredentials = nullptr;
     }
 
     // input arguments
@@ -187,10 +181,6 @@ NTSTATUS LsaApLogonUserEx2 (
         *MachineName = CreateLsaUnicodeString(computerName, (USHORT)computerNameSize*sizeof(wchar_t));
     }
 
-    // Output arguments not assigned:
-    // - PrimaryCredentials
-    // - SupplementalCredentials
-
     LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
@@ -208,8 +198,8 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .LogonTerminated = LsaApLogonTerminated,
     .CallPackageUntrusted = nullptr,
     .CallPackagePassthrough = nullptr,
-    .LogonUserEx = nullptr,
-    .LogonUserEx2 = LsaApLogonUserEx2,
+    .LogonUserEx = LsaApLogonUserEx,
+    .LogonUserEx2 = nullptr,
     .Initialize = SpInitialize,
     .Shutdown = SpShutDown,
     .GetInfo = SpGetInfo,
