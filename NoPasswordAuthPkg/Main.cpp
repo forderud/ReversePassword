@@ -10,8 +10,44 @@ LSA_SECPKG_FUNCTION_TABLE FunctionTable;
 
 NTSTATUS NTAPI SpInitialize(_In_ ULONG_PTR PackageId, _In_ SECPKG_PARAMETERS* Parameters, _In_ LSA_SECPKG_FUNCTION_TABLE* functionTable) {
     LogMessage("SpInitialize");
-    PackageId;
-    Parameters;
+
+    LogMessage("  PackageId: %u", PackageId);
+    LogMessage("  Version: %u", Parameters->Version);
+    {
+        ULONG state = Parameters->MachineState;
+        LogMessage("  MachineState:");
+        if (state & SECPKG_STATE_ENCRYPTION_PERMITTED) {
+            state &= ~SECPKG_STATE_ENCRYPTION_PERMITTED;
+            LogMessage("  - ENCRYPTION_PERMITTED");
+        }
+        if (state & SECPKG_STATE_STRONG_ENCRYPTION_PERMITTED) {
+            state &= ~SECPKG_STATE_STRONG_ENCRYPTION_PERMITTED;
+            LogMessage("  - STRONG_ENCRYPTION_PERMITTED");
+        }
+        if (state & SECPKG_STATE_DOMAIN_CONTROLLER) {
+            state &= ~SECPKG_STATE_DOMAIN_CONTROLLER;
+            LogMessage("  - DOMAIN_CONTROLLER");
+        }
+        if (state & SECPKG_STATE_WORKSTATION) {
+            state &= ~SECPKG_STATE_WORKSTATION;
+            LogMessage("  - WORKSTATION");
+        }
+        if (state & SECPKG_STATE_STANDALONE) {
+            state &= ~SECPKG_STATE_STANDALONE;
+            LogMessage("  - STANDALONE");
+        }
+        if (state) {
+            // print resudual flags not already covered
+            LogMessage("  * Unknown flags: 0x%X", state);
+        }
+    }
+    LogMessage("  SetupMode: %u", Parameters->SetupMode);
+    // parameters not logged
+    Parameters->DomainSid;
+    Parameters->DomainName;
+    Parameters->DnsDomainName;
+    Parameters->DomainGuid;
+
     FunctionTable = *functionTable; // copy function pointer table
 
     LogMessage("  return STATUS_SUCCESS");
