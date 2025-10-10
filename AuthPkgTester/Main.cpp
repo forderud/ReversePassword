@@ -182,23 +182,25 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         }
 #endif
 
-        // Start command prompt.
+        wprintf(L"\n");
+        wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
+
         STARTUPINFOW si = {
             .cb = sizeof(si),
             //.lpDesktop = (wchar_t*)L"winsta0\\default",
         };
         PROCESS_INFORMATION pi = {};
+
+        DWORD logonFlags = LOGON_WITH_PROFILE;
         const wchar_t* appName = nullptr;
         std::wstring cmdLine = L"cmd.exe";
-        wprintf(L"\n");
-        wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
         DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP; // | CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT;
 #if 1
-        // actual call that we want to work
-        BOOL ok = CreateProcessWithTokenW(token, LOGON_WITH_PROFILE, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
+        // actual call that we want to function
+        BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
 #else
         // compatibility testing call
-        BOOL ok = CreateProcessWithLogonW(username.c_str(), /*domain*/nullptr, password.c_str(), LOGON_WITH_PROFILE, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
+        BOOL ok = CreateProcessWithLogonW(username.c_str(), /*domain*/nullptr, password.c_str(), logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
 #endif
         if (!ok) {
             DWORD err = GetLastError();
