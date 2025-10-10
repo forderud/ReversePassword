@@ -166,7 +166,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token) {
             wprintf(L"WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
     }
 
-    if (hasIncreaseQuta) {
+    {
 #if 0
         {
             // replace "token" with the primary token for the current user
