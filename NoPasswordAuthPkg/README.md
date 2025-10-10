@@ -25,3 +25,6 @@ Run `Install_NoPasswordAuthPkg.ps1` as admin.
 * [SpLsaModeInitialize](https://learn.microsoft.com/en-us/windows/win32/api/ntsecpkg/nc-ntsecpkg-splsamodeinitializefn) entry point
 * [SECPKG_FUNCTION_TABLE](https://learn.microsoft.com/en-us/windows/win32/api/ntsecpkg/ns-ntsecpkg-secpkg_function_table) function dispatch table
 * [Functions Implemented by Authentication Packages](https://learn.microsoft.com/en-us/windows/win32/secauthn/authentication-functions#functions-implemented-by-authentication-packages)
+
+## Acknowledgement
+This project is based on [EIDAuthentication](https://github.com/chantzish/EIDAuthentication).

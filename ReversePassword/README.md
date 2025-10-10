@@ -9,4 +9,5 @@ Overall class diagram:
 | `CredentialProviderCredential` <[ICredentialProviderCredential](https://learn.microsoft.com/en-us/windows/win32/api/credentialprovider/nn-credentialprovider-icredentialprovidercredential), [ICredentialProviderCredential2](https://learn.microsoft.com/en-us/windows/win32/api/credentialprovider/nn-credentialprovider-icredentialprovidercredential2)>| Instances are created on-demand by `CredentialView` when `CredentialProvider` receives `GetCredentialAt` calls. |
 
 
-This project is heavily based on the no longer maintained [CredProvider.NET](https://github.com/SteveSyfuhs/CredProvider.NET)
+## Acknowledgement
+This project is based on the no longer maintained [CredProvider.NET](https://github.com/SteveSyfuhs/CredProvider.NET).
