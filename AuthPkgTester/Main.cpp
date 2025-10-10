@@ -121,85 +121,7 @@ bool IsEqual (LUID left, LUID right) {
     return (left.LowPart == right.LowPart) && (left.HighPart == right.HighPart);
 }
 
-NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
-    //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
-
-    const char ORIGIN[] = "AuthPkgTester";
-    LSA_STRING origin {
-        .Length = (USHORT)strlen(ORIGIN),
-        .MaximumLength = (USHORT)strlen(ORIGIN),
-        .Buffer = (char*)ORIGIN,
-    };
-
-    TOKEN_SOURCE sourceContext{};
-    {
-        // Populate SourceName & SourceIdentifier fields
-        HANDLE userToken = GetCurrentProcessToken();
-        DWORD returnLength = 0;
-        GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
-        assert(returnLength == sizeof(sourceContext));
-    }
-
-    ULONG authPkg = 0;
-    NTSTATUS status = GetAuthPackage(lsa, authPkgName, &authPkg);
-    if (status != STATUS_SUCCESS)
-        return status;
-    
-    // output arguments
-    void* profileBuffer = nullptr;
-    ULONG profileBufferLen = 0;
-    LUID logonId{};
-    HANDLE token = 0;
-    QUOTA_LIMITS quotas{};
-    NTSTATUS subStatus = 0;
-
-    LOGON32_PROVIDER_DEFAULT;
-    LOGON32_PROVIDER_WINNT50;
-
-#if 0
-    {
-        PSID logonSid = nullptr;
-        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, LOGON32_PROVIDER_DEFAULT, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
-        if (!ok) {
-            DWORD err = GetLastError();
-            wprintf(L"LogonUserExW failed with err: %u\n", err);
-            abort();
-        }
-        FreeSid(logonSid);
-    }
-#else
-    NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
-    if (ret != STATUS_SUCCESS)
-        return ret;
-#endif
-
-    wprintf(L"profileBufferLen: %u\n", profileBufferLen);
-    if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
-        static_assert(sizeof(MSV1_0_INTERACTIVE_PROFILE) == 160);
-        auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer;
-
-        // print MSV1_0_INTERACTIVE_PROFILE fields to console
-        wprintf(L"MessageType: %u (MsV1_0InteractiveProfile=2)\n", profile->MessageType);
-        wprintf(L"LogonCount: %u\n", profile->LogonCount);
-        wprintf(L"BadPasswordCount: %u\n", profile->BadPasswordCount);
-        wprintf(L"LogonTime: 0x%llx\n", profile->LogonTime.QuadPart);
-        wprintf(L"LogoffTime: 0x%llx\n", profile->LogoffTime.QuadPart);
-        wprintf(L"KickOffTime: 0x%llx\n", profile->KickOffTime.QuadPart);
-        wprintf(L"PasswordLastSet: 0x%llx\n", profile->PasswordLastSet.QuadPart);
-        wprintf(L"PasswordCanChange: 0x%llx\n", profile->PasswordCanChange.QuadPart);
-        wprintf(L"PasswordMustChange: 0x%llx\n", profile->PasswordMustChange.QuadPart);
-        wprintf(L"LogonScript: %s\n", ToWstring(profile->LogonScript).c_str());
-        wprintf(L"HomeDirectory: %s\n", ToWstring(profile->HomeDirectory).c_str());
-        wprintf(L"FullName: %s\n", ToWstring(profile->FullName).c_str());
-        wprintf(L"ProfilePath: %s\n", ToWstring(profile->ProfilePath).c_str());
-        wprintf(L"HomeDirectoryDrive: %s\n", ToWstring(profile->HomeDirectoryDrive).c_str());
-        wprintf(L"LogonServer: %s\n", ToWstring(profile->LogonServer).c_str());
-        wprintf(L"UserFlags: %u\n", profile->UserFlags);
-    }
-
-    LsaFreeReturnBuffer(profileBuffer);
-
-#if 0
+NTSTATUS CreateCmdProcessWithTokenW(HANDLE token) {
     {
         // verify that "token" type is TokenPrimary
         TOKEN_TYPE tokenType = {};
@@ -285,10 +207,91 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
     }
+}
+
+NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
+    //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
+
+    const char ORIGIN[] = "AuthPkgTester";
+    LSA_STRING origin {
+        .Length = (USHORT)strlen(ORIGIN),
+        .MaximumLength = (USHORT)strlen(ORIGIN),
+        .Buffer = (char*)ORIGIN,
+    };
+
+    TOKEN_SOURCE sourceContext{};
+    {
+        // Populate SourceName & SourceIdentifier fields
+        HANDLE userToken = GetCurrentProcessToken();
+        DWORD returnLength = 0;
+        GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
+        assert(returnLength == sizeof(sourceContext));
+    }
+
+    ULONG authPkg = 0;
+    NTSTATUS status = GetAuthPackage(lsa, authPkgName, &authPkg);
+    if (status != STATUS_SUCCESS)
+        return status;
+    
+    // output arguments
+    void* profileBuffer = nullptr;
+    ULONG profileBufferLen = 0;
+    LUID logonId{};
+    HANDLE token = 0;
+    QUOTA_LIMITS quotas{};
+    NTSTATUS subStatus = 0;
+
+    LOGON32_PROVIDER_DEFAULT;
+    LOGON32_PROVIDER_WINNT50;
+
+#if 0
+    {
+        PSID logonSid = nullptr;
+        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, LOGON32_PROVIDER_DEFAULT, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
+        if (!ok) {
+            DWORD err = GetLastError();
+            wprintf(L"LogonUserExW failed with err: %u\n", err);
+            abort();
+        }
+        FreeSid(logonSid);
+    }
+#else
+    NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
+    if (ret != STATUS_SUCCESS)
+        return ret;
 #endif
 
+    wprintf(L"profileBufferLen: %u\n", profileBufferLen);
+    if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
+        static_assert(sizeof(MSV1_0_INTERACTIVE_PROFILE) == 160);
+        auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer;
+
+        // print MSV1_0_INTERACTIVE_PROFILE fields to console
+        wprintf(L"MessageType: %u (MsV1_0InteractiveProfile=2)\n", profile->MessageType);
+        wprintf(L"LogonCount: %u\n", profile->LogonCount);
+        wprintf(L"BadPasswordCount: %u\n", profile->BadPasswordCount);
+        wprintf(L"LogonTime: 0x%llx\n", profile->LogonTime.QuadPart);
+        wprintf(L"LogoffTime: 0x%llx\n", profile->LogoffTime.QuadPart);
+        wprintf(L"KickOffTime: 0x%llx\n", profile->KickOffTime.QuadPart);
+        wprintf(L"PasswordLastSet: 0x%llx\n", profile->PasswordLastSet.QuadPart);
+        wprintf(L"PasswordCanChange: 0x%llx\n", profile->PasswordCanChange.QuadPart);
+        wprintf(L"PasswordMustChange: 0x%llx\n", profile->PasswordMustChange.QuadPart);
+        wprintf(L"LogonScript: %s\n", ToWstring(profile->LogonScript).c_str());
+        wprintf(L"HomeDirectory: %s\n", ToWstring(profile->HomeDirectory).c_str());
+        wprintf(L"FullName: %s\n", ToWstring(profile->FullName).c_str());
+        wprintf(L"ProfilePath: %s\n", ToWstring(profile->ProfilePath).c_str());
+        wprintf(L"HomeDirectoryDrive: %s\n", ToWstring(profile->HomeDirectoryDrive).c_str());
+        wprintf(L"LogonServer: %s\n", ToWstring(profile->LogonServer).c_str());
+        wprintf(L"UserFlags: %u\n", profile->UserFlags);
+    }
+
+#if 0
+    ret = CreateCmdProcessWithTokenW(token);
+#endif
+
+    LsaFreeReturnBuffer(profileBuffer);
     CloseHandle(token);
-    return STATUS_SUCCESS;
+    return ret;
 }
 
 
