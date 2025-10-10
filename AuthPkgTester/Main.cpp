@@ -121,7 +121,7 @@ bool IsEqual (LUID left, LUID right) {
     return (left.LowPart == right.LowPart) && (left.HighPart == right.HighPart);
 }
 
-NTSTATUS CreateCmdProcessWithTokenW(HANDLE token) {
+NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password) {
     {
         // verify that "token" type is TokenPrimary
         TOKEN_TYPE tokenType = {};
@@ -188,11 +188,19 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token) {
             //.lpDesktop = (wchar_t*)L"winsta0\\default",
         };
         PROCESS_INFORMATION pi = {};
-        std::wstring cmd_exe = L"cmd.exe";
+        const wchar_t* appName = nullptr;
+        std::wstring cmdLine = L"cmd.exe";
         wprintf(L"\n");
         wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
         DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP; // | CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT;
-        if (!CreateProcessWithTokenW(token, LOGON_WITH_PROFILE, nullptr, cmd_exe.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi)) {
+#if 1
+        // actual call that we want to work
+        BOOL ok = CreateProcessWithTokenW(token, LOGON_WITH_PROFILE, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
+#else
+        // compatibility testing call
+        BOOL ok = CreateProcessWithLogonW(username.c_str(), /*domain*/nullptr, password.c_str(), LOGON_WITH_PROFILE, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
+#endif
+        if (!ok) {
             DWORD err = GetLastError();
             if (err == ERROR_INVALID_HANDLE)
                 wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_INVALID_HANDLE).\n");
@@ -289,7 +297,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 
 #if 1
-    ret = CreateCmdProcessWithTokenW(token);
+    ret = CreateCmdProcessWithTokenW(token, username, password);
 #endif
 
     LsaFreeReturnBuffer(profileBuffer);
