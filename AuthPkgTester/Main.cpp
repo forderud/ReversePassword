@@ -152,7 +152,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token) {
         privilegesBuffer.resize(privilegesLength);
         auto* privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
 
-        wprintf(L"Inspecting all %u token privileges...\n", privileges->PrivilegeCount);
+        wprintf(L"Inspecting %u token privileges...\n", privileges->PrivilegeCount);
         for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
             if (IsEqual(privileges->Privileges[i].Luid, INCREASE_QUOTA))
                 hasIncreaseQuta = true;
@@ -189,6 +189,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token) {
         };
         PROCESS_INFORMATION pi = {};
         std::wstring cmd_exe = L"cmd.exe";
+        wprintf(L"\n");
         wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
         DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP; // | CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT;
         if (!CreateProcessWithTokenW(token, LOGON_WITH_PROFILE, nullptr, cmd_exe.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi)) {
@@ -207,6 +208,8 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token) {
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
     }
+
+    return STATUS_SUCCESS;
 }
 
 NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
