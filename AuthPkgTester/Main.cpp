@@ -166,10 +166,12 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
                 hasImpersonateName = true;
         }
 
+#if 0
         if (!hasIncreaseQuta)
             wprintf(L"WARNING: SE_INCREASE_QUOTA_NAME privilege missing\n");
         if (!hasAssignPrimaryToken)
             wprintf(L"WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
+#endif
         if (!hasImpersonateName)
             wprintf(L"WARNING: SE_IMPERSONATE_NAME privilege missing\n");
     }
