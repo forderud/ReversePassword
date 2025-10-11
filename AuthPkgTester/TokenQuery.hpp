@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include <aclapi.h>
 #include <stdio.h>
 
 
@@ -127,13 +128,43 @@ bool CheckTokenAccessRights(HANDLE token) {
         ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, secDesc.data(), (DWORD)secDesc.size(), &lengthNeeded);
         assert(ok);
         sd = (SECURITY_DESCRIPTOR*)secDesc.data();
-        wprintf(L"  DACL revision: %u\n", sd->Revision);
+    }
+    
+    wprintf(L"  DACL revision: %u\n", sd->Revision);
+
+    {
+#if 0
+        DWORD desiredAccess = TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY;
+
+        BOOL daclPresent = false;
+        ACL* dacl = nullptr;
+        BOOL daclDefaulted = false;
+        BOOL ok = GetSecurityDescriptorDacl(sd, &daclPresent, &dacl, &daclDefaulted);
+        assert(ok);
+
+        wchar_t name[1024] = {};
+        DWORD nameLen = 1024;
+        if (!GetUserNameW(name, &nameLen))
+            abort();
+
+        EXPLICIT_ACCESS ea{};
+        BuildExplicitAccessWithNameW(&ea, name, desiredAccess, GRANT_ACCESS, 0);
+        ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+
+        PACL newDacl = nullptr;
+        DWORD ret = SetEntriesInAclW(1, &ea, /*oldAcl*/dacl, &newDacl);
+        assert(ret == ERROR_SUCCESS);
+
+        // replace DACL
+        ok = SetSecurityDescriptorDacl(sd, daclPresent, newDacl, daclDefaulted);
+        assert(ok);
+        //LocalFree(sd->Dacl);
+
+        // update security settings
+        ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, sd);
+        assert(ok);
+#endif
     }
 
-    if (sd) {
-        // update security settings
-        BOOL ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, sd);
-        assert(ok);
-    }
     return true;
 }
