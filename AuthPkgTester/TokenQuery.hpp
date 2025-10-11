@@ -115,7 +115,8 @@ bool CheckTokenPrivileges(HANDLE token) {
     return true;
 }
 
-
+/** Add a DACL entry to the token security descriptor.
+    Use BuildExplicitAccessWithNameW to initialize the "ea" argument. */
 bool AddTokenDaclRight(HANDLE token, EXPLICIT_ACCESS_W& ea) {
     std::vector<BYTE> relSdBuf;
     SECURITY_DESCRIPTOR* relSd = nullptr;
