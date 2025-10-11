@@ -167,7 +167,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         BOOL daclPresent = false;
         ACL* dacl = nullptr;
         BOOL daclDefaulted = false;
-        BOOL ok = GetSecurityDescriptorDacl(relSd, &daclPresent, &dacl, &daclDefaulted);
+        BOOL ok = GetSecurityDescriptorDacl(absSd, &daclPresent, &dacl, &daclDefaulted);
         assert(ok);
 
         wchar_t name[1024] = {};
@@ -183,15 +183,8 @@ bool CheckTokenAccessRights(HANDLE token) {
         DWORD ret = SetEntriesInAclW(1, &ea, /*oldAcl*/dacl, &newDacl);
         assert(ret == ERROR_SUCCESS);
 
-#if 1
-        std::vector<BYTE> newSdBuf(SECURITY_DESCRIPTOR_MIN_LENGTH, (BYTE)0);
-        auto* newSd = (SECURITY_DESCRIPTOR*)newSdBuf.data();
-        ok = InitializeSecurityDescriptor(newSd, SECURITY_DESCRIPTOR_REVISION);
-        assert(ok);
-#endif
-
         // replace DACL (SD must be in absolute format)
-        ok = SetSecurityDescriptorDacl(relSd, daclPresent, newDacl, daclDefaulted);
+        ok = SetSecurityDescriptorDacl(absSd, daclPresent, newDacl, daclDefaulted);
         if (!ok) {
             DWORD err = GetLastError();
             wprintf(L"ERROR: SetEntriesInAclW failed (%s)\n", ToString(err).c_str());
@@ -200,7 +193,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         //LocalFree(newDacl);
 
         // update security settings
-        ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, relSd);
+        ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, absSd);
         assert(ok);
 #endif
     }
