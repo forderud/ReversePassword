@@ -34,9 +34,12 @@ const wchar_t* ToString(PrivilegeState ps) {
     }
 }
 
+inline bool EqualLUID(LUID a, LUID b) {
+    return (a.LowPart == b.LowPart) && (a.HighPart == b.HighPart);
+}
+
 void CheckPrivilegeEnabled(LUID_AND_ATTRIBUTES entry, LUID priv, /*out*/PrivilegeState& state) {
-    bool match = (entry.Luid.LowPart == priv.LowPart) && (entry.Luid.HighPart == priv.HighPart);
-    if (!match)
+    if (!EqualLUID(entry.Luid, priv))
         return;
 
     if (entry.Attributes & (SE_PRIVILEGE_ENABLED | SE_PRIVILEGE_ENABLED_BY_DEFAULT))
@@ -92,25 +95,21 @@ bool CheckTokenPrivileges(HANDLE token) {
         wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
         wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonateName));
 
+        if (privIncreaseQuta == PrivilegeState::Disabled) {
 #if 0
-        if (privImpersonateName != PrivilegeState::Enabled) {
-            assert(privImpersonateName == PrivilegeState::Missing);
-
-            // append SE_IMPERSONATE_NAME=enabled privilege at the end of the buffer
-            privilegesBuffer.resize(privilegesBuffer.size() + sizeof(LUID_AND_ATTRIBUTES), (BYTE)0);
+            wprintf(L"  Enabling SE_INCREASE_QUOTA_NAME...\n");
             privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
+            for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
+                if (EqualLUID(privileges->Privileges[i].Luid, INCREASE_QUOTA))
+                    privileges->Privileges[i].Attributes = SE_PRIVILEGE_ENABLED;
+            }
 
-            privileges->PrivilegeCount += 1;
-            privileges->Privileges[privileges->PrivilegeCount - 1].Luid = IMPERSONATE_NAME;
-            privileges->Privileges[privileges->PrivilegeCount - 1].Attributes = SE_PRIVILEGE_ENABLED;
-
-            wprintf(L"  Attempting to enable SE_IMPERSONATE_NAME (doesn't work)...\n");
             if (!AdjustTokenPrivileges(token, /*disableAll*/false, privileges, 0, nullptr, nullptr)) {
                 DWORD err = GetLastError();
                 wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
             }
-        }
 #endif
+        }
     }
 
     return true;
