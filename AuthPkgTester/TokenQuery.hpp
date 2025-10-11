@@ -150,7 +150,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         BuildExplicitAccessWithNameW(&ea, name, desiredAccess, GRANT_ACCESS, 0);
         ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
 
-        PACL newDacl = nullptr;
+        ACL* newDacl = nullptr;
         DWORD ret = SetEntriesInAclW(1, &ea, /*oldAcl*/dacl, &newDacl);
         assert(ret == ERROR_SUCCESS);
 
