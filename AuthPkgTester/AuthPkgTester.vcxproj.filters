@@ -5,6 +5,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PrintInfo.hpp" />
-    <ClInclude Include="TokenSupport.hpp" />
+    <ClInclude Include="TokenQuery.hpp" />
   </ItemGroup>
 </Project>

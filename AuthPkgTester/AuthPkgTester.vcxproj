@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PrintInfo.hpp" />
-    <ClInclude Include="TokenSupport.hpp" />
+    <ClInclude Include="TokenQuery.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

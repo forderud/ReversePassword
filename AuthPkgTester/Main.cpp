@@ -13,7 +13,7 @@
 #include <tuple>
 #include <vector>
 #include "PrintInfo.hpp"
-#include "TokenSupport.hpp"
+#include "TokenQuery.hpp"
 
 #pragma comment(lib, "Secur32.lib")
 #pragma comment(lib, "Userenv.lib")
