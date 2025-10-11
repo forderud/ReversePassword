@@ -61,7 +61,7 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
 
     PrivilegeState privIncreaseQuta = {};
     PrivilegeState privAssignPrimaryToken = {};
-    PrivilegeState privImpersonateName = {};
+    PrivilegeState privImpersonate = {};
     {
         LUID INCREASE_QUOTA{};
         BOOL ok = LookupPrivilegeValueW(nullptr, SE_INCREASE_QUOTA_NAME, &INCREASE_QUOTA);
@@ -69,8 +69,8 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
         LUID ASSIGNPRIMARYTOKEN = {};
         ok = LookupPrivilegeValueW(nullptr, SE_ASSIGNPRIMARYTOKEN_NAME, &ASSIGNPRIMARYTOKEN);
         assert(ok);
-        LUID IMPERSONATE_NAME = {};
-        ok = LookupPrivilegeValueW(nullptr, SE_IMPERSONATE_NAME, &IMPERSONATE_NAME);
+        LUID IMPERSONATE = {};
+        ok = LookupPrivilegeValueW(nullptr, SE_IMPERSONATE_NAME, &IMPERSONATE);
         assert(ok);
 
         std::vector<BYTE> privilegesBuffer(1024, (BYTE)0);
@@ -86,12 +86,12 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
         for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
             CheckPrivilegeEnabled(privileges->Privileges[i], INCREASE_QUOTA, privIncreaseQuta);
             CheckPrivilegeEnabled(privileges->Privileges[i], ASSIGNPRIMARYTOKEN, privAssignPrimaryToken);
-            CheckPrivilegeEnabled(privileges->Privileges[i], IMPERSONATE_NAME, privImpersonateName);
+            CheckPrivilegeEnabled(privileges->Privileges[i], IMPERSONATE, privImpersonate);
         }
 
         wprintf(L"  SE_INCREASE_QUOTA_NAME privilege %s\n", ToString(privIncreaseQuta));
         wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
-        wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonateName));
+        wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonate));
 
         if (enableDisabled && (privIncreaseQuta == PrivilegeState::Disabled)) {
             wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
