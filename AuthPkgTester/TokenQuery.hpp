@@ -128,7 +128,6 @@ bool AddTokenDaclRight(HANDLE token, EXPLICIT_ACCESS_W& ea) {
         ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, relSdBuf.data(), (DWORD)relSdBuf.size(), &sdSize);
         assert(ok);
 
-        wprintf(L"  DACL revision: %u\n", relSd->Revision);
         assert(relSd->Control & SE_SELF_RELATIVE); // security descriptor is self-relative
     }
 
@@ -176,11 +175,12 @@ bool AddTokenDaclRight(HANDLE token, EXPLICIT_ACCESS_W& ea) {
             wprintf(L"ERROR: SetEntriesInAclW failed (%s)\n", ToString(err).c_str());
             abort();
         }
-        //LocalFree(newDacl);
 
         // update security settings
         ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, absSd);
         assert(ok);
+
+        LocalFree(newDacl);
     }
 
     return true;
