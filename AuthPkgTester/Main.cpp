@@ -154,7 +154,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 
             // copy token to avoid ERROR_TOKEN_ALREADY_IN_USE
             token = 0;
-            if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenImpersonation, &token))
+            if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenPrimary, &token))
                 abort();
         }
 #endif
