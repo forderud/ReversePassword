@@ -89,9 +89,7 @@ bool CheckTokenPrivileges(HANDLE token) {
             CheckPrivilegeEnabled(privileges->Privileges[i], IMPERSONATE_NAME, privImpersonateName);
         }
 
-#if 0
         wprintf(L"  SE_INCREASE_QUOTA_NAME privilege %s\n", ToString(privIncreaseQuta));
-#endif
         wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
         wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonateName));
 
@@ -107,6 +105,7 @@ bool CheckTokenPrivileges(HANDLE token) {
             if (!AdjustTokenPrivileges(token, /*disableAll*/false, privileges, 0, nullptr, nullptr)) {
                 DWORD err = GetLastError();
                 wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
+                abort();
             }
 #endif
         }
