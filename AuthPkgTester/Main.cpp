@@ -156,6 +156,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 
     {
         HWINSTA ws = OpenWindowStationW(L"winsta0", false, READ_CONTROL | WRITE_DAC);
+        assert(ws);
 
         // Grant WINSTA_ALL_ACCESS to "username"
         EXPLICIT_ACCESS_W ea{};
