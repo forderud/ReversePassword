@@ -156,12 +156,13 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         std::wstring cmdLine = L"cmd.exe";
         DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP; // | CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT;
 #if 1
-        // actual call that we want to function
+        // actual call that we want to work
         BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
 #elif 0
-        ImpersonateLoggedOnUser(token);
-        BOOL ok = CreateProcessW(appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
-        RevertToSelf();
+        // alternative function that fail with ERROR_PRIVILEGE_NOT_HELD
+        BOOL ok = CreateProcessAsUserW(token, appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
+
+        // cannot use CreateProcessW with ImpersonateLoggedOnUser, since it doesn't support impersonation
 #else
         // compatibility testing call
         BOOL ok = CreateProcessWithLogonW(username.c_str(), /*domain*/nullptr, password.c_str(), logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
