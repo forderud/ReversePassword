@@ -134,9 +134,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     if (!VerifyThatTokenIsPrimary(token))
         abort();
 
-    wprintf(L"Inspecting user token privileges:\n");
-    CheckTokenPrivileges(token);
-
     wprintf(L"Inspecting current process privileges:\n");
     CheckTokenPrivileges(GetCurrentProcessToken());
 
@@ -149,15 +146,15 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
             if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &procToken))
                 abort();
 
-            wprintf(L"Current process token:\n");
-            CheckTokenPrivileges(procToken);
-
             // copy token to avoid ERROR_TOKEN_ALREADY_IN_USE
             token = 0;
             if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenPrimary, &token))
                 abort();
         }
 #endif
+
+        wprintf(L"Inspecting user token privileges:\n");
+        CheckTokenPrivileges(token);
 
         wprintf(L"\n");
         wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
