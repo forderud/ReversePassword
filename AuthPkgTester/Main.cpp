@@ -228,7 +228,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
         if (!ok) {
             DWORD err = GetLastError();
-            wprintf(L"LogonUserExW failed with err: %u\n", err);
+            wprintf(L"LogonUserExW failed (%s)\n", ToString(err).c_str());
             abort();
         }
         FreeSid(logonSid);
