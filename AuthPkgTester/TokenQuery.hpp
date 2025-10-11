@@ -118,18 +118,18 @@ bool CheckTokenPrivileges(HANDLE token) {
 bool CheckTokenAccessRights(HANDLE token) {
     // TODO: Check TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights that's required by CreateProcessWithTokenW
 
-    std::vector<BYTE> secDesc;
+    std::vector<BYTE> curSdBuf;
     {
         DWORD lengthNeeded = 0;
         BOOL ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, nullptr, 0, &lengthNeeded);
         assert(!ok);
-        secDesc.resize(lengthNeeded, (BYTE)0);
-        ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, secDesc.data(), (DWORD)secDesc.size(), &lengthNeeded);
+        curSdBuf.resize(lengthNeeded, (BYTE)0);
+        ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, curSdBuf.data(), (DWORD)curSdBuf.size(), &lengthNeeded);
         assert(ok);
     }
-    SECURITY_DESCRIPTOR* sd = (SECURITY_DESCRIPTOR*)secDesc.data();
+    SECURITY_DESCRIPTOR* curSd = (SECURITY_DESCRIPTOR*)curSdBuf.data();
 
-    wprintf(L"  DACL revision: %u\n", sd->Revision);
+    wprintf(L"  DACL revision: %u\n", curSd->Revision);
 
     {
 #if 0
@@ -138,7 +138,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         BOOL daclPresent = false;
         ACL* dacl = nullptr;
         BOOL daclDefaulted = false;
-        BOOL ok = GetSecurityDescriptorDacl(sd, &daclPresent, &dacl, &daclDefaulted);
+        BOOL ok = GetSecurityDescriptorDacl(curSd, &daclPresent, &dacl, &daclDefaulted);
         assert(ok);
 
         wchar_t name[1024] = {};
@@ -154,8 +154,15 @@ bool CheckTokenAccessRights(HANDLE token) {
         DWORD ret = SetEntriesInAclW(1, &ea, /*oldAcl*/dacl, &newDacl);
         assert(ret == ERROR_SUCCESS);
 
+#if 1
+        std::vector<BYTE> newSdBuf(SECURITY_DESCRIPTOR_MIN_LENGTH, (BYTE)0);
+        auto* newSd = (SECURITY_DESCRIPTOR*)newSdBuf.data();
+        ok = InitializeSecurityDescriptor(newSd, SECURITY_DESCRIPTOR_REVISION);
+        assert(ok);
+#endif
+
         // replace DACL
-        ok = SetSecurityDescriptorDacl(sd, daclPresent, newDacl, daclDefaulted);
+        ok = SetSecurityDescriptorDacl(curSd, daclPresent, newDacl, daclDefaulted);
         if (!ok) {
             DWORD err = GetLastError();
             wprintf(L"ERROR: SetEntriesInAclW failed (%s)\n", ToString(err).c_str());
@@ -164,7 +171,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         //LocalFree(newDacl);
 
         // update security settings
-        ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, sd);
+        ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, curSd);
         assert(ok);
 #endif
     }
