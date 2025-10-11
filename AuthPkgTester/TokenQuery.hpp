@@ -118,19 +118,21 @@ bool CheckTokenPrivileges(HANDLE token) {
 bool CheckTokenAccessRights(HANDLE token) {
     // TODO: Check TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights that's required by CreateProcessWithTokenW
 
-    std::vector<BYTE> curSdBuf;
+    std::vector<BYTE> relSdBuf;
+    SECURITY_DESCRIPTOR* relSd = nullptr;
     {
-        DWORD lengthNeeded = 0;
-        BOOL ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, nullptr, 0, &lengthNeeded);
+        DWORD sdSize = 0;
+        BOOL ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, nullptr, 0, &sdSize);
         assert(!ok);
-        curSdBuf.resize(lengthNeeded, (BYTE)0);
-        ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, curSdBuf.data(), (DWORD)curSdBuf.size(), &lengthNeeded);
-        assert(ok);
-    }
-    auto* curSd = (SECURITY_DESCRIPTOR*)curSdBuf.data();
+        relSdBuf.resize(sdSize, (BYTE)0);
+        relSd = (SECURITY_DESCRIPTOR*)relSdBuf.data();
 
-    wprintf(L"  DACL revision: %u\n", curSd->Revision);
-    assert(curSd->Control & SE_SELF_RELATIVE); // SecurityDescriptor is self-relative
+        ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, relSdBuf.data(), (DWORD)relSdBuf.size(), &sdSize);
+        assert(ok);
+
+        wprintf(L"  DACL revision: %u\n", relSd->Revision);
+        assert(relSd->Control & SE_SELF_RELATIVE); // security descriptor is self-relative
+    }
 
     std::vector<BYTE> absSdBuf;
     SECURITY_DESCRIPTOR* absSd = nullptr;
@@ -141,7 +143,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         DWORD saclSize = 0;
         DWORD ownerSize = 0;
         DWORD primGrpSize = 0;
-        BOOL ok = MakeAbsoluteSD(curSd, nullptr, &absSdSize, nullptr, &daclSize, nullptr, &saclSize, nullptr, &ownerSize, nullptr, &primGrpSize);
+        BOOL ok = MakeAbsoluteSD(relSd, nullptr, &absSdSize, nullptr, &daclSize, nullptr, &saclSize, nullptr, &ownerSize, nullptr, &primGrpSize);
         assert(!ok);
 
         absSdBuf.resize(absSdSize, (BYTE)0);
@@ -151,7 +153,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         std::vector<BYTE> saclBuf(saclSize, (BYTE)0);
         std::vector<BYTE> ownerBuf(saclSize, (BYTE)0);
         std::vector<BYTE> primGrpBuf(saclSize, (BYTE)0);
-        ok = MakeAbsoluteSD(curSd, absSd, &absSdSize, (ACL*)daclBuf.data(), &daclSize, (ACL*)saclBuf.data(), &saclSize, (PSID)ownerBuf.data(), &ownerSize, (PSID)primGrpBuf.data(), &primGrpSize);
+        ok = MakeAbsoluteSD(relSd, absSd, &absSdSize, (ACL*)daclBuf.data(), &daclSize, (ACL*)saclBuf.data(), &saclSize, (PSID)ownerBuf.data(), &ownerSize, (PSID)primGrpBuf.data(), &primGrpSize);
         assert(ok);
     }
 
@@ -162,7 +164,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         BOOL daclPresent = false;
         ACL* dacl = nullptr;
         BOOL daclDefaulted = false;
-        BOOL ok = GetSecurityDescriptorDacl(curSd, &daclPresent, &dacl, &daclDefaulted);
+        BOOL ok = GetSecurityDescriptorDacl(relSd, &daclPresent, &dacl, &daclDefaulted);
         assert(ok);
 
         wchar_t name[1024] = {};
@@ -186,7 +188,7 @@ bool CheckTokenAccessRights(HANDLE token) {
 #endif
 
         // replace DACL (SD must be in absolute format)
-        ok = SetSecurityDescriptorDacl(curSd, daclPresent, newDacl, daclDefaulted);
+        ok = SetSecurityDescriptorDacl(relSd, daclPresent, newDacl, daclDefaulted);
         if (!ok) {
             DWORD err = GetLastError();
             wprintf(L"ERROR: SetEntriesInAclW failed (%s)\n", ToString(err).c_str());
@@ -195,7 +197,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         //LocalFree(newDacl);
 
         // update security settings
-        ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, curSd);
+        ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, relSd);
         assert(ok);
 #endif
     }
