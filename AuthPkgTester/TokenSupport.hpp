@@ -67,10 +67,12 @@ bool CheckTokenPrivileges(HANDLE token) {
         assert(ok);
 
         std::vector<BYTE> privilegesBuffer(1024, (BYTE)0);
-        DWORD privilegesLength = 0;
-        ok = GetTokenInformation(token, TokenPrivileges, privilegesBuffer.data(), (DWORD)privilegesBuffer.size(), &privilegesLength);
-        assert(ok);
-        privilegesBuffer.resize(privilegesLength);
+        {
+            DWORD privilegesLength = 0;
+            ok = GetTokenInformation(token, TokenPrivileges, privilegesBuffer.data(), (DWORD)privilegesBuffer.size(), &privilegesLength);
+            assert(ok);
+            privilegesBuffer.resize(privilegesLength);
+        }
         auto* privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
 
         wprintf(L"  Privilege count: %u.\n", privileges->PrivilegeCount);
@@ -90,14 +92,14 @@ bool CheckTokenPrivileges(HANDLE token) {
             assert(privImpersonateName == PrivilegeState::Missing);
 
             // append SE_IMPERSONATE_NAME=enabled privilege at the end of the buffer
-            privilegesBuffer.resize(privilegesBuffer.size() + sizeof(LUID_AND_ATTRIBUTES));
+            privilegesBuffer.resize(privilegesBuffer.size() + sizeof(LUID_AND_ATTRIBUTES), (BYTE)0);
             privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
 
             privileges->PrivilegeCount += 1;
             privileges->Privileges[privileges->PrivilegeCount - 1].Luid = IMPERSONATE_NAME;
             privileges->Privileges[privileges->PrivilegeCount - 1].Attributes = SE_PRIVILEGE_ENABLED;
 
-            wprintf(L"  Attempting to enable SE_IMPERSONATE_NAME...\n");
+            wprintf(L"  Attempting to enable SE_IMPERSONATE_NAME (doesn't work)...\n");
             if (!AdjustTokenPrivileges(token, false, privileges, 0, nullptr, nullptr)) {
                 DWORD err = GetLastError();
                 wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
