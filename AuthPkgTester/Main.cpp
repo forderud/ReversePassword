@@ -164,6 +164,8 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 
         bool ok = AddWinStaDaclRight(ws, ea);
         assert(ok);
+
+        CloseWindowStation(ws);
     }
 
     STARTUPINFOW si = {
