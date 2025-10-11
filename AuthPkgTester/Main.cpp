@@ -141,18 +141,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     wprintf(L"Inspecting user token privileges:\n");
     CheckTokenPrivileges(token);
 
-    {
-#if 0
-        wprintf(L"Adjusting user token access rights:\n");
-        // TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights are required by CreateProcessWithTokenW
-        EXPLICIT_ACCESS_W ea{};
-        BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY, GRANT_ACCESS, 0);
-        ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
-
-        AddTokenDaclRight(token, ea);
-#endif
-    }
-
     wprintf(L"\n");
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
 
@@ -169,6 +157,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     const wchar_t* curDir = L"C:\\";
 #if 1
     // actual call that we want to work
+    // CreateProcessWithTokenW require TOKEN_QUERY, TOKEN_DUPLICATE & TOKEN_ASSIGN_PRIMARY access rights 
     BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
 #elif 0
     // alternative function that fail with ERROR_PRIVILEGE_NOT_HELD
