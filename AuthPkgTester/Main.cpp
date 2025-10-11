@@ -124,18 +124,16 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     CheckTokenPrivileges(GetCurrentProcessToken());
 
 #if 0
-    {
-        // replace "token" with the primary token for the current user
-        // useful for verifying the CreateProcessWithTokenW call below
-        HANDLE procToken = 0;
-        if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &procToken))
-            abort();
+    // replace "token" with the primary token for the current user
+    // useful for verifying the CreateProcessWithTokenW call below
+    HANDLE procToken = 0;
+    if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &procToken))
+        abort();
 
-        // copy token to avoid ERROR_TOKEN_ALREADY_IN_USE
-        token = 0;
-        if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenPrimary, &token))
-            abort();
-    }
+    // copy token to avoid ERROR_TOKEN_ALREADY_IN_USE
+    token = 0;
+    if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenPrimary, &token))
+        abort();
 #endif
 
     wprintf(L"Inspecting user token privileges:\n");
