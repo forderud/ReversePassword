@@ -102,7 +102,7 @@ bool CheckTokenPrivileges(HANDLE token) {
             priv.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
             priv.Privileges[0].Luid = INCREASE_QUOTA;
 
-            if (!AdjustTokenPrivileges(token, /*disableAll*/false, privileges, sizeof(priv), nullptr, nullptr)) {
+            if (!AdjustTokenPrivileges(token, /*disableAll*/false, &priv, sizeof(priv), nullptr, nullptr)) {
                 DWORD err = GetLastError();
                 wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
                 abort();
