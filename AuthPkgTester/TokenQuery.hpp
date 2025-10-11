@@ -115,7 +115,7 @@ bool CheckTokenPrivileges(HANDLE token) {
 }
 
 
-bool CheckTokenAccessRights(HANDLE token) {
+bool AddTokenAccessRights(HANDLE token, DWORD desiredAccess) {
     // TODO: Check TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights that's required by CreateProcessWithTokenW
 
     std::vector<BYTE> relSdBuf;
@@ -161,9 +161,6 @@ bool CheckTokenAccessRights(HANDLE token) {
     }
 
     {
-#if 0
-        DWORD desiredAccess = TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY;
-
         BOOL daclPresent = false;
         ACL* dacl = nullptr;
         BOOL daclDefaulted = false;
@@ -195,7 +192,6 @@ bool CheckTokenAccessRights(HANDLE token) {
         // update security settings
         ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, absSd);
         assert(ok);
-#endif
     }
 
     return true;
