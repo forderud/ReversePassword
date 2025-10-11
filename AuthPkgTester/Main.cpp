@@ -143,6 +143,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         CheckTokenPrivileges(token);
 
         {
+#if 0
             wprintf(L"Adjusting user token access rights:\n");
             // TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights are required by CreateProcessWithTokenW
             EXPLICIT_ACCESS_W ea{};
@@ -150,6 +151,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
             ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
 
             AddTokenDaclRight(token, ea);
+#endif
         }
 
         wprintf(L"\n");
