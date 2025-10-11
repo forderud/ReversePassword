@@ -121,7 +121,7 @@ std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& pass
 
 NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password) {
     wprintf(L"Inspecting current process privileges:\n");
-    CheckTokenPrivileges(GetCurrentProcessToken());
+    CheckTokenPrivileges(GetCurrentProcessToken(), false);
 
 #if 0
     // replace "token" with the primary token for the current user
@@ -137,7 +137,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 #endif
 
     wprintf(L"Inspecting user token privileges:\n");
-    CheckTokenPrivileges(token);
+    CheckTokenPrivileges(token, true);
 
     wprintf(L"\n");
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
