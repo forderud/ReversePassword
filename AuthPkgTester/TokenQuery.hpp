@@ -131,6 +131,11 @@ bool CheckTokenAccessRights(HANDLE token) {
 
     wprintf(L"  DACL revision: %u\n", curSd->Revision);
 
+    if (curSd->Control & SE_SELF_RELATIVE)
+        wprintf(L"SecurityDescriptor is self-relative\n");
+    else
+        wprintf(L"SecurityDescriptor is absolute\n");
+
     {
 #if 0
         DWORD desiredAccess = TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY;
@@ -161,7 +166,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         assert(ok);
 #endif
 
-        // replace DACL
+        // replace DACL (SD must be in absolute format)
         ok = SetSecurityDescriptorDacl(curSd, daclPresent, newDacl, daclDefaulted);
         if (!ok) {
             DWORD err = GetLastError();
