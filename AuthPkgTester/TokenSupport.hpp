@@ -61,7 +61,7 @@ bool CheckTokenPrivileges(HANDLE token) {
         privilegesBuffer.resize(privilegesLength);
         auto* privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
 
-        wprintf(L"  Contain %u token privileges.\n", privileges->PrivilegeCount);
+        wprintf(L"  Privilege count: %u.\n", privileges->PrivilegeCount);
         for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
             CheckPrivilegeEnabled(privileges->Privileges[i], INCREASE_QUOTA, privIncreaseQuta);
             CheckPrivilegeEnabled(privileges->Privileges[i], ASSIGNPRIMARYTOKEN, privAssignPrimaryToken);
@@ -69,13 +69,10 @@ bool CheckTokenPrivileges(HANDLE token) {
         }
 
 #if 0
-        if (privIncreaseQuta != PrivilegeState::Enabled)
-            wprintf(L"  WARNING: SE_INCREASE_QUOTA_NAME privilege %s\n", ToString(privIncreaseQuta));
-        if (privAssignPrimaryToken != PrivilegeState::Enabled)
-            wprintf(L"  WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
+        wprintf(L"  SE_INCREASE_QUOTA_NAME privilege %s\n", ToString(privIncreaseQuta));
+        wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
 #endif
-        if (privImpersonateName != PrivilegeState::Enabled)
-            wprintf(L"  WARNING: SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonateName));
+        wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonateName));
     }
 
     return true;
