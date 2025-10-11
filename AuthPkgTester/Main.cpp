@@ -138,6 +138,9 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
             if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &procToken))
                 abort();
 
+            wprintf(L"Current process token:\n");
+            CheckTokenPrivileges(procToken);
+
             // copy impersonation token
             token = 0;
             if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenImpersonation, &token))
@@ -173,6 +176,8 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
                 wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_PRIVILEGE_NOT_HELD).\n");
             else if (err == ERROR_INVALID_PARAMETER)
                 wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_INVALID_PARAMETER).\n");
+            else if (err == ERROR_TOKEN_ALREADY_IN_USE)
+                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_TOKEN_ALREADY_IN_USE).\n");
             else
                 wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (err %u).\n", err);
             return err;
