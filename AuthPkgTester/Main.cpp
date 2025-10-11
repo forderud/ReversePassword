@@ -123,72 +123,70 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     wprintf(L"Inspecting current process privileges:\n");
     CheckTokenPrivileges(GetCurrentProcessToken());
 
+#if 0
+    {
+        // replace "token" with the primary token for the current user
+        // useful for verifying the CreateProcessWithTokenW call below
+        HANDLE procToken = 0;
+        if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &procToken))
+            abort();
+
+        // copy token to avoid ERROR_TOKEN_ALREADY_IN_USE
+        token = 0;
+        if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenPrimary, &token))
+            abort();
+    }
+#endif
+
+    wprintf(L"Inspecting user token privileges:\n");
+    CheckTokenPrivileges(token);
+
     {
 #if 0
-        {
-            // replace "token" with the primary token for the current user
-            // useful for verifying the CreateProcessWithTokenW call below
-            HANDLE procToken = 0;
-            if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &procToken))
-                abort();
+        wprintf(L"Adjusting user token access rights:\n");
+        // TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights are required by CreateProcessWithTokenW
+        EXPLICIT_ACCESS_W ea{};
+        BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY, GRANT_ACCESS, 0);
+        ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
 
-            // copy token to avoid ERROR_TOKEN_ALREADY_IN_USE
-            token = 0;
-            if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenPrimary, &token))
-                abort();
-        }
+        AddTokenDaclRight(token, ea);
 #endif
-
-        wprintf(L"Inspecting user token privileges:\n");
-        CheckTokenPrivileges(token);
-
-        {
-#if 0
-            wprintf(L"Adjusting user token access rights:\n");
-            // TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights are required by CreateProcessWithTokenW
-            EXPLICIT_ACCESS_W ea{};
-            BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY, GRANT_ACCESS, 0);
-            ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
-
-            AddTokenDaclRight(token, ea);
-#endif
-        }
-
-        wprintf(L"\n");
-        wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
-
-        STARTUPINFOW si = {
-            .cb = sizeof(si),
-            //.lpDesktop = (wchar_t*)L"winsta0\\default",
-        };
-        PROCESS_INFORMATION pi = {};
-
-        DWORD logonFlags = LOGON_WITH_PROFILE;
-        const wchar_t* appName = nullptr;
-        std::wstring cmdLine = L"cmd.exe";
-        DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP; // | CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT;
-        const wchar_t* curDir = L"C:\\";
-#if 1
-        // actual call that we want to work
-        BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
-#elif 0
-        // alternative function that fail with ERROR_PRIVILEGE_NOT_HELD
-        BOOL ok = CreateProcessAsUserW(token, appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/nullptr, curDir, &si, &pi);
-
-        // cannot use CreateProcessW with ImpersonateLoggedOnUser, since it doesn't support impersonation
-#else
-        // compatibility testing call
-        BOOL ok = CreateProcessWithLogonW(username.c_str(), /*domain*/nullptr, password.c_str(), logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
-#endif
-        if (!ok) {
-            DWORD err = GetLastError();
-            wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (%s).\n", ToString(err).c_str());
-            return err;
-        }
-
-        CloseHandle(pi.hProcess);
-        CloseHandle(pi.hThread);
     }
+
+    wprintf(L"\n");
+    wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
+
+    STARTUPINFOW si = {
+        .cb = sizeof(si),
+        //.lpDesktop = (wchar_t*)L"winsta0\\default",
+    };
+    PROCESS_INFORMATION pi = {};
+
+    DWORD logonFlags = LOGON_WITH_PROFILE;
+    const wchar_t* appName = nullptr;
+    std::wstring cmdLine = L"cmd.exe";
+    DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP; // | CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT;
+    const wchar_t* curDir = L"C:\\";
+#if 1
+    // actual call that we want to work
+    BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
+#elif 0
+    // alternative function that fail with ERROR_PRIVILEGE_NOT_HELD
+    BOOL ok = CreateProcessAsUserW(token, appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/nullptr, curDir, &si, &pi);
+
+    // cannot use CreateProcessW with ImpersonateLoggedOnUser, since it doesn't support impersonation
+#else
+    // compatibility testing call
+    BOOL ok = CreateProcessWithLogonW(username.c_str(), /*domain*/nullptr, password.c_str(), logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
+#endif
+    if (!ok) {
+        DWORD err = GetLastError();
+        wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (%s).\n", ToString(err).c_str());
+        return err;
+    }
+
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
 
     return STATUS_SUCCESS;
 }
