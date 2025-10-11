@@ -149,7 +149,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
             BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY, GRANT_ACCESS, 0);
             ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
 
-            AddTokenAccessRights(token, ea);
+            AddTokenDaclRight(token, ea);
         }
 
         wprintf(L"\n");

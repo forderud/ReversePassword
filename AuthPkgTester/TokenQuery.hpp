@@ -115,7 +115,7 @@ bool CheckTokenPrivileges(HANDLE token) {
 }
 
 
-bool AddTokenAccessRights(HANDLE token, EXPLICIT_ACCESS_W& ea) {
+bool AddTokenDaclRight(HANDLE token, EXPLICIT_ACCESS_W& ea) {
     std::vector<BYTE> relSdBuf;
     SECURITY_DESCRIPTOR* relSd = nullptr;
     {
