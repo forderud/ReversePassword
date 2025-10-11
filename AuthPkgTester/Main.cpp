@@ -156,7 +156,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 
     {
         // https://learn.microsoft.com/en-us/windows/win32/winstation/window-station-security-and-access-rights
-        HWINSTA ws = OpenWindowStationW(L"winsta0", false, READ_CONTROL | WRITE_DAC);
+        HWINSTA ws = OpenWindowStationW(L"winsta0", /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(ws);
 
         // Grant WINSTA_ALL_ACCESS to "username"
@@ -171,7 +171,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     }
     {
         // https://learn.microsoft.com/en-us/windows/win32/winstation/desktop-security-and-access-rights
-        HDESK desk = OpenInputDesktop(0, false, READ_CONTROL | WRITE_DAC);
+        HDESK desk = OpenInputDesktop(0, /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(desk);
 
         // Grant WINSTA_ALL_ACCESS to "username"
