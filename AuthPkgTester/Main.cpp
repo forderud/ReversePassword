@@ -9,6 +9,7 @@
 #include <userenv.h> // for CreateEnvironmentBlock
 #include <cassert>
 #include <iostream>
+#include <string>
 #include <tuple>
 #include <vector>
 #include "PrintInfo.hpp"
@@ -118,6 +119,16 @@ std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& pass
     return authInfo;
 }
 
+const std::wstring ToString(DWORD err) {
+    switch (err) {
+    case ERROR_INVALID_HANDLE: return L"ERROR_INVALID_HANDLE";
+    case ERROR_PRIVILEGE_NOT_HELD: return L"ERROR_PRIVILEGE_NOT_HELD";
+    case ERROR_INVALID_PARAMETER: return L"ERROR_INVALID_PARAMETER";
+    case ERROR_TOKEN_ALREADY_IN_USE: return L"ERROR_TOKEN_ALREADY_IN_USE";
+    }
+
+    return L"error " + std::to_wstring(err);
+}
 
 NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password) {
     if (!VerifyThatTokenIsPrimary(token))
@@ -170,16 +181,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 #endif
         if (!ok) {
             DWORD err = GetLastError();
-            if (err == ERROR_INVALID_HANDLE)
-                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_INVALID_HANDLE).\n");
-            else if (err == ERROR_PRIVILEGE_NOT_HELD)
-                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_PRIVILEGE_NOT_HELD).\n");
-            else if (err == ERROR_INVALID_PARAMETER)
-                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_INVALID_PARAMETER).\n");
-            else if (err == ERROR_TOKEN_ALREADY_IN_USE)
-                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (ERROR_TOKEN_ALREADY_IN_USE).\n");
-            else
-                wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (err %u).\n", err);
+            wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (%s).\n", ToString(err).c_str());
             return err;
         }
 
