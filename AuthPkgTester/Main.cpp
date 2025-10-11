@@ -136,6 +136,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 
     bool hasIncreaseQuta = false;
     bool hasAssignPrimaryToken = false;
+    bool hasImpersonateName = false;
     {
         // current process privilege check
         LUID INCREASE_QUOTA{};
@@ -143,6 +144,9 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         assert(ok);
         LUID ASSIGNPRIMARYTOKEN = {};
         ok = LookupPrivilegeValueW(nullptr, SE_ASSIGNPRIMARYTOKEN_NAME, &ASSIGNPRIMARYTOKEN);
+        assert(ok);
+        LUID IMPERSONATE_NAME = {};
+        ok = LookupPrivilegeValueW(nullptr, SE_IMPERSONATE_NAME, &IMPERSONATE_NAME);
         assert(ok);
 
         std::vector<BYTE> privilegesBuffer(1024, (BYTE)0);
@@ -158,12 +162,16 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
                 hasIncreaseQuta = true;
             if (IsEqual(privileges->Privileges[i].Luid, ASSIGNPRIMARYTOKEN))
                 hasAssignPrimaryToken = true;
+            if (IsEqual(privileges->Privileges[i].Luid, IMPERSONATE_NAME))
+                hasImpersonateName = true;
         }
 
         if (!hasIncreaseQuta)
             wprintf(L"WARNING: SE_INCREASE_QUOTA_NAME privilege missing\n");
         if (!hasAssignPrimaryToken)
             wprintf(L"WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
+        if (!hasImpersonateName)
+            wprintf(L"WARNING: SE_IMPERSONATE_NAME privilege missing\n");
     }
 
     {
