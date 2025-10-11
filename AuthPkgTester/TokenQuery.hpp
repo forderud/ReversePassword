@@ -159,7 +159,7 @@ bool AddTokenDaclRight(HANDLE token, EXPLICIT_ACCESS_W& ea) {
 
     {
         BOOL daclPresent = false;
-        ACL* dacl = nullptr;
+        ACL* dacl = nullptr; // weak ptr.
         BOOL daclDefaulted = false;
         BOOL ok = GetSecurityDescriptorDacl(absSd, &daclPresent, &dacl, &daclDefaulted);
         assert(ok);
