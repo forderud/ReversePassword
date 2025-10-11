@@ -62,6 +62,7 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
     PrivilegeState privIncreaseQuta = {};
     PrivilegeState privAssignPrimaryToken = {};
     PrivilegeState privImpersonate = {};
+    PrivilegeState privBackup = {};
     {
         LUID INCREASE_QUOTA{};
         BOOL ok = LookupPrivilegeValueW(nullptr, SE_INCREASE_QUOTA_NAME, &INCREASE_QUOTA);
@@ -71,6 +72,9 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
         assert(ok);
         LUID IMPERSONATE = {};
         ok = LookupPrivilegeValueW(nullptr, SE_IMPERSONATE_NAME, &IMPERSONATE);
+        assert(ok);
+        LUID BACKUP = {};
+        ok = LookupPrivilegeValueW(nullptr, SE_BACKUP_NAME, &BACKUP);
         assert(ok);
 
         std::vector<BYTE> privilegesBuffer(1024, (BYTE)0);
@@ -87,20 +91,22 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
             CheckPrivilegeEnabled(privileges->Privileges[i], INCREASE_QUOTA, privIncreaseQuta);
             CheckPrivilegeEnabled(privileges->Privileges[i], ASSIGNPRIMARYTOKEN, privAssignPrimaryToken);
             CheckPrivilegeEnabled(privileges->Privileges[i], IMPERSONATE, privImpersonate);
+            CheckPrivilegeEnabled(privileges->Privileges[i], BACKUP, privBackup);
         }
 
         wprintf(L"  SE_INCREASE_QUOTA_NAME privilege %s\n", ToString(privIncreaseQuta));
         wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
         wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonate));
+        wprintf(L"  SE_BACKUP_NAME privilege %s\n", ToString(privBackup));
 
         if (enableDisabled) {
-            if (privIncreaseQuta == PrivilegeState::Disabled) {
-                wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
+            if (privBackup == PrivilegeState::Disabled) {
+                wprintf(L"  Enabling SE_BACKUP_NAME...\n");
                 // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
                 TOKEN_PRIVILEGES priv{};
                 priv.PrivilegeCount = 1;
                 priv.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-                priv.Privileges[0].Luid = INCREASE_QUOTA;
+                priv.Privileges[0].Luid = BACKUP;
 
                 if (!AdjustTokenPrivileges(token, /*disableAll*/false, &priv, 0, nullptr, nullptr)) {
                     DWORD err = GetLastError();
