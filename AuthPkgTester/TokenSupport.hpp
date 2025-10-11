@@ -10,15 +10,12 @@ enum class PrivilegeState {
 
 const wchar_t* ToString(PrivilegeState ps) {
     switch (ps) {
-    case PrivilegeState::Missing:
-        return L"missing";
-    case PrivilegeState::Enabled:
-        return L"enabled";
-    case PrivilegeState::Disabled:
-        return L"disabled";
+    case PrivilegeState::Missing: return L"missing";
+    case PrivilegeState::Enabled: return L"enabled";
+    case PrivilegeState::Disabled: return L"disabled";
+    default:
+        abort();
     }
-
-    abort();
 }
 
 void CheckPrivilegeEnabled(LUID_AND_ATTRIBUTES entry, LUID priv, /*out*/PrivilegeState& state) {
