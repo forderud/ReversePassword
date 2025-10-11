@@ -135,6 +135,10 @@ bool CheckTokenAccessRights(HANDLE token) {
     }
 
     std::vector<BYTE> absSdBuf;
+    std::vector<BYTE> daclBuf;
+    std::vector<BYTE> saclBuf;
+    std::vector<BYTE> ownerBuf;
+    std::vector<BYTE> primGrpBuf;
     SECURITY_DESCRIPTOR* absSd = nullptr;
     {
         // convert self-relative security descriptor to absolute
@@ -148,11 +152,10 @@ bool CheckTokenAccessRights(HANDLE token) {
 
         absSdBuf.resize(absSdSize, (BYTE)0);
         absSd = (SECURITY_DESCRIPTOR*)absSdBuf.data();
-
-        std::vector<BYTE> daclBuf(daclSize, (BYTE)0);
-        std::vector<BYTE> saclBuf(saclSize, (BYTE)0);
-        std::vector<BYTE> ownerBuf(saclSize, (BYTE)0);
-        std::vector<BYTE> primGrpBuf(saclSize, (BYTE)0);
+        daclBuf.resize(daclSize, (BYTE)0);
+        saclBuf.resize(saclSize, (BYTE)0);
+        ownerBuf.resize(saclSize, (BYTE)0);
+        primGrpBuf.resize(saclSize, (BYTE)0);
         ok = MakeAbsoluteSD(relSd, absSd, &absSdSize, (ACL*)daclBuf.data(), &daclSize, (ACL*)saclBuf.data(), &saclSize, (PSID)ownerBuf.data(), &ownerSize, (PSID)primGrpBuf.data(), &primGrpSize);
         assert(ok);
     }
