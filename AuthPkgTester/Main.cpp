@@ -252,15 +252,12 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     LUID logonId{};
     HANDLE token = 0;
     QUOTA_LIMITS quotas{};
-    NTSTATUS subStatus = 0;
-
-    LOGON32_PROVIDER_DEFAULT;
-    LOGON32_PROVIDER_WINNT50;
 
 #if 0
     {
+        DWORD logonProvider = LOGON32_PROVIDER_DEFAULT; // or LOGON32_PROVIDER_WINNT50 or LOGON32_PROVIDER_WINNT40
         PSID logonSid = nullptr;
-        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, LOGON32_PROVIDER_DEFAULT, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
+        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
         if (!ok) {
             DWORD err = GetLastError();
             wprintf(L"LogonUserExW failed with err: %u\n", err);
@@ -269,9 +266,12 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         FreeSid(logonSid);
     }
 #else
-    NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
-    if (ret != STATUS_SUCCESS)
-        return ret;
+    {
+        NTSTATUS subStatus = 0;
+        NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
+        if (ret != STATUS_SUCCESS)
+            return ret;
+    }
 #endif
 
     wprintf(L"profileBufferLen: %u\n", profileBufferLen);
@@ -299,7 +299,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 
 #if 1
-    ret = CreateCmdProcessWithTokenW(token, username, password);
+    NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, password);
 #endif
 
     LsaFreeReturnBuffer(profileBuffer);
