@@ -144,6 +144,16 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     wprintf(L"\n");
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
 
+#if 0
+    // not sure if this is needed when using LOGON_WITH_PROFILE
+    PROFILEINFOW profile = {
+        .dwSize = sizeof(profile),
+        .lpUserName = (wchar_t*)username.c_str(),
+    };
+    if (!LoadUserProfileW(token, &profile))
+        abort();
+#endif
+
     STARTUPINFOW si = {
         .cb = sizeof(si),
         //.lpDesktop = (wchar_t*)L"winsta0\\default",
