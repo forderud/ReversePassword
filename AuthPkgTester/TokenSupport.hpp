@@ -3,8 +3,12 @@
 #include <stdio.h>
 
 
-bool IsEqual(LUID left, LUID right) {
-    return (left.LowPart == right.LowPart) && (left.HighPart == right.HighPart);
+void CheckPrivilegeEnabled(LUID_AND_ATTRIBUTES entry, LUID priv, bool& enabled) {
+    bool match = (entry.Luid.LowPart == priv.LowPart) && (entry.Luid.HighPart == priv.HighPart);
+    if (!match)
+        return;
+
+    enabled = entry.Attributes & (SE_PRIVILEGE_ENABLED | SE_PRIVILEGE_ENABLED_BY_DEFAULT);
 }
 
 
@@ -41,12 +45,9 @@ bool CheckTokenPrivileges(HANDLE token) {
 
         wprintf(L"  Contain %u token privileges.\n", privileges->PrivilegeCount);
         for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
-            if (IsEqual(privileges->Privileges[i].Luid, INCREASE_QUOTA))
-                hasIncreaseQuta = true;
-            if (IsEqual(privileges->Privileges[i].Luid, ASSIGNPRIMARYTOKEN))
-                hasAssignPrimaryToken = true;
-            if (IsEqual(privileges->Privileges[i].Luid, IMPERSONATE_NAME))
-                hasImpersonateName = true;
+            CheckPrivilegeEnabled(privileges->Privileges[i], INCREASE_QUOTA, hasIncreaseQuta);
+            CheckPrivilegeEnabled(privileges->Privileges[i], ASSIGNPRIMARYTOKEN, hasAssignPrimaryToken);
+            CheckPrivilegeEnabled(privileges->Privileges[i], IMPERSONATE_NAME, hasImpersonateName);
         }
 
 #if 0
