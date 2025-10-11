@@ -7,22 +7,6 @@ bool IsEqual(LUID left, LUID right) {
     return (left.LowPart == right.LowPart) && (left.HighPart == right.HighPart);
 }
 
-bool VerifyThatTokenIsPrimary(HANDLE token) {
-    {
-        // verify that "token" type is TokenPrimary
-        TOKEN_TYPE tokenType = {};
-        DWORD tokenLen = 0;
-        if (!GetTokenInformation(token, TokenType, &tokenType, sizeof(tokenType), &tokenLen))
-            abort();
-        if (tokenType != TokenPrimary) {
-            wprintf(L"ERROR: Incorrect process token type. Need primary token.\n");
-            return false;
-        }
-    }
-
-    return true;
-}
-
 
 bool CheckTokenPrivileges(HANDLE token) {
     {

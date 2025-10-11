@@ -131,9 +131,6 @@ const std::wstring ToString(DWORD err) {
 }
 
 NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password) {
-    if (!VerifyThatTokenIsPrimary(token))
-        abort();
-
     wprintf(L"Inspecting current process privileges:\n");
     CheckTokenPrivileges(GetCurrentProcessToken());
 
