@@ -25,6 +25,15 @@ bool VerifyThatTokenIsPrimary(HANDLE token) {
 
 
 bool CheckTokenPrivileges(HANDLE token) {
+    {
+        TOKEN_TYPE tokenType = {};
+        DWORD tokenLen = 0;
+        if (!GetTokenInformation(token, TokenType, &tokenType, sizeof(tokenType), &tokenLen))
+            abort();
+
+        wprintf(L"TokenType: %s\n", (tokenType == TokenPrimary) ? L"Primary" : L"Impersonation");
+    }
+
     bool hasIncreaseQuta = false;
     bool hasAssignPrimaryToken = false;
     bool hasImpersonateName = false;
