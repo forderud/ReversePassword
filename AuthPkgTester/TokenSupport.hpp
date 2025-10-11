@@ -2,13 +2,21 @@
 #include <Windows.h>
 #include <stdio.h>
 
+enum class PrivilegeState {
+    Missing,
+    Enabled,
+    Disabled,
+};
 
-void CheckPrivilegeEnabled(LUID_AND_ATTRIBUTES entry, LUID priv, bool& enabled) {
+void CheckPrivilegeEnabled(LUID_AND_ATTRIBUTES entry, LUID priv, /*out*/PrivilegeState& state) {
     bool match = (entry.Luid.LowPart == priv.LowPart) && (entry.Luid.HighPart == priv.HighPart);
     if (!match)
         return;
 
-    enabled = entry.Attributes & (SE_PRIVILEGE_ENABLED | SE_PRIVILEGE_ENABLED_BY_DEFAULT);
+    if (entry.Attributes & (SE_PRIVILEGE_ENABLED | SE_PRIVILEGE_ENABLED_BY_DEFAULT))
+        state = PrivilegeState::Enabled;
+    else
+        state = PrivilegeState::Disabled;
 }
 
 
@@ -22,9 +30,9 @@ bool CheckTokenPrivileges(HANDLE token) {
         wprintf(L"  TokenType: %s\n", (tokenType == TokenPrimary) ? L"Primary" : L"Impersonation");
     }
 
-    bool hasIncreaseQuta = false;
-    bool hasAssignPrimaryToken = false;
-    bool hasImpersonateName = false;
+    PrivilegeState privIncreaseQuta = {};
+    PrivilegeState privAssignPrimaryToken = {};
+    PrivilegeState privImpersonateName = {};
     {
         LUID INCREASE_QUOTA{};
         BOOL ok = LookupPrivilegeValueW(nullptr, SE_INCREASE_QUOTA_NAME, &INCREASE_QUOTA);
@@ -45,9 +53,9 @@ bool CheckTokenPrivileges(HANDLE token) {
 
         wprintf(L"  Contain %u token privileges.\n", privileges->PrivilegeCount);
         for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
-            CheckPrivilegeEnabled(privileges->Privileges[i], INCREASE_QUOTA, hasIncreaseQuta);
-            CheckPrivilegeEnabled(privileges->Privileges[i], ASSIGNPRIMARYTOKEN, hasAssignPrimaryToken);
-            CheckPrivilegeEnabled(privileges->Privileges[i], IMPERSONATE_NAME, hasImpersonateName);
+            CheckPrivilegeEnabled(privileges->Privileges[i], INCREASE_QUOTA, privIncreaseQuta);
+            CheckPrivilegeEnabled(privileges->Privileges[i], ASSIGNPRIMARYTOKEN, privAssignPrimaryToken);
+            CheckPrivilegeEnabled(privileges->Privileges[i], IMPERSONATE_NAME, privImpersonateName);
         }
 
 #if 0
@@ -56,7 +64,7 @@ bool CheckTokenPrivileges(HANDLE token) {
         if (!hasAssignPrimaryToken)
             wprintf(L"  WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
 #endif
-        if (!hasImpersonateName)
+        if (privImpersonateName != PrivilegeState::Enabled)
             wprintf(L"  WARNING: SE_IMPERSONATE_NAME privilege missing\n");
     }
 
