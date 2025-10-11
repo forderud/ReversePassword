@@ -10,6 +10,7 @@ const std::wstring ToString(DWORD err) {
     case ERROR_PRIVILEGE_NOT_HELD: return L"ERROR_PRIVILEGE_NOT_HELD";
     case ERROR_INVALID_PARAMETER: return L"ERROR_INVALID_PARAMETER";
     case ERROR_TOKEN_ALREADY_IN_USE: return L"ERROR_TOKEN_ALREADY_IN_USE";
+    case ERROR_INVALID_SECURITY_DESCR: return L"ERROR_INVALID_SECURITY_DESCR";
     }
 
     return L"error " + std::to_wstring(err);
@@ -118,8 +119,6 @@ bool CheckTokenAccessRights(HANDLE token) {
     // TODO: Check TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights that's required by CreateProcessWithTokenW
 
     std::vector<BYTE> secDesc;
-    SECURITY_DESCRIPTOR* sd = nullptr;
-
     {
         DWORD lengthNeeded = 0;
         BOOL ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, nullptr, 0, &lengthNeeded);
@@ -127,9 +126,9 @@ bool CheckTokenAccessRights(HANDLE token) {
         secDesc.resize(lengthNeeded, (BYTE)0);
         ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, secDesc.data(), (DWORD)secDesc.size(), &lengthNeeded);
         assert(ok);
-        sd = (SECURITY_DESCRIPTOR*)secDesc.data();
     }
-    
+    SECURITY_DESCRIPTOR* sd = (SECURITY_DESCRIPTOR*)secDesc.data();
+
     wprintf(L"  DACL revision: %u\n", sd->Revision);
 
     {
@@ -157,8 +156,12 @@ bool CheckTokenAccessRights(HANDLE token) {
 
         // replace DACL
         ok = SetSecurityDescriptorDacl(sd, daclPresent, newDacl, daclDefaulted);
-        assert(ok);
-        //LocalFree(sd->Dacl);
+        if (!ok) {
+            DWORD err = GetLastError();
+            wprintf(L"ERROR: SetEntriesInAclW failed (%s)\n", ToString(err).c_str());
+            abort();
+        }
+        //LocalFree(newDacl);
 
         // update security settings
         ok = SetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, sd);
