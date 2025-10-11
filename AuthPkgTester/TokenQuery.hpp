@@ -116,8 +116,6 @@ bool CheckTokenPrivileges(HANDLE token) {
 
 
 bool AddTokenAccessRights(HANDLE token, EXPLICIT_ACCESS_W& ea) {
-    // TODO: Check TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights that's required by CreateProcessWithTokenW
-
     std::vector<BYTE> relSdBuf;
     SECURITY_DESCRIPTOR* relSd = nullptr;
     {
