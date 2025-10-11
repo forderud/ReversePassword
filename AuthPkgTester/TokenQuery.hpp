@@ -127,14 +127,33 @@ bool CheckTokenAccessRights(HANDLE token) {
         ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, curSdBuf.data(), (DWORD)curSdBuf.size(), &lengthNeeded);
         assert(ok);
     }
-    SECURITY_DESCRIPTOR* curSd = (SECURITY_DESCRIPTOR*)curSdBuf.data();
+    auto* curSd = (SECURITY_DESCRIPTOR*)curSdBuf.data();
 
     wprintf(L"  DACL revision: %u\n", curSd->Revision);
+    assert(curSd->Control & SE_SELF_RELATIVE); // SecurityDescriptor is self-relative
 
-    if (curSd->Control & SE_SELF_RELATIVE)
-        wprintf(L"SecurityDescriptor is self-relative\n");
-    else
-        wprintf(L"SecurityDescriptor is absolute\n");
+    std::vector<BYTE> absSdBuf;
+    SECURITY_DESCRIPTOR* absSd = nullptr;
+    {
+        // convert self-relative security descriptor to absolute
+        DWORD absSdSize = 0;
+        DWORD daclSize = 0;
+        DWORD saclSize = 0;
+        DWORD ownerSize = 0;
+        DWORD primGrpSize = 0;
+        BOOL ok = MakeAbsoluteSD(curSd, nullptr, &absSdSize, nullptr, &daclSize, nullptr, &saclSize, nullptr, &ownerSize, nullptr, &primGrpSize);
+        assert(!ok);
+
+        absSdBuf.resize(absSdSize, (BYTE)0);
+        absSd = (SECURITY_DESCRIPTOR*)absSdBuf.data();
+
+        std::vector<BYTE> daclBuf(daclSize, (BYTE)0);
+        std::vector<BYTE> saclBuf(saclSize, (BYTE)0);
+        std::vector<BYTE> ownerBuf(saclSize, (BYTE)0);
+        std::vector<BYTE> primGrpBuf(saclSize, (BYTE)0);
+        ok = MakeAbsoluteSD(curSd, absSd, &absSdSize, (ACL*)daclBuf.data(), &daclSize, (ACL*)saclBuf.data(), &saclSize, (PSID)ownerBuf.data(), &ownerSize, (PSID)primGrpBuf.data(), &primGrpSize);
+        assert(ok);
+    }
 
     {
 #if 0
