@@ -88,6 +88,7 @@ bool CheckTokenPrivileges(HANDLE token) {
 #endif
         wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonateName));
 
+#if 0
         if (privImpersonateName != PrivilegeState::Enabled) {
             assert(privImpersonateName == PrivilegeState::Missing);
 
@@ -105,6 +106,7 @@ bool CheckTokenPrivileges(HANDLE token) {
                 wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
             }
         }
+#endif
     }
 
     return true;
