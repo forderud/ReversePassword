@@ -146,7 +146,7 @@ bool CheckTokenAccessRights(HANDLE token) {
         if (!GetUserNameW(name, &nameLen))
             abort();
 
-        EXPLICIT_ACCESS ea{};
+        EXPLICIT_ACCESS_W ea{};
         BuildExplicitAccessWithNameW(&ea, name, desiredAccess, GRANT_ACCESS, 0);
         ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
 
