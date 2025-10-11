@@ -2,6 +2,18 @@
 #include <Windows.h>
 #include <stdio.h>
 
+
+const std::wstring ToString(DWORD err) {
+    switch (err) {
+    case ERROR_INVALID_HANDLE: return L"ERROR_INVALID_HANDLE";
+    case ERROR_PRIVILEGE_NOT_HELD: return L"ERROR_PRIVILEGE_NOT_HELD";
+    case ERROR_INVALID_PARAMETER: return L"ERROR_INVALID_PARAMETER";
+    case ERROR_TOKEN_ALREADY_IN_USE: return L"ERROR_TOKEN_ALREADY_IN_USE";
+    }
+
+    return L"error " + std::to_wstring(err);
+}
+
 enum class PrivilegeState {
     Missing,
     Enabled,
@@ -73,6 +85,24 @@ bool CheckTokenPrivileges(HANDLE token) {
         wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
 #endif
         wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonateName));
+
+        if (privImpersonateName != PrivilegeState::Enabled) {
+            assert(privImpersonateName == PrivilegeState::Missing);
+
+            // append SE_IMPERSONATE_NAME=enabled privilege at the end of the buffer
+            privilegesBuffer.resize(privilegesBuffer.size() + sizeof(LUID_AND_ATTRIBUTES));
+            privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
+
+            privileges->PrivilegeCount += 1;
+            privileges->Privileges[privileges->PrivilegeCount - 1].Luid = IMPERSONATE_NAME;
+            privileges->Privileges[privileges->PrivilegeCount - 1].Attributes = SE_PRIVILEGE_ENABLED;
+
+            wprintf(L"  Attempting to enable SE_IMPERSONATE_NAME...\n");
+            if (!AdjustTokenPrivileges(token, false, privileges, 0, nullptr, nullptr)) {
+                DWORD err = GetLastError();
+                wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
+            }
+        }
     }
 
     return true;
