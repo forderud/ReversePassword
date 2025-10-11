@@ -93,18 +93,20 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
         wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
         wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonate));
 
-        if (enableDisabled && (privIncreaseQuta == PrivilegeState::Disabled)) {
-            wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
-            // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
-            TOKEN_PRIVILEGES priv{};
-            priv.PrivilegeCount = 1;
-            priv.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-            priv.Privileges[0].Luid = INCREASE_QUOTA;
+        if (enableDisabled) {
+            if (privIncreaseQuta == PrivilegeState::Disabled) {
+                wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
+                // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
+                TOKEN_PRIVILEGES priv{};
+                priv.PrivilegeCount = 1;
+                priv.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+                priv.Privileges[0].Luid = INCREASE_QUOTA;
 
-            if (!AdjustTokenPrivileges(token, /*disableAll*/false, &priv, 0, nullptr, nullptr)) {
-                DWORD err = GetLastError();
-                wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
-                abort();
+                if (!AdjustTokenPrivileges(token, /*disableAll*/false, &priv, 0, nullptr, nullptr)) {
+                    DWORD err = GetLastError();
+                    wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
+                    abort();
+                }
             }
         }
     }
