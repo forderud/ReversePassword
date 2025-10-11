@@ -118,7 +118,7 @@ bool CheckTokenPrivileges(HANDLE token) {
 
 /** Add a DACL entry to the window station security descriptor.
     Use BuildExplicitAccessWithNameW to initialize the "ea" argument. */
-bool AddWinStaDaclRight(HWINSTA ws, EXPLICIT_ACCESS_W& ea) {
+bool AddWinStaDaclRight(HANDLE ws, EXPLICIT_ACCESS_W& ea) {
     PSID owner = nullptr;
     PSID group = nullptr;
     ACL* dacl = nullptr;
