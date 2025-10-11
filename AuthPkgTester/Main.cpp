@@ -142,8 +142,19 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         wprintf(L"Inspecting user token privileges:\n");
         CheckTokenPrivileges(token);
 
-        wprintf(L"Adjusting user token access rights:\n");
-        AddTokenAccessRights(token, TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY);
+        {
+            wprintf(L"Adjusting user token access rights:\n");
+            wchar_t name[1024] = {};
+            DWORD nameLen = 1024;
+            if (!GetUserNameW(name, &nameLen))
+                abort();
+
+            EXPLICIT_ACCESS_W ea{};
+            BuildExplicitAccessWithNameW(&ea, name, TOKEN_QUERY | TOKEN_DUPLICATE | TOKEN_ASSIGN_PRIMARY, GRANT_ACCESS, 0);
+            ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+
+            AddTokenAccessRights(token, ea);
+        }
 
         wprintf(L"\n");
         wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");

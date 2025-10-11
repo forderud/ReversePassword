@@ -115,7 +115,7 @@ bool CheckTokenPrivileges(HANDLE token) {
 }
 
 
-bool AddTokenAccessRights(HANDLE token, DWORD desiredAccess) {
+bool AddTokenAccessRights(HANDLE token, EXPLICIT_ACCESS_W& ea) {
     // TODO: Check TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights that's required by CreateProcessWithTokenW
 
     std::vector<BYTE> relSdBuf;
@@ -166,15 +166,6 @@ bool AddTokenAccessRights(HANDLE token, DWORD desiredAccess) {
         BOOL daclDefaulted = false;
         BOOL ok = GetSecurityDescriptorDacl(absSd, &daclPresent, &dacl, &daclDefaulted);
         assert(ok);
-
-        wchar_t name[1024] = {};
-        DWORD nameLen = 1024;
-        if (!GetUserNameW(name, &nameLen))
-            abort();
-
-        EXPLICIT_ACCESS_W ea{};
-        BuildExplicitAccessWithNameW(&ea, name, desiredAccess, GRANT_ACCESS, 0);
-        ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
 
         ACL* newDacl = nullptr;
         DWORD ret = SetEntriesInAclW(1, &ea, /*oldAcl*/dacl, &newDacl);
