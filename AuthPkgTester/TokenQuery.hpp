@@ -96,13 +96,14 @@ bool CheckTokenPrivileges(HANDLE token) {
         if (privIncreaseQuta == PrivilegeState::Disabled) {
 #if 0
             wprintf(L"  Enabling SE_INCREASE_QUOTA_NAME...\n");
+            // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
             privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
             for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
                 if (EqualLUID(privileges->Privileges[i].Luid, INCREASE_QUOTA))
                     privileges->Privileges[i].Attributes = SE_PRIVILEGE_ENABLED;
             }
 
-            if (!AdjustTokenPrivileges(token, /*disableAll*/false, privileges, 0, nullptr, nullptr)) {
+            if (!AdjustTokenPrivileges(token, /*disableAll*/false, privileges, (DWORD)privilegesBuffer.size(), nullptr, nullptr)) {
                 DWORD err = GetLastError();
                 wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
                 abort();
