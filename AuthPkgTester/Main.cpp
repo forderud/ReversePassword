@@ -123,7 +123,10 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     if (!VerifyThatTokenIsPrimary(token))
         abort();
 
-    // current process privilege check
+    wprintf(L"Inspecting user token privileges:\n");
+    CheckTokenPrivileges(token);
+
+    wprintf(L"Inspecting current process privileges:\n");
     CheckTokenPrivileges(GetCurrentProcessToken());
 
     {

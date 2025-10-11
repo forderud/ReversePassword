@@ -31,7 +31,7 @@ bool CheckTokenPrivileges(HANDLE token) {
         if (!GetTokenInformation(token, TokenType, &tokenType, sizeof(tokenType), &tokenLen))
             abort();
 
-        wprintf(L"TokenType: %s\n", (tokenType == TokenPrimary) ? L"Primary" : L"Impersonation");
+        wprintf(L"  TokenType: %s\n", (tokenType == TokenPrimary) ? L"Primary" : L"Impersonation");
     }
 
     bool hasIncreaseQuta = false;
@@ -55,7 +55,7 @@ bool CheckTokenPrivileges(HANDLE token) {
         privilegesBuffer.resize(privilegesLength);
         auto* privileges = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
 
-        wprintf(L"Inspecting %u token privileges...\n", privileges->PrivilegeCount);
+        wprintf(L"  Contain %u token privileges.\n", privileges->PrivilegeCount);
         for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
             if (IsEqual(privileges->Privileges[i].Luid, INCREASE_QUOTA))
                 hasIncreaseQuta = true;
@@ -67,12 +67,12 @@ bool CheckTokenPrivileges(HANDLE token) {
 
 #if 0
         if (!hasIncreaseQuta)
-            wprintf(L"WARNING: SE_INCREASE_QUOTA_NAME privilege missing\n");
+            wprintf(L"  WARNING: SE_INCREASE_QUOTA_NAME privilege missing\n");
         if (!hasAssignPrimaryToken)
-            wprintf(L"WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
+            wprintf(L"  WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
 #endif
         if (!hasImpersonateName)
-            wprintf(L"WARNING: SE_IMPERSONATE_NAME privilege missing\n");
+            wprintf(L"  WARNING: SE_IMPERSONATE_NAME privilege missing\n");
     }
 
     return true;
