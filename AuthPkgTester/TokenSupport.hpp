@@ -8,6 +8,19 @@ enum class PrivilegeState {
     Disabled,
 };
 
+const wchar_t* ToString(PrivilegeState ps) {
+    switch (ps) {
+    case PrivilegeState::Missing:
+        return L"missing";
+    case PrivilegeState::Enabled:
+        return L"enabled";
+    case PrivilegeState::Disabled:
+        return L"disabled";
+    }
+
+    abort();
+}
+
 void CheckPrivilegeEnabled(LUID_AND_ATTRIBUTES entry, LUID priv, /*out*/PrivilegeState& state) {
     bool match = (entry.Luid.LowPart == priv.LowPart) && (entry.Luid.HighPart == priv.HighPart);
     if (!match)
@@ -59,13 +72,13 @@ bool CheckTokenPrivileges(HANDLE token) {
         }
 
 #if 0
-        if (!hasIncreaseQuta)
-            wprintf(L"  WARNING: SE_INCREASE_QUOTA_NAME privilege missing\n");
-        if (!hasAssignPrimaryToken)
-            wprintf(L"  WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege missing\n");
+        if (privIncreaseQuta != PrivilegeState::Enabled)
+            wprintf(L"  WARNING: SE_INCREASE_QUOTA_NAME privilege %s\n", ToString(privIncreaseQuta));
+        if (privAssignPrimaryToken != PrivilegeState::Enabled)
+            wprintf(L"  WARNING: SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
 #endif
         if (privImpersonateName != PrivilegeState::Enabled)
-            wprintf(L"  WARNING: SE_IMPERSONATE_NAME privilege missing\n");
+            wprintf(L"  WARNING: SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonateName));
     }
 
     return true;
