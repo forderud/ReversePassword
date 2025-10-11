@@ -258,9 +258,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         wprintf(L"UserFlags: %u\n", profile->UserFlags);
     }
 
-#if 1
     NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, password);
-#endif
 
     LsaFreeReturnBuffer(profileBuffer);
     CloseHandle(token);
