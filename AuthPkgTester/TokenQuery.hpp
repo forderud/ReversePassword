@@ -116,6 +116,30 @@ bool CheckTokenPrivileges(HANDLE token) {
     return true;
 }
 
+/** Add a DACL entry to the window station security descriptor.
+    Use BuildExplicitAccessWithNameW to initialize the "ea" argument. */
+bool AddWinStaDaclRight(HWINSTA ws, EXPLICIT_ACCESS_W& ea) {
+    PSID owner = nullptr;
+    PSID group = nullptr;
+    ACL* dacl = nullptr;
+    ACL* sacl = nullptr;
+    PSECURITY_DESCRIPTOR sd = nullptr;
+    DWORD ret = GetSecurityInfo(ws, SE_WINDOW_OBJECT, DACL_SECURITY_INFORMATION, &owner, &group, &dacl, &sacl, &sd);
+    assert(ret == ERROR_SUCCESS);
+
+    ACL* newDacl = nullptr;
+    ret = SetEntriesInAclW(1, &ea, /*oldAcl*/dacl, &newDacl);
+    assert(ret == ERROR_SUCCESS);
+
+    ret = SetSecurityInfo(ws, SE_WINDOW_OBJECT, DACL_SECURITY_INFORMATION, owner, group, newDacl, sacl);
+    assert(ret == ERROR_SUCCESS);
+
+    LocalFree(newDacl);
+    LocalFree(sd);
+    return true;
+}
+
+
 /** Add a DACL entry to the token security descriptor.
     Use BuildExplicitAccessWithNameW to initialize the "ea" argument. */
 bool AddTokenDaclRight(HANDLE token, EXPLICIT_ACCESS_W& ea) {

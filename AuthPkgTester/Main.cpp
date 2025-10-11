@@ -154,6 +154,18 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         abort();
 #endif
 
+    {
+        HWINSTA ws = OpenWindowStationW(L"winsta0", false, READ_CONTROL | WRITE_DAC);
+
+        // Grant WINSTA_ALL_ACCESS to "username"
+        EXPLICIT_ACCESS_W ea{};
+        BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), WINSTA_ALL_ACCESS , GRANT_ACCESS, false);
+        ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+
+        bool ok = AddWinStaDaclRight(ws, ea);
+        assert(ok);
+    }
+
     STARTUPINFOW si = {
         .cb = sizeof(si),
         //.lpDesktop = (wchar_t*)L"winsta0\\default",
