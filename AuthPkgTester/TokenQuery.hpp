@@ -105,7 +105,7 @@ bool CheckTokenPrivileges(HANDLE token) {
             privileges->Privileges[privileges->PrivilegeCount - 1].Attributes = SE_PRIVILEGE_ENABLED;
 
             wprintf(L"  Attempting to enable SE_IMPERSONATE_NAME (doesn't work)...\n");
-            if (!AdjustTokenPrivileges(token, false, privileges, 0, nullptr, nullptr)) {
+            if (!AdjustTokenPrivileges(token, /*disableAll*/false, privileges, 0, nullptr, nullptr)) {
                 DWORD err = GetLastError();
                 wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
             }
