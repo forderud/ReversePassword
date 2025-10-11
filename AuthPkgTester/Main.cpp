@@ -158,6 +158,10 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 #if 1
         // actual call that we want to function
         BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
+#elif 0
+        ImpersonateLoggedOnUser(token);
+        BOOL ok = CreateProcessW(appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
+        RevertToSelf();
 #else
         // compatibility testing call
         BOOL ok = CreateProcessWithLogonW(username.c_str(), /*domain*/nullptr, password.c_str(), logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, /*cur-dir*/L"C:\\", &si, &pi);
