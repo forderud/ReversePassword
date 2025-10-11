@@ -111,3 +111,21 @@ bool CheckTokenPrivileges(HANDLE token) {
 
     return true;
 }
+
+
+bool CheckTokenAccessRights(HANDLE token) {
+    // TODO: Check TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights that's required by CreateProcessWithTokenW
+
+    {
+        DWORD lengthNeeded = 0;
+        BOOL ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, nullptr, 0, &lengthNeeded);
+        assert(!ok);
+        std::vector<BYTE> secDesc(lengthNeeded, (BYTE)0);
+        ok = GetKernelObjectSecurity(token, DACL_SECURITY_INFORMATION, secDesc.data(), (DWORD)secDesc.size(), &lengthNeeded);
+        assert(ok);
+        SECURITY_DESCRIPTOR* sd = (SECURITY_DESCRIPTOR*)secDesc.data();
+        wprintf(L"  DACL revision: %u\n", sd->Revision);
+    }
+
+    return true;
+}

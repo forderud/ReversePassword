@@ -142,7 +142,8 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         wprintf(L"Inspecting user token privileges:\n");
         CheckTokenPrivileges(token);
 
-        // TODO: Check TOKEN_QUERY, TOKEN_DUPLICATE, and TOKEN_ASSIGN_PRIMARY access rights.
+        wprintf(L"Inspecting user token access rights:\n");
+        CheckTokenAccessRights(token);
 
         wprintf(L"\n");
         wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
