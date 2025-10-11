@@ -88,8 +88,8 @@ bool CheckTokenPrivileges(HANDLE token) {
 
 #if 0
         wprintf(L"  SE_INCREASE_QUOTA_NAME privilege %s\n", ToString(privIncreaseQuta));
-        wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
 #endif
+        wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
         wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonateName));
 
 #if 0
