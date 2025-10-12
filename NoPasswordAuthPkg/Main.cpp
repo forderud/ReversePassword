@@ -65,7 +65,8 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
 
     // return security package metadata
     PackageInfo->fCapabilities = SECPKG_FLAG_LOGON //  supports LsaLogonUser
-                               | SECPKG_FLAG_CLIENT_ONLY; // no server auth support
+                               | SECPKG_FLAG_CLIENT_ONLY // no server auth support
+                               | SECPKG_FLAG_NEGOTIABLE;
     PackageInfo->wVersion = SECURITY_SUPPORT_PROVIDER_INTERFACE_VERSION;
     PackageInfo->wRPCID = SECPKG_ID_NONE; // no DCE/RPC support
     PackageInfo->cbMaxToken = 0;
@@ -76,6 +77,40 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
     return STATUS_SUCCESS;
 }
 
+
+/** The SpGetExtendedInformation function provides extended information about a  security package. */
+NTSTATUS NTAPI SpGetExtendedInformation(
+    __in   SECPKG_EXTENDED_INFORMATION_CLASS Class,
+    __out  SECPKG_EXTENDED_INFORMATION** ppInformation
+)
+{
+    // TODO: Change this OID
+    // 1.3.6.1.4.1.35000.1
+    // https://learn.microsoft.com/nb-no/windows/win32/seccertenroll/about-object-identifier
+    // 1.3 . 6  .  1 .  4 .1   .35000    .1
+    // 0x2B,0x06,0x01,0x04,0x01,0x88,0xB8,0x01
+    UCHAR GssOid[] = { 0x2B,0x06,0x01,0x04,0x01,0x88,0xB8,0x01 };
+    DWORD GssOidLen = ARRAYSIZE(GssOid);
+
+    NTSTATUS Status = SEC_E_UNSUPPORTED_FUNCTION;
+    switch (Class) {
+    case SecpkgGssInfo:
+        *ppInformation = (SECPKG_EXTENDED_INFORMATION*)FunctionTable.AllocateLsaHeap(sizeof(SECPKG_EXTENDED_INFORMATION) + GssOidLen);
+        (*ppInformation)->Class = SecpkgGssInfo;
+        (*ppInformation)->Info.GssInfo.EncodedIdLength = GssOidLen;
+        memcpy((*ppInformation)->Info.GssInfo.EncodedId, GssOid, GssOidLen);
+        Status = STATUS_SUCCESS;
+        break;
+    case SecpkgExtraOids:
+        *ppInformation = (SECPKG_EXTENDED_INFORMATION*)FunctionTable.AllocateLsaHeap(sizeof(SECPKG_EXTENDED_INFORMATION));
+        (*ppInformation)->Class = SecpkgExtraOids;
+        (*ppInformation)->Info.ExtraOids.OidCount = 0;
+        Status = STATUS_SUCCESS;
+        break;
+    }
+
+    return Status;
+}
 
 /* Authenticate a user logon attempt.
    Returns STATUS_SUCCESS if the login attempt succeeded. */
@@ -241,7 +276,7 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
     .DeleteContext = nullptr,
     .ApplyControlToken = nullptr,
     .GetUserInfo = nullptr,
-    .GetExtendedInformation = nullptr,
+    .GetExtendedInformation = SpGetExtendedInformation,
     .QueryContextAttributes = nullptr,
     .AddCredentialsW = nullptr,
     .SetExtendedInformation = nullptr,
