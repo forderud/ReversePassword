@@ -62,14 +62,14 @@ struct Privilege {
         }
     }
 
-    void Enable() {
+    void Modify(State s) {
         // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
         TOKEN_PRIVILEGES tp = {
             .PrivilegeCount = 1,
         };
         tp.Privileges[0] = {
             .Luid = value,
-            .Attributes = SE_PRIVILEGE_ENABLED,
+            .Attributes = (s == Enabled) ? SE_PRIVILEGE_ENABLED : 0,
         };
 
         if (!AdjustTokenPrivileges(token, /*disableAll*/false, &tp, 0, nullptr, nullptr)) {
@@ -78,7 +78,7 @@ struct Privilege {
             abort();
         }
 
-        state = Enabled;
+        state = s;
     }
 
 private:
@@ -109,15 +109,15 @@ bool AdjustTokenPrivileges(HANDLE token) {
     // enable disabled privileges
     if (IncreaseQuta.state == Privilege::Disabled) {
         wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
-        IncreaseQuta.Enable();
+        IncreaseQuta.Modify(Privilege::Enabled);
     }
     if (AssignPrimaryToken.state == Privilege::Disabled) {
         wprintf(L"  Enabling SE_ASSIGNPRIMARYTOKEN...\n");
-        AssignPrimaryToken.Enable();
+        AssignPrimaryToken.Modify(Privilege::Enabled);
     }
     if (Impersonate.state == Privilege::Disabled) {
         wprintf(L"  Enabling SE_IMPERSONATE...\n");
-        Impersonate.Enable();
+        Impersonate.Modify(Privilege::Enabled);
     }
 
     return true;
