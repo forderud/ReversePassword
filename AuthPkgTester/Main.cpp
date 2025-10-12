@@ -246,7 +246,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     ULONG profileBufferLen = 0;
     HANDLE token = 0;
     QUOTA_LIMITS quotas{};
-    PSID logonSid = nullptr; // logon session SID in "S-1-5-5-*X*-*Y*" format
+    PSID logonSid = nullptr; // logon session SID in "S-1-5-5-X-Y" format
 
 #if 0
     {
@@ -266,7 +266,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         if (ret != STATUS_SUCCESS)
             return ret;
 
-        // create logon session SID in "S-1-5-5-*X*-*Y*" format
+        // create logon session SID in "S-1-5-5-X-Y" format
         SID_IDENTIFIER_AUTHORITY ntAuthority = SECURITY_NT_AUTHORITY;
         BOOL ok = AllocateAndInitializeSid(&ntAuthority, 3, 5, logonId.HighPart, logonId.LowPart, 0, 0, 0, 0, 0, &logonSid);
         assert(ok);
