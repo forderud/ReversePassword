@@ -221,15 +221,6 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         .Buffer = (char*)ORIGIN,
     };
 
-    TOKEN_SOURCE sourceContext{};
-    {
-        // Populate SourceName & SourceIdentifier fields
-        HANDLE userToken = GetCurrentProcessTokenEx();
-        DWORD returnLength = 0;
-        GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
-        assert(returnLength == sizeof(sourceContext));
-    }
-
     ULONG authPkg = 0;
     NTSTATUS status = GetAuthPackage(lsa, authPkgName, &authPkg);
     if (status != STATUS_SUCCESS)
@@ -254,6 +245,15 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 #else
     {
+        TOKEN_SOURCE sourceContext{};
+        {
+            // Populate SourceName & SourceIdentifier fields
+            HANDLE userToken = GetCurrentProcessTokenEx();
+            DWORD returnLength = 0;
+            GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
+            assert(returnLength == sizeof(sourceContext));
+        }
+
         NTSTATUS subStatus = 0;
         LUID logonId{};
         NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
