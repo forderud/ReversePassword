@@ -82,7 +82,7 @@ HANDLE GetCurrentProcessTokenEx() {
     return token;
 }
 
-NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password, const std::wstring& logonSid) {
+NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password, PSID logonSid) {
     wprintf(L"Inspecting current process privileges:\n");
     AdjustTokenPrivileges(GetCurrentProcessTokenEx());
 
@@ -122,10 +122,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         }
         {
             // Grant GENERIC_ALL to "logonSid"
-            PSID logonSidBin = nullptr;
-            BOOL ok = ConvertStringSidToSidW(logonSid.c_str(), &logonSidBin);
-            assert(ok);
-
             EXPLICIT_ACCESS_W ea{
                 .grfAccessPermissions = GENERIC_ALL,
                 .grfAccessMode = GRANT_ACCESS,
@@ -136,12 +132,10 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
                 .MultipleTrusteeOperation = NO_MULTIPLE_TRUSTEE,
                 .TrusteeForm = TRUSTEE_IS_SID,
                 .TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP,
-                .ptstrName = (wchar_t*)logonSidBin,
+                .ptstrName = (wchar_t*)logonSid,
             };
-            ok = AddWindowDaclRight(ws, ea);
+            bool ok = AddWindowDaclRight(ws, ea);
             assert(ok);
-
-            LocalFree(logonSidBin);
         }
         CloseWindowStation(ws);
     }
@@ -160,10 +154,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         }
         {
             // Grant GENERIC_ALL to "logonSid"
-            PSID logonSidBin = nullptr;
-            BOOL ok = ConvertStringSidToSidW(logonSid.c_str(), &logonSidBin);
-            assert(ok);
-
             EXPLICIT_ACCESS_W ea{
                 .grfAccessPermissions = GENERIC_ALL,
                 .grfAccessMode = GRANT_ACCESS,
@@ -174,12 +164,10 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
                 .MultipleTrusteeOperation = NO_MULTIPLE_TRUSTEE,
                 .TrusteeForm = TRUSTEE_IS_SID,
                 .TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP,
-                .ptstrName = (wchar_t*)logonSidBin,
+                .ptstrName = (wchar_t*)logonSid,
             };
-            ok = AddWindowDaclRight(desk, ea);
+            bool ok = AddWindowDaclRight(desk, ea);
             assert(ok);
-
-            LocalFree(logonSidBin);
         }
         CloseDesktop(desk);
     }
@@ -258,23 +246,17 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     ULONG profileBufferLen = 0;
     HANDLE token = 0;
     QUOTA_LIMITS quotas{};
-    std::wstring logonSid; // logon session SID in "S-1-5-5-*X*-*Y*" format
+    PSID logonSid = nullptr; // logon session SID in "S-1-5-5-*X*-*Y*" format
 
 #if 0
     {
         DWORD logonProvider = LOGON32_PROVIDER_DEFAULT; // or LOGON32_PROVIDER_WINNT50 or LOGON32_PROVIDER_WINNT40
-        PSID logonSidBin = nullptr;
-        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSidBin, &profileBuffer, &profileBufferLen, &quotas);
+        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
         if (!ok) {
             DWORD err = GetLastError();
             wprintf(L"LogonUserExW failed (%s)\n", ToString(err).c_str());
             abort();
         }
-        wchar_t* tmp = nullptr;
-        ConvertSidToStringSidW(logonSidBin, &tmp);
-        logonSid = tmp;
-        LocalFree(tmp);
-        FreeSid(logonSidBin);
     }
 #else
     {
@@ -284,7 +266,9 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         if (ret != STATUS_SUCCESS)
             return ret;
 
-        logonSid = L"S-1-5-5-" + std::to_wstring(logonId.HighPart) + L"-" + std::to_wstring(logonId.LowPart);
+        std::wstring logonSidStr = L"S-1-5-5-" + std::to_wstring(logonId.HighPart) + L"-" + std::to_wstring(logonId.LowPart);
+        BOOL ok = ConvertStringSidToSidW(logonSidStr.c_str(), &logonSid);
+        assert(ok);
     }
 #endif
 
@@ -300,6 +284,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
     LsaFreeReturnBuffer(profileBuffer);
     CloseHandle(token);
+    FreeSid(logonSid);
     return ret;
 }
 
