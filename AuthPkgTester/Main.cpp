@@ -154,11 +154,20 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     // CreateProcessWithTokenW require TOKEN_QUERY, TOKEN_DUPLICATE & TOKEN_ASSIGN_PRIMARY access rights 
     BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
 #elif 0
+    // environment loading required with CreateProcessAsUserW
+    void* userEnvironment = nullptr;
+    if (!CreateEnvironmentBlock(&userEnvironment, token, /*inherit*/false))
+        abort();
+
+    creationFlags |= CREATE_UNICODE_ENVIRONMENT;
+
     // alternative function that fail with ERROR_PRIVILEGE_NOT_HELD
     // CreateProcessAsUserW require SE_INCREASE_QUOTA_NAME and may require SE_ASSIGNPRIMARYTOKEN_NAME
-    BOOL ok = CreateProcessAsUserW(token, appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/nullptr, curDir, &si, &pi);
+    BOOL ok = CreateProcessAsUserW(token, appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/userEnvironment, curDir, &si, &pi);
 
     // cannot use CreateProcessW with ImpersonateLoggedOnUser, since it doesn't support impersonation
+
+    DestroyEnvironmentBlock(userEnvironment);
 #else
     // compatibility testing call
     BOOL ok = CreateProcessWithLogonW(username.c_str(), /*domain*/nullptr, password.c_str(), logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
