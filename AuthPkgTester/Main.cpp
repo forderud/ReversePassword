@@ -220,8 +220,12 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
 #if 0
     {
-        DWORD logonProvider = LOGON32_PROVIDER_DEFAULT; // or LOGON32_PROVIDER_WINNT50 or LOGON32_PROVIDER_WINNT40
-        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
+        wchar_t domain[MAX_COMPUTERNAME_LENGTH + 1] = {};
+        DWORD domainLen = MAX_COMPUTERNAME_LENGTH;
+        GetComputerNameW(domain, &domainLen);
+
+        DWORD logonProvider = LOGON32_PROVIDER_WINNT50; // use negotiate logon provider (require passing domain=computername)
+        BOOL ok = LogonUserExW(username.c_str(), domain, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
         if (!ok) {
             DWORD err = GetLastError();
             wprintf(L"LogonUserExW failed (%s)\n", ToString(err).c_str());
