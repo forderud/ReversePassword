@@ -17,34 +17,39 @@ const std::wstring ToString(DWORD err) {
     }
 }
 
-enum class PrivilegeState {
-    Missing,
-    Enabled,
-    Disabled,
-};
+struct Privilege {
+    enum State {
+        Missing,
+        Enabled,
+        Disabled,
+    };
 
-const wchar_t* ToString(PrivilegeState ps) {
-    switch (ps) {
-    case PrivilegeState::Missing: return L"missing";
-    case PrivilegeState::Enabled: return L"enabled";
-    case PrivilegeState::Disabled: return L"disabled";
-    default:
-        abort();
+    const wchar_t* ToString() const {
+        switch (state) {
+        case Privilege::Missing: return L"missing";
+        case Privilege::Enabled: return L"enabled";
+        case Privilege::Disabled: return L"disabled";
+        default:
+            abort();
+        }
     }
-}
+
+    LUID  value{};
+    State state = Missing;
+};
 
 inline bool EqualLUID(LUID a, LUID b) {
     return (a.LowPart == b.LowPart) && (a.HighPart == b.HighPart);
 }
 
-void CheckPrivilegeEnabled(LUID_AND_ATTRIBUTES entry, LUID priv, /*out*/PrivilegeState& state) {
-    if (!EqualLUID(entry.Luid, priv))
+void CheckPrivilegeEnabled(LUID_AND_ATTRIBUTES entry, /*out*/Privilege& priv) {
+    if (!EqualLUID(entry.Luid, priv.value))
         return;
 
     if (entry.Attributes & (SE_PRIVILEGE_ENABLED | SE_PRIVILEGE_ENABLED_BY_DEFAULT))
-        state = PrivilegeState::Enabled;
+        priv.state = Privilege::State::Enabled;
     else
-        state = PrivilegeState::Disabled;
+        priv.state = Privilege::State::Disabled;
 }
 
 
@@ -58,18 +63,15 @@ bool AdjustTokenPrivileges(HANDLE token) {
         wprintf(L"  TokenType: %s\n", (tokenType == TokenPrimary) ? L"Primary" : L"Impersonation");
     }
 
-    PrivilegeState privIncreaseQuta = {};
-    PrivilegeState privAssignPrimaryToken = {};
-    PrivilegeState privImpersonate = {};
+    Privilege IncreaseQuta = {};
+    Privilege AssignPrimaryToken = {};
+    Privilege Impersonate = {};
     {
-        LUID INCREASE_QUOTA{};
-        BOOL ok = LookupPrivilegeValueW(nullptr, SE_INCREASE_QUOTA_NAME, &INCREASE_QUOTA);
+        BOOL ok = LookupPrivilegeValueW(nullptr, SE_INCREASE_QUOTA_NAME, &IncreaseQuta.value);
         assert(ok);
-        LUID ASSIGNPRIMARYTOKEN = {};
-        ok = LookupPrivilegeValueW(nullptr, SE_ASSIGNPRIMARYTOKEN_NAME, &ASSIGNPRIMARYTOKEN);
+        ok = LookupPrivilegeValueW(nullptr, SE_ASSIGNPRIMARYTOKEN_NAME, &AssignPrimaryToken.value);
         assert(ok);
-        LUID IMPERSONATE = {};
-        ok = LookupPrivilegeValueW(nullptr, SE_IMPERSONATE_NAME, &IMPERSONATE);
+        ok = LookupPrivilegeValueW(nullptr, SE_IMPERSONATE_NAME, &Impersonate.value);
         assert(ok);
 
         std::vector<BYTE> privilegesBuffer(1024, (BYTE)0);
@@ -83,14 +85,14 @@ bool AdjustTokenPrivileges(HANDLE token) {
 
         wprintf(L"  Privilege count: %u.\n", privileges->PrivilegeCount);
         for (size_t i = 0; i < privileges->PrivilegeCount; i++) {
-            CheckPrivilegeEnabled(privileges->Privileges[i], INCREASE_QUOTA, privIncreaseQuta);
-            CheckPrivilegeEnabled(privileges->Privileges[i], ASSIGNPRIMARYTOKEN, privAssignPrimaryToken);
-            CheckPrivilegeEnabled(privileges->Privileges[i], IMPERSONATE, privImpersonate);
+            CheckPrivilegeEnabled(privileges->Privileges[i], IncreaseQuta);
+            CheckPrivilegeEnabled(privileges->Privileges[i], AssignPrimaryToken);
+            CheckPrivilegeEnabled(privileges->Privileges[i], Impersonate);
         }
 
-        wprintf(L"  SE_INCREASE_QUOTA privilege %s\n", ToString(privIncreaseQuta));
-        wprintf(L"  SE_ASSIGNPRIMARYTOKEN privilege %s\n", ToString(privAssignPrimaryToken));
-        wprintf(L"  SE_IMPERSONATE privilege %s\n", ToString(privImpersonate));
+        wprintf(L"  SE_INCREASE_QUOTA privilege %s\n", IncreaseQuta.ToString());
+        wprintf(L"  SE_ASSIGNPRIMARYTOKEN privilege %s\n", AssignPrimaryToken.ToString());
+        wprintf(L"  SE_IMPERSONATE privilege %s\n", Impersonate.ToString());
 
         {
             auto enablePrivilege = [token](LUID privVal) {
@@ -111,17 +113,17 @@ bool AdjustTokenPrivileges(HANDLE token) {
             };
 
             // enable disabled privileges
-            if (privIncreaseQuta == PrivilegeState::Disabled) {
+            if (IncreaseQuta.state == Privilege::Disabled) {
                 wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
-                enablePrivilege(INCREASE_QUOTA);
+                enablePrivilege(IncreaseQuta.value);
             }
-            if (privAssignPrimaryToken == PrivilegeState::Disabled) {
+            if (AssignPrimaryToken.state == Privilege::Disabled) {
                 wprintf(L"  Enabling SE_ASSIGNPRIMARYTOKEN...\n");
-                enablePrivilege(ASSIGNPRIMARYTOKEN);
+                enablePrivilege(AssignPrimaryToken.value);
             }
-            if (privImpersonate == PrivilegeState::Disabled) {
+            if (Impersonate.state == Privilege::Disabled) {
                 wprintf(L"  Enabling SE_IMPERSONATE...\n");
-                enablePrivilege(IMPERSONATE);
+                enablePrivilege(Impersonate.value);
             }
         }
     }
