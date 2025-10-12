@@ -48,7 +48,7 @@ void CheckPrivilegeEnabled(LUID_AND_ATTRIBUTES entry, LUID priv, /*out*/Privileg
 }
 
 
-bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
+bool AdjustTokenPrivileges(HANDLE token) {
     {
         TOKEN_TYPE tokenType = {};
         DWORD tokenLen = 0;
@@ -92,7 +92,7 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
         wprintf(L"  SE_ASSIGNPRIMARYTOKEN privilege %s\n", ToString(privAssignPrimaryToken));
         wprintf(L"  SE_IMPERSONATE privilege %s\n", ToString(privImpersonate));
 
-        if (enableDisabled) {
+        {
             auto enablePrivilege = [token](LUID privVal) {
                 // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
                 TOKEN_PRIVILEGES tp = {
@@ -110,6 +110,7 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
                 }
             };
 
+            // enable disabled privileges
             if (privIncreaseQuta == PrivilegeState::Disabled) {
                 wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
                 enablePrivilege(INCREASE_QUOTA);
