@@ -88,24 +88,36 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
             CheckPrivilegeEnabled(privileges->Privileges[i], IMPERSONATE, privImpersonate);
         }
 
-        wprintf(L"  SE_INCREASE_QUOTA_NAME privilege %s\n", ToString(privIncreaseQuta));
-        wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", ToString(privAssignPrimaryToken));
-        wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", ToString(privImpersonate));
+        wprintf(L"  SE_INCREASE_QUOTA privilege %s\n", ToString(privIncreaseQuta));
+        wprintf(L"  SE_ASSIGNPRIMARYTOKEN privilege %s\n", ToString(privAssignPrimaryToken));
+        wprintf(L"  SE_IMPERSONATE privilege %s\n", ToString(privImpersonate));
 
         if (enableDisabled) {
-            if (privIncreaseQuta == PrivilegeState::Disabled) {
-                wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
+            auto enablePrivilege = [token](LUID privVal) {
                 // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
-                TOKEN_PRIVILEGES priv{};
-                priv.PrivilegeCount = 1;
-                priv.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-                priv.Privileges[0].Luid = INCREASE_QUOTA;
+                TOKEN_PRIVILEGES tp{};
+                tp.PrivilegeCount = 1;
+                tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+                tp.Privileges[0].Luid = privVal;
 
-                if (!AdjustTokenPrivileges(token, /*disableAll*/false, &priv, 0, nullptr, nullptr)) {
+                if (!AdjustTokenPrivileges(token, /*disableAll*/false, &tp, 0, nullptr, nullptr)) {
                     DWORD err = GetLastError();
                     wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
                     abort();
                 }
+            };
+
+            if (privIncreaseQuta == PrivilegeState::Disabled) {
+                wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
+                enablePrivilege(INCREASE_QUOTA);
+            }
+            if (privAssignPrimaryToken == PrivilegeState::Disabled) {
+                wprintf(L"  Enabling SE_ASSIGNPRIMARYTOKEN...\n");
+                enablePrivilege(ASSIGNPRIMARYTOKEN);
+            }
+            if (privImpersonate == PrivilegeState::Disabled) {
+                wprintf(L"  Enabling SE_IMPERSONATE...\n");
+                enablePrivilege(IMPERSONATE);
             }
         }
     }
