@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <aclapi.h>
 #include <stdio.h>
+#include <string>
+#include <vector>
 
 
 const std::wstring ToString(DWORD err) {
@@ -69,7 +71,7 @@ struct Privilege {
         };
         tp.Privileges[0] = {
             .Luid = value,
-            .Attributes = (s == Enabled) ? SE_PRIVILEGE_ENABLED : 0,
+            .Attributes = (s == Enabled) ? (DWORD)SE_PRIVILEGE_ENABLED : 0,
         };
 
         if (!AdjustTokenPrivileges(token, /*disableAll*/false, &tp, 0, nullptr, nullptr)) {

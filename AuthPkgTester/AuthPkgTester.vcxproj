@@ -83,6 +83,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="MSV1_0Utils.hpp" />
     <ClInclude Include="PrintInfo.hpp" />
     <ClInclude Include="TokenUtils.hpp" />
   </ItemGroup>
