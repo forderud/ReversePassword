@@ -4,6 +4,12 @@
 #include <vector>
 
 
+inline std::wstring ToWstring(const LSA_UNICODE_STRING& lsa_str) {
+    if (lsa_str.Length == 0)
+        return L"<empty>";
+    return std::wstring(lsa_str.Buffer, lsa_str.Length / 2);
+}
+
 /** Prepare MSV1_0_INTERACTIVE_LOGON struct to be passed to LsaLogonUser when using authPkg=MSV1_0_PACKAGE_NAME. */
 std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& password) {
     std::wstring domain = L"";
@@ -46,4 +52,24 @@ std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& pass
     memcpy(passwordStart, password.data(), passwordSize);
 
     return authInfo;
+}
+
+/** Print MSV1_0_INTERACTIVE_PROFILE fields to console. */
+void Print(const MSV1_0_INTERACTIVE_PROFILE& p) {
+    wprintf(L"MessageType: %u (MsV1_0InteractiveProfile=2)\n", p.MessageType);
+    wprintf(L"LogonCount: %u\n", p.LogonCount);
+    wprintf(L"BadPasswordCount: %u\n", p.BadPasswordCount);
+    wprintf(L"LogonTime: 0x%llx\n", p.LogonTime.QuadPart);
+    wprintf(L"LogoffTime: 0x%llx\n", p.LogoffTime.QuadPart);
+    wprintf(L"KickOffTime: 0x%llx\n", p.KickOffTime.QuadPart);
+    wprintf(L"PasswordLastSet: 0x%llx\n", p.PasswordLastSet.QuadPart);
+    wprintf(L"PasswordCanChange: 0x%llx\n", p.PasswordCanChange.QuadPart);
+    wprintf(L"PasswordMustChange: 0x%llx\n", p.PasswordMustChange.QuadPart);
+    wprintf(L"LogonScript: %s\n", ToWstring(p.LogonScript).c_str());
+    wprintf(L"HomeDirectory: %s\n", ToWstring(p.HomeDirectory).c_str());
+    wprintf(L"FullName: %s\n", ToWstring(p.FullName).c_str());
+    wprintf(L"ProfilePath: %s\n", ToWstring(p.ProfilePath).c_str());
+    wprintf(L"HomeDirectoryDrive: %s\n", ToWstring(p.HomeDirectoryDrive).c_str());
+    wprintf(L"LogonServer: %s\n", ToWstring(p.LogonServer).c_str());
+    wprintf(L"UserFlags: %u\n", p.UserFlags);
 }

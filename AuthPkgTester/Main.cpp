@@ -27,12 +27,6 @@ inline std::string ToAscii(const std::wstring& w_str) {
     return s_str;
 }
 
-inline std::wstring ToWstring(LSA_UNICODE_STRING& lsa_str) {
-    if (lsa_str.Length == 0)
-        return L"<empty>";
-    return std::wstring(lsa_str.Buffer, lsa_str.Length / 2);
-}
-
 class LsaHandle {
 public:
     LsaHandle() {
@@ -237,24 +231,8 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
         static_assert(sizeof(MSV1_0_INTERACTIVE_PROFILE) == 160);
         auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer;
-
-        // print MSV1_0_INTERACTIVE_PROFILE fields to console
-        wprintf(L"MessageType: %u (MsV1_0InteractiveProfile=2)\n", profile->MessageType);
-        wprintf(L"LogonCount: %u\n", profile->LogonCount);
-        wprintf(L"BadPasswordCount: %u\n", profile->BadPasswordCount);
-        wprintf(L"LogonTime: 0x%llx\n", profile->LogonTime.QuadPart);
-        wprintf(L"LogoffTime: 0x%llx\n", profile->LogoffTime.QuadPart);
-        wprintf(L"KickOffTime: 0x%llx\n", profile->KickOffTime.QuadPart);
-        wprintf(L"PasswordLastSet: 0x%llx\n", profile->PasswordLastSet.QuadPart);
-        wprintf(L"PasswordCanChange: 0x%llx\n", profile->PasswordCanChange.QuadPart);
-        wprintf(L"PasswordMustChange: 0x%llx\n", profile->PasswordMustChange.QuadPart);
-        wprintf(L"LogonScript: %s\n", ToWstring(profile->LogonScript).c_str());
-        wprintf(L"HomeDirectory: %s\n", ToWstring(profile->HomeDirectory).c_str());
-        wprintf(L"FullName: %s\n", ToWstring(profile->FullName).c_str());
-        wprintf(L"ProfilePath: %s\n", ToWstring(profile->ProfilePath).c_str());
-        wprintf(L"HomeDirectoryDrive: %s\n", ToWstring(profile->HomeDirectoryDrive).c_str());
-        wprintf(L"LogonServer: %s\n", ToWstring(profile->LogonServer).c_str());
-        wprintf(L"UserFlags: %u\n", profile->UserFlags);
+        // print fields to console
+        Print(*profile);
     }
 
     NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, password);
