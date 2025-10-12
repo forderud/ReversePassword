@@ -227,6 +227,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
             wprintf(L"LogonUserExW failed (%s)\n", ToString(err).c_str());
             abort();
         }
+        wprintf(L"SUCCESS: LogonUserExW succeeded.\n");
     }
 #else
     {
@@ -256,6 +257,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
             wprintf(L"LsaLogonUser failed (%s)\n", ToString(ret).c_str());
             abort();
         }
+        wprintf(L"SUCCESS: LsaLogonUser succeeded.\n");
 
         // create logon session SID in "S-1-5-5-X-Y" format
         SID_IDENTIFIER_AUTHORITY ntAuthority = SECURITY_NT_AUTHORITY;
