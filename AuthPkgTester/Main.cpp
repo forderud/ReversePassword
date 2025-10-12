@@ -214,7 +214,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
-    const char ORIGIN[] = "AuthPkgTester";
+    const char ORIGIN[] = "AuthPkgTester"; // "Advapi32 Logon";
     LSA_STRING origin {
         .Length = (USHORT)strlen(ORIGIN),
         .MaximumLength = (USHORT)strlen(ORIGIN),
@@ -256,6 +256,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
         NTSTATUS subStatus = 0;
         LUID logonId{};
+        // "LocalGroups" not set because it require SeTcbPrivilege
         NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
         if (ret != STATUS_SUCCESS) {
             wprintf(L"LsaLogonUser failed (%s)\n", ToString(ret).c_str());
