@@ -7,6 +7,7 @@
 #include <ntstatus.h>
 #include <SubAuth.h>
 #include <userenv.h> // for CreateEnvironmentBlock
+#include <sddl.h>
 #include <cassert>
 #include <iostream>
 #include <tuple>
@@ -210,28 +211,35 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     // output arguments
     void* profileBuffer = nullptr;
     ULONG profileBufferLen = 0;
-    LUID logonId{};
     HANDLE token = 0;
     QUOTA_LIMITS quotas{};
+    std::wstring logonSid; // logon session SID in "S-1-5-5-*X*-*Y*" format
 
 #if 0
     {
         DWORD logonProvider = LOGON32_PROVIDER_DEFAULT; // or LOGON32_PROVIDER_WINNT50 or LOGON32_PROVIDER_WINNT40
-        PSID logonSid = nullptr;
-        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
+        PSID logonSidBin = nullptr;
+        BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSidBin, &profileBuffer, &profileBufferLen, &quotas);
         if (!ok) {
             DWORD err = GetLastError();
             wprintf(L"LogonUserExW failed (%s)\n", ToString(err).c_str());
             abort();
         }
-        FreeSid(logonSid);
+        wchar_t* tmp = nullptr;
+        ConvertSidToStringSidW(logonSidBin, &tmp);
+        logonSid = tmp;
+        LocalFree(tmp);
+        FreeSid(logonSidBin);
     }
 #else
     {
         NTSTATUS subStatus = 0;
+        LUID logonId{};
         NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
         if (ret != STATUS_SUCCESS)
             return ret;
+
+        logonSid = L"S-1-5-5-" + std::to_wstring(logonId.HighPart) + L"-" + std::to_wstring(logonId.LowPart);
     }
 #endif
 
