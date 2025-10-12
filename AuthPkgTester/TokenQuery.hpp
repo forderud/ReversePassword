@@ -98,8 +98,10 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
                 TOKEN_PRIVILEGES tp = {
                     .PrivilegeCount = 1,
                 };
-                tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
-                tp.Privileges[0].Luid = privVal;
+                tp.Privileges[0] = {
+                    .Luid = privVal,
+                    .Attributes = SE_PRIVILEGE_ENABLED,
+                };
 
                 if (!AdjustTokenPrivileges(token, /*disableAll*/false, &tp, 0, nullptr, nullptr)) {
                     DWORD err = GetLastError();
