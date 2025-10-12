@@ -37,7 +37,23 @@ struct Privilege {
     Privilege(const wchar_t* privName) {
         BOOL ok = LookupPrivilegeValueW(nullptr, privName, &value);
         assert(ok);
+    }
 
+    void Enable(HANDLE token) {
+        // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
+        TOKEN_PRIVILEGES tp = {
+            .PrivilegeCount = 1,
+        };
+        tp.Privileges[0] = {
+            .Luid = value,
+            .Attributes = SE_PRIVILEGE_ENABLED,
+        };
+
+        if (!AdjustTokenPrivileges(token, /*disableAll*/false, &tp, 0, nullptr, nullptr)) {
+            DWORD err = GetLastError();
+            wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ::ToString(err).c_str());
+            abort();
+        }
     }
 
     LUID  value{};
@@ -96,34 +112,17 @@ bool AdjustTokenPrivileges(HANDLE token) {
     }
     {
         // enable disabled privileges
-        auto enablePrivilege = [token](LUID privVal) {
-            // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
-            TOKEN_PRIVILEGES tp = {
-                .PrivilegeCount = 1,
-            };
-            tp.Privileges[0] = {
-                .Luid = privVal,
-                .Attributes = SE_PRIVILEGE_ENABLED,
-            };
-
-            if (!AdjustTokenPrivileges(token, /*disableAll*/false, &tp, 0, nullptr, nullptr)) {
-                DWORD err = GetLastError();
-                wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ToString(err).c_str());
-                abort();
-            }
-        };
-
         if (IncreaseQuta.state == Privilege::Disabled) {
             wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
-            enablePrivilege(IncreaseQuta.value);
+            IncreaseQuta.Enable(token);
         }
         if (AssignPrimaryToken.state == Privilege::Disabled) {
             wprintf(L"  Enabling SE_ASSIGNPRIMARYTOKEN...\n");
-            enablePrivilege(AssignPrimaryToken.value);
+            AssignPrimaryToken.Enable(token);
         }
         if (Impersonate.state == Privilege::Disabled) {
             wprintf(L"  Enabling SE_IMPERSONATE...\n");
-            enablePrivilege(Impersonate.value);
+            Impersonate.Enable(token);
         }
     }
 
