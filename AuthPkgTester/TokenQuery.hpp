@@ -95,8 +95,9 @@ bool CheckTokenPrivileges(HANDLE token, bool enableDisabled) {
         if (enableDisabled) {
             auto enablePrivilege = [token](LUID privVal) {
                 // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
-                TOKEN_PRIVILEGES tp{};
-                tp.PrivilegeCount = 1;
+                TOKEN_PRIVILEGES tp = {
+                    .PrivilegeCount = 1,
+                };
                 tp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
                 tp.Privileges[0].Luid = privVal;
 
