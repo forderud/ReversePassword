@@ -65,7 +65,7 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
 
     // return security package metadata
     PackageInfo->fCapabilities = SECPKG_FLAG_LOGON;
-    PackageInfo->wVersion = 1; // always 1 for SecPkgInfoW
+    PackageInfo->wVersion = SECURITY_SUPPORT_PROVIDER_INTERFACE_VERSION;
     PackageInfo->wRPCID = SECPKG_ID_NONE; // no DCE/RPC support
     PackageInfo->cbMaxToken = 0;
     PackageInfo->Name = (wchar_t*)L"NoPasswordAuthPkg";
