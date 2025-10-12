@@ -82,7 +82,7 @@ HANDLE GetCurrentProcessTokenEx() {
     return token;
 }
 
-NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password) {
+NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password, const std::wstring& logonSid) {
     wprintf(L"Inspecting current process privileges:\n");
     AdjustTokenPrivileges(GetCurrentProcessTokenEx());
 
@@ -112,30 +112,75 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         // https://learn.microsoft.com/en-us/windows/win32/winstation/window-station-security-and-access-rights
         HWINSTA ws = OpenWindowStationW(L"winsta0", /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(ws);
+        {
+            // Grant WINSTA_ALL_ACCESS to "username"
+            EXPLICIT_ACCESS_W ea{};
+            BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), WINSTA_ALL_ACCESS, GRANT_ACCESS, /*inherit*/false);
+            ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+            bool ok = AddWindowDaclRight(ws, ea);
+            assert(ok);
+        }
+        {
+            // Grant GENERIC_ALL to "logonSid"
+            PSID logonSidBin = nullptr;
+            BOOL ok = ConvertStringSidToSidW(logonSid.c_str(), &logonSidBin);
+            assert(ok);
 
-        // Grant WINSTA_ALL_ACCESS to "username"
-        EXPLICIT_ACCESS_W ea{};
-        BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), WINSTA_ALL_ACCESS , GRANT_ACCESS, /*inherit*/false);
-        ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+            EXPLICIT_ACCESS_W ea{
+                .grfAccessPermissions = GENERIC_ALL,
+                .grfAccessMode = GRANT_ACCESS,
+                .grfInheritance = false,
+            };
+            ea.Trustee = {
+                .pMultipleTrustee = NULL,
+                .MultipleTrusteeOperation = NO_MULTIPLE_TRUSTEE,
+                .TrusteeForm = TRUSTEE_IS_SID,
+                .TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP,
+                .ptstrName = (wchar_t*)logonSidBin,
+            };
+            ok = AddWindowDaclRight(ws, ea);
+            assert(ok);
 
-        bool ok = AddWindowDaclRight(ws, ea);
-        assert(ok);
-
+            LocalFree(logonSidBin);
+        }
         CloseWindowStation(ws);
     }
     {
         // https://learn.microsoft.com/en-us/windows/win32/winstation/desktop-security-and-access-rights
         HDESK desk = OpenInputDesktop(0, /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(desk);
+        {
+            // Grant GRANT_ACCESS to "username"
+            EXPLICIT_ACCESS_W ea{};
+            BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), GENERIC_ALL, GRANT_ACCESS, /*inherit*/false);
+            ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
 
-        // Grant GRANT_ACCESS to "username"
-        EXPLICIT_ACCESS_W ea{};
-        BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), GENERIC_ALL, GRANT_ACCESS, /*inherit*/false);
-        ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+            bool ok = AddWindowDaclRight(desk, ea);
+            assert(ok);
+        }
+        {
+            // Grant GENERIC_ALL to "logonSid"
+            PSID logonSidBin = nullptr;
+            BOOL ok = ConvertStringSidToSidW(logonSid.c_str(), &logonSidBin);
+            assert(ok);
 
-        bool ok = AddWindowDaclRight(desk, ea);
-        assert(ok);
+            EXPLICIT_ACCESS_W ea{
+                .grfAccessPermissions = GENERIC_ALL,
+                .grfAccessMode = GRANT_ACCESS,
+                .grfInheritance = false,
+            };
+            ea.Trustee = {
+                .pMultipleTrustee = NULL,
+                .MultipleTrusteeOperation = NO_MULTIPLE_TRUSTEE,
+                .TrusteeForm = TRUSTEE_IS_SID,
+                .TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP,
+                .ptstrName = (wchar_t*)logonSidBin,
+            };
+            ok = AddWindowDaclRight(desk, ea);
+            assert(ok);
 
+            LocalFree(logonSidBin);
+        }
         CloseDesktop(desk);
     }
 
@@ -251,7 +296,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         Print(*profile);
     }
 
-    NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, password);
+    NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, password, logonSid);
 
     LsaFreeReturnBuffer(profileBuffer);
     CloseHandle(token);
