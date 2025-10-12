@@ -135,7 +135,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     }
     {
         // https://learn.microsoft.com/en-us/windows/win32/winstation/desktop-security-and-access-rights
-        HDESK desk = OpenDesktopW(L"default", 0, /*inherit*/false, READ_CONTROL | WRITE_DAC);
+        HDESK desk = OpenDesktopW(L"default", 0, /*inherit*/false, READ_CONTROL | WRITE_DAC | DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
         assert(desk);
         {
             // Grant GRANT_ACCESS to "username"
@@ -230,7 +230,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     QUOTA_LIMITS quotas{};
     PSID logonSid = nullptr; // logon session SID in "S-1-5-5-X-Y" format
 
-#if 0
+#if 1
     {
         DWORD logonProvider = LOGON32_PROVIDER_DEFAULT; // or LOGON32_PROVIDER_WINNT50 or LOGON32_PROVIDER_WINNT40
         BOOL ok = LogonUserExW(username.c_str(), nullptr, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
