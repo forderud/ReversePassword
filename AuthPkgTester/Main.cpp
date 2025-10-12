@@ -134,7 +134,7 @@ HANDLE GetCurrentProcessTokenEx() {
 
 NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password) {
     wprintf(L"Inspecting current process privileges:\n");
-    CheckTokenPrivileges(GetCurrentProcessTokenEx(), false);
+    CheckTokenPrivileges(GetCurrentProcessTokenEx(), true);
 
 #if 0
     // replace "token" with the primary token for the current user
