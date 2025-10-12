@@ -86,12 +86,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     wprintf(L"Inspecting current process privileges:\n");
     AdjustTokenPrivileges(GetCurrentProcessTokenEx());
 
-#if 0
-    // replace "token" with the primary token for the current user
-    // useful for verifying the CreateProcessWithTokenW call below
-    token = GetCurrentProcessTokenEx();
-#endif
-
     wprintf(L"Inspecting user token privileges:\n");
     AdjustTokenPrivileges(token);
 
