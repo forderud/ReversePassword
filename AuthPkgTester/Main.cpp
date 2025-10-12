@@ -135,7 +135,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     }
     {
         // https://learn.microsoft.com/en-us/windows/win32/winstation/desktop-security-and-access-rights
-        HDESK desk = OpenInputDesktop(0, /*inherit*/false, READ_CONTROL | WRITE_DAC);
+        HDESK desk = OpenDesktopW(L"default", 0, /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(desk);
         {
             // Grant GRANT_ACCESS to "username"
