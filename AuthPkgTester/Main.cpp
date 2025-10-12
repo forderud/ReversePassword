@@ -82,7 +82,7 @@ HANDLE GetCurrentProcessTokenEx() {
     return token;
 }
 
-NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password, PSID logonSid) {
+NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, PSID logonSid) {
     wprintf(L"Inspecting current process privileges:\n");
     AdjustTokenPrivileges(GetCurrentProcessTokenEx());
 
@@ -195,9 +195,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     // cannot use CreateProcessW with ImpersonateLoggedOnUser, since it doesn't support impersonation
 
     DestroyEnvironmentBlock(userEnvironment);
-#else
-    // working compatibility testing call
-    BOOL ok = CreateProcessWithLogonW(username.c_str(), /*domain*/nullptr, password.c_str(), logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
 #endif
     if (!ok) {
         DWORD err = GetLastError();
@@ -285,7 +282,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         Print(*profile);
     }
 
-    NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, password, logonSid);
+    NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, logonSid);
 
     LsaFreeReturnBuffer(profileBuffer);
     CloseHandle(token);
