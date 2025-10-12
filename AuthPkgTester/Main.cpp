@@ -242,14 +242,11 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 #else
     {
-        TOKEN_SOURCE sourceContext{};
-        {
-            // initialize with TokenSource from current process
-            HANDLE userToken = GetCurrentProcessTokenEx();
-            DWORD returnLength = 0;
-            GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
-            assert(returnLength == sizeof(sourceContext));
-        }
+        TOKEN_SOURCE sourceContext{
+            .SourceName = "APtest",
+            .SourceIdentifier{},
+        };
+        AllocateLocallyUniqueId(&sourceContext.SourceIdentifier);
 
         NTSTATUS subStatus = 0;
         LUID logonId{};
