@@ -127,7 +127,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         HDESK desk = OpenInputDesktop(0, /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(desk);
 
-        // Grant WINSTA_ALL_ACCESS to "username"
+        // Grant GRANT_ACCESS to "username"
         EXPLICIT_ACCESS_W ea{};
         BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), GENERIC_ALL, GRANT_ACCESS, /*inherit*/false);
         ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
