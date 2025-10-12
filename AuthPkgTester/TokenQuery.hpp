@@ -48,7 +48,7 @@ struct Privilege {
         }
         auto* tp = (TOKEN_PRIVILEGES*)privilegesBuffer.data();
 
-        wprintf(L"  Privilege count: %u.\n", tp->PrivilegeCount);
+        //wprintf(L"  Privilege count: %u.\n", tp->PrivilegeCount);
         for (size_t i = 0; i < tp->PrivilegeCount; i++) {
             const LUID_AND_ATTRIBUTES entry = tp->Privileges[i];
             bool match = (value.LowPart == entry.Luid.LowPart) && (value.HighPart == entry.Luid.HighPart);
