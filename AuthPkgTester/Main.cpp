@@ -211,13 +211,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
-    const char ORIGIN[] = "AuthPkgTester"; // "Advapi32 Logon";
-    LSA_STRING origin {
-        .Length = (USHORT)strlen(ORIGIN),
-        .MaximumLength = (USHORT)strlen(ORIGIN),
-        .Buffer = (char*)ORIGIN,
-    };
-
     ULONG authPkg = 0;
     NTSTATUS status = GetAuthPackage(lsa, authPkgName, &authPkg);
     if (status != STATUS_SUCCESS)
@@ -242,6 +235,13 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     }
 #else
     {
+        const char ORIGIN[] = "AuthPkgTester"; // "Advapi32 Logon";
+        LSA_STRING origin{
+            .Length = (USHORT)strlen(ORIGIN),
+            .MaximumLength = (USHORT)strlen(ORIGIN),
+            .Buffer = (char*)ORIGIN,
+        };
+
         TOKEN_SOURCE sourceContext{
             .SourceName = "APtest",
             .SourceIdentifier{},
