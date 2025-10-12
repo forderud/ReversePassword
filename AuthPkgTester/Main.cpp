@@ -266,11 +266,19 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         if (ret != STATUS_SUCCESS)
             return ret;
 
-        std::wstring logonSidStr = L"S-1-5-5-" + std::to_wstring(logonId.HighPart) + L"-" + std::to_wstring(logonId.LowPart);
-        BOOL ok = ConvertStringSidToSidW(logonSidStr.c_str(), &logonSid);
+        // create logon session SID in "S-1-5-5-*X*-*Y*" format
+        SID_IDENTIFIER_AUTHORITY ntAuthority = SECURITY_NT_AUTHORITY;
+        BOOL ok = AllocateAndInitializeSid(&ntAuthority, 3, 5, logonId.HighPart, logonId.LowPart, 0, 0, 0, 0, 0, &logonSid);
         assert(ok);
     }
 #endif
+
+    {
+        wchar_t* sidStr = nullptr;
+        ConvertSidToStringSidW(logonSid, &sidStr);
+        wprintf(L"Logon session SID: %s\n", sidStr);
+        LocalFree(sidStr);
+    }
 
     wprintf(L"profileBufferLen: %u\n", profileBufferLen);
     if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
