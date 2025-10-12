@@ -162,7 +162,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), WINSTA_ALL_ACCESS , GRANT_ACCESS, /*inherit*/false);
         ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
 
-        bool ok = AddWinStaDaclRight(ws, ea);
+        bool ok = AddWindowDaclRight(ws, ea);
         assert(ok);
 
         CloseWindowStation(ws);
@@ -177,7 +177,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), GENERIC_ALL, GRANT_ACCESS, /*inherit*/false);
         ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
 
-        bool ok = AddWinStaDaclRight(desk, ea);
+        bool ok = AddWindowDaclRight(desk, ea);
         assert(ok);
 
         CloseDesktop(desk);
