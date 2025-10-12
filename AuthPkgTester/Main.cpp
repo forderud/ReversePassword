@@ -218,7 +218,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     QUOTA_LIMITS quotas{};
     PSID logonSid = nullptr; // logon session SID in "S-1-5-5-X-Y" format
 
-#if 0
+#if 1
     {
         wchar_t domain[MAX_COMPUTERNAME_LENGTH + 1] = {};
         DWORD domainLen = MAX_COMPUTERNAME_LENGTH;
