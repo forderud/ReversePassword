@@ -64,7 +64,8 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
     LogMessage("SpGetInfo");
 
     // return security package metadata
-    PackageInfo->fCapabilities = SECPKG_FLAG_LOGON;
+    PackageInfo->fCapabilities = SECPKG_FLAG_LOGON //  supports LsaLogonUser
+                               | SECPKG_FLAG_CLIENT_ONLY; // no server auth support
     PackageInfo->wVersion = SECURITY_SUPPORT_PROVIDER_INTERFACE_VERSION;
     PackageInfo->wRPCID = SECPKG_ID_NONE; // no DCE/RPC support
     PackageInfo->cbMaxToken = 0;
