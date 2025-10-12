@@ -248,18 +248,45 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         };
         AllocateLocallyUniqueId(&sourceContext.SourceIdentifier);
 
+        // taken from https://github.com/reactos/reactos/blob/master/dll/win32/advapi32/misc/logon.c#L1157
+        SID_IDENTIFIER_AUTHORITY ntAuthority = SECURITY_NT_AUTHORITY;
+        SID_IDENTIFIER_AUTHORITY localAuthority = SECURITY_LOCAL_SID_AUTHORITY;
+        LUID LogonId = {};
+        AllocateLocallyUniqueId(&LogonId);
+        PSID LogonSid = nullptr;
+        BOOL ok = AllocateAndInitializeSid(&ntAuthority, 3,
+            SECURITY_LOGON_IDS_RID, LogonId.HighPart, LogonId.LowPart, 0, 0, 0, 0, 0,
+            &LogonSid);
+        assert(ok);
+        PSID LocalSid = nullptr;
+        ok = AllocateAndInitializeSid(&localAuthority, 1,
+            SECURITY_LOCAL_RID, 0, 0, 0, 0, 0, 0, 0,
+            &LocalSid);
+        assert(ok);
+
+        std::vector<BYTE> tokenGroupBuf(sizeof(TOKEN_GROUPS) + ((2-ANYSIZE_ARRAY)*sizeof(SID_AND_ATTRIBUTES)), (BYTE)0);
+        TOKEN_GROUPS* TokenGroups = (TOKEN_GROUPS*)tokenGroupBuf.data();
+
+        TokenGroups->GroupCount = 2;
+        TokenGroups->Groups[0].Sid = LogonSid;
+        TokenGroups->Groups[0].Attributes = SE_GROUP_MANDATORY | SE_GROUP_ENABLED | SE_GROUP_ENABLED_BY_DEFAULT | SE_GROUP_LOGON_ID;
+        TokenGroups->Groups[1].Sid = LocalSid;
+        TokenGroups->Groups[1].Attributes = SE_GROUP_MANDATORY | SE_GROUP_ENABLED | SE_GROUP_ENABLED_BY_DEFAULT;
+
         NTSTATUS subStatus = 0;
         LUID logonId{};
         // "LocalGroups" not set because it require SeTcbPrivilege
-        NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
+        NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), TokenGroups, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
         if (ret != STATUS_SUCCESS) {
             wprintf(L"LsaLogonUser failed (%s)\n", ToString(ret).c_str());
             abort();
         }
 
+        LocalFree(LogonSid);
+        LocalFree(LocalSid);
+
         // create logon session SID in "S-1-5-5-X-Y" format
-        SID_IDENTIFIER_AUTHORITY ntAuthority = SECURITY_NT_AUTHORITY;
-        BOOL ok = AllocateAndInitializeSid(&ntAuthority, 3, 5, logonId.HighPart, logonId.LowPart, 0, 0, 0, 0, 0, &logonSid);
+        ok = AllocateAndInitializeSid(&ntAuthority, 3, 5, logonId.HighPart, logonId.LowPart, 0, 0, 0, 0, 0, &logonSid);
         assert(ok);
     }
 #endif
