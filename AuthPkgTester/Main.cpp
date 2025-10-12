@@ -181,7 +181,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     // WARNING: CreateProcessWithTokenW succeeds, but cmd.exe crashes immediately with 0xc0000142 (DLL initialization failed) with token from LsaLogonUser
     // CreateProcessWithTokenW require TOKEN_QUERY, TOKEN_DUPLICATE & TOKEN_ASSIGN_PRIMARY access rights 
     BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
-#elif 0
+#else
     // WARNING: CreateProcessAsUserW fails, unless running through the SYSTEM account. Even then, cmd.exe crashes immediately with 0xc0000142 (DLL initialization failed)
 
     void* userEnvironment = nullptr;
