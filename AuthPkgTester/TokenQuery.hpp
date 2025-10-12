@@ -26,9 +26,9 @@ struct Privilege {
 
     const wchar_t* ToString() const {
         switch (state) {
-        case Privilege::Missing: return L"missing";
-        case Privilege::Enabled: return L"enabled";
-        case Privilege::Disabled: return L"disabled";
+        case Missing: return L"missing";
+        case Enabled: return L"enabled";
+        case Disabled: return L"disabled";
         default:
             abort();
         }
@@ -56,9 +56,9 @@ struct Privilege {
                 continue;
 
             if (entry.Attributes & (SE_PRIVILEGE_ENABLED | SE_PRIVILEGE_ENABLED_BY_DEFAULT))
-                state = Privilege::State::Enabled;
+                state = Enabled;
             else
-                state = Privilege::State::Disabled;
+                state = Disabled;
         }
     }
 
