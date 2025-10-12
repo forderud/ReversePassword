@@ -247,7 +247,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     {
         TOKEN_SOURCE sourceContext{};
         {
-            // Populate SourceName & SourceIdentifier fields
+            // initialize with TokenSource from current process
             HANDLE userToken = GetCurrentProcessTokenEx();
             DWORD returnLength = 0;
             GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
