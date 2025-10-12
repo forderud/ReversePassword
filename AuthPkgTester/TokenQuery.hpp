@@ -34,6 +34,12 @@ struct Privilege {
         }
     }
 
+    Privilege(const wchar_t* privName) {
+        BOOL ok = LookupPrivilegeValueW(nullptr, privName, &value);
+        assert(ok);
+
+    }
+
     LUID  value{};
     State state = Missing;
 };
@@ -63,18 +69,9 @@ bool AdjustTokenPrivileges(HANDLE token) {
         wprintf(L"  TokenType: %s\n", (tokenType == TokenPrimary) ? L"Primary" : L"Impersonation");
     }
 
-    Privilege IncreaseQuta = {};
-    Privilege AssignPrimaryToken = {};
-    Privilege Impersonate = {};
-    {
-        // initialize privilege values
-        BOOL ok = LookupPrivilegeValueW(nullptr, SE_INCREASE_QUOTA_NAME, &IncreaseQuta.value);
-        assert(ok);
-        ok = LookupPrivilegeValueW(nullptr, SE_ASSIGNPRIMARYTOKEN_NAME, &AssignPrimaryToken.value);
-        assert(ok);
-        ok = LookupPrivilegeValueW(nullptr, SE_IMPERSONATE_NAME, &Impersonate.value);
-        assert(ok);
-    }
+    Privilege IncreaseQuta(SE_INCREASE_QUOTA_NAME);
+    Privilege AssignPrimaryToken(SE_ASSIGNPRIMARYTOKEN_NAME);
+    Privilege Impersonate(SE_IMPERSONATE_NAME);
     {
         // detect enabled privileges
         std::vector<BYTE> privilegesBuffer(1024, (BYTE)0);
