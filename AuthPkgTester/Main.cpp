@@ -119,21 +119,27 @@ std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& pass
     return authInfo;
 }
 
-NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password) {
-    wprintf(L"Inspecting current process privileges:\n");
-    CheckTokenPrivileges(GetCurrentProcessToken(), false);
-
-#if 0
-    // replace "token" with the primary token for the current user
-    // useful for verifying the CreateProcessWithTokenW call below
+/** Aleternative to GetCurrentProcessToken() with more privileges. */
+HANDLE GetCurrentProcessTokenEx() {
     HANDLE procToken = 0;
     if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &procToken))
         abort();
 
     // copy token to avoid ERROR_TOKEN_ALREADY_IN_USE
-    token = 0;
+    HANDLE token = 0;
     if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenPrimary, &token))
         abort();
+    return token;
+}
+
+NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password) {
+    wprintf(L"Inspecting current process privileges:\n");
+    CheckTokenPrivileges(GetCurrentProcessTokenEx(), false);
+
+#if 0
+    // replace "token" with the primary token for the current user
+    // useful for verifying the CreateProcessWithTokenW call below
+    token = GetCurrentProcessTokenEx();
 #endif
 
     wprintf(L"Inspecting user token privileges:\n");
@@ -233,7 +239,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     TOKEN_SOURCE sourceContext{};
     {
         // Populate SourceName & SourceIdentifier fields
-        HANDLE userToken = GetCurrentProcessToken();
+        HANDLE userToken = GetCurrentProcessTokenEx();
         DWORD returnLength = 0;
         GetTokenInformation(userToken, TokenSource, &sourceContext, sizeof(sourceContext), &returnLength);
         assert(returnLength == sizeof(sourceContext));
