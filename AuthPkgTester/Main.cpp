@@ -257,8 +257,10 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         NTSTATUS subStatus = 0;
         LUID logonId{};
         NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
-        if (ret != STATUS_SUCCESS)
-            return ret;
+        if (ret != STATUS_SUCCESS) {
+            wprintf(L"LsaLogonUser failed (%s)\n", ToString(ret).c_str());
+            abort();
+        }
 
         // create logon session SID in "S-1-5-5-X-Y" format
         SID_IDENTIFIER_AUTHORITY ntAuthority = SECURITY_NT_AUTHORITY;
