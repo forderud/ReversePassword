@@ -34,12 +34,12 @@ struct Privilege {
         }
     }
 
-    Privilege(const wchar_t* privName) {
+    Privilege(HANDLE token, const wchar_t* privName) : token(token) {
         BOOL ok = LookupPrivilegeValueW(nullptr, privName, &value);
         assert(ok);
     }
 
-    void Enable(HANDLE token) {
+    void Enable() {
         // https://learn.microsoft.com/nb-no/windows/win32/secauthz/enabling-and-disabling-privileges-in-c--
         TOKEN_PRIVILEGES tp = {
             .PrivilegeCount = 1,
@@ -56,6 +56,9 @@ struct Privilege {
         }
     }
 
+private:
+    HANDLE token = 0;
+public:
     LUID  value{};
     State state = Missing;
 };
@@ -85,9 +88,9 @@ bool AdjustTokenPrivileges(HANDLE token) {
         wprintf(L"  TokenType: %s\n", (tokenType == TokenPrimary) ? L"Primary" : L"Impersonation");
     }
 
-    Privilege IncreaseQuta(SE_INCREASE_QUOTA_NAME);
-    Privilege AssignPrimaryToken(SE_ASSIGNPRIMARYTOKEN_NAME);
-    Privilege Impersonate(SE_IMPERSONATE_NAME);
+    Privilege IncreaseQuta(token, SE_INCREASE_QUOTA_NAME);
+    Privilege AssignPrimaryToken(token, SE_ASSIGNPRIMARYTOKEN_NAME);
+    Privilege Impersonate(token, SE_IMPERSONATE_NAME);
     {
         // detect enabled privileges
         std::vector<BYTE> privilegesBuffer(1024, (BYTE)0);
@@ -114,15 +117,15 @@ bool AdjustTokenPrivileges(HANDLE token) {
         // enable disabled privileges
         if (IncreaseQuta.state == Privilege::Disabled) {
             wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
-            IncreaseQuta.Enable(token);
+            IncreaseQuta.Enable();
         }
         if (AssignPrimaryToken.state == Privilege::Disabled) {
             wprintf(L"  Enabling SE_ASSIGNPRIMARYTOKEN...\n");
-            AssignPrimaryToken.Enable(token);
+            AssignPrimaryToken.Enable();
         }
         if (Impersonate.state == Privilege::Disabled) {
             wprintf(L"  Enabling SE_IMPERSONATE...\n");
-            Impersonate.Enable(token);
+            Impersonate.Enable();
         }
     }
 
