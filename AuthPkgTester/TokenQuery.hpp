@@ -77,6 +77,8 @@ struct Privilege {
             wprintf(L"ERROR: AdjustTokenPrivileges failed (%s)\n", ::ToString(err).c_str());
             abort();
         }
+
+        state = Enabled;
     }
 
 private:
