@@ -220,11 +220,15 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
 #if 0
     {
+#if 0
         wchar_t domain[MAX_COMPUTERNAME_LENGTH + 1] = {};
         DWORD domainLen = MAX_COMPUTERNAME_LENGTH;
         GetComputerNameW(domain, &domainLen);
-
         DWORD logonProvider = LOGON32_PROVIDER_WINNT50; // use negotiate logon provider (require passing domain=computername)
+#else
+        wchar_t* domain = nullptr;
+        DWORD logonProvider = LOGON32_PROVIDER_DEFAULT; // default logon (seem to work better for local accounts)
+#endif
         BOOL ok = LogonUserExW(username.c_str(), domain, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
         if (!ok) {
             DWORD err = GetLastError();
