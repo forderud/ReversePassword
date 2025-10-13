@@ -107,14 +107,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         HWINSTA ws = OpenWindowStationW(L"winsta0", /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(ws);
         {
-            // Grant WINSTA_ALL_ACCESS to "username"
-            EXPLICIT_ACCESS_W ea{};
-            BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), WINSTA_ALL_ACCESS, GRANT_ACCESS, /*inherit*/false);
-            ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
-            bool ok = AddWindowDaclRight(ws, ea);
-            assert(ok);
-        }
-        {
             // Grant GENERIC_ALL to "logonSid"
             EXPLICIT_ACCESS_W ea{
                 .grfAccessPermissions = GENERIC_ALL,
@@ -137,15 +129,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         // https://learn.microsoft.com/en-us/windows/win32/winstation/desktop-security-and-access-rights
         HDESK desk = OpenDesktopW(L"default", 0, /*inherit*/false, READ_CONTROL | WRITE_DAC | DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
         assert(desk);
-        {
-            // Grant GRANT_ACCESS to "username"
-            EXPLICIT_ACCESS_W ea{};
-            BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), GENERIC_ALL, GRANT_ACCESS, /*inherit*/false);
-            ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
-
-            bool ok = AddWindowDaclRight(desk, ea);
-            assert(ok);
-        }
         {
             // Grant GENERIC_ALL to "logonSid"
             EXPLICIT_ACCESS_W ea{
