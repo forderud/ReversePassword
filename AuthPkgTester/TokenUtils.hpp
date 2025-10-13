@@ -129,7 +129,7 @@ bool AdjustTokenPrivileges(HANDLE token) {
 
 /** Add a DACL entry to the window station or desktop security descriptor.
     Use BuildExplicitAccessWithNameW to initialize the "ea" argument. */
-bool AddWindowDaclRight(HANDLE ws, EXPLICIT_ACCESS_W& ea) {
+void AddWindowDaclRight(HANDLE ws, EXPLICIT_ACCESS_W& ea) {
     PSID owner = nullptr;
     PSID group = nullptr;
     ACL* dacl = nullptr;
@@ -147,7 +147,6 @@ bool AddWindowDaclRight(HANDLE ws, EXPLICIT_ACCESS_W& ea) {
 
     LocalFree(newDacl);
     LocalFree(sd);
-    return true;
 }
 
 

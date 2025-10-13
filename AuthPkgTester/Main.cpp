@@ -120,8 +120,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
                 .TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP,
                 .ptstrName = (wchar_t*)logonSid,
             };
-            bool ok = AddWindowDaclRight(ws, ea);
-            assert(ok);
+            AddWindowDaclRight(ws, ea);
         }
         CloseWindowStation(ws);
     }
@@ -143,8 +142,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
                 .TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP,
                 .ptstrName = (wchar_t*)logonSid,
             };
-            bool ok = AddWindowDaclRight(desk, ea);
-            assert(ok);
+            AddWindowDaclRight(desk, ea);
         }
         CloseDesktop(desk);
     }
