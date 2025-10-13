@@ -34,6 +34,20 @@ public:
         // establish LSA connection
         NTSTATUS status = LsaConnectUntrusted(&m_lsa);
         assert(status == STATUS_SUCCESS);
+
+#if 0
+        const char name[] = "AuthPkgTester";
+        LSA_STRING lsa_name{
+            .Length = sizeof(name) - 1,
+            .MaximumLength = sizeof(name) - 1,
+            .Buffer = (char*)name,
+        };
+
+        LSA_OPERATIONAL_MODE mode = 0;
+        status = LsaRegisterLogonProcess(&lsa_name, /*out*/&m_lsa, /*out*/&mode); // require SeTcbPrivilege
+        assert(status == STATUS_PORT_CONNECTION_REFUSED);
+        abort();
+#endif
     }
     ~LsaHandle() {
         // close LSA handle
