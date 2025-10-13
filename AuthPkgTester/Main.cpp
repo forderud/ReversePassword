@@ -102,50 +102,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         abort();
 #endif
 
-    {
-        // https://learn.microsoft.com/en-us/windows/win32/winstation/window-station-security-and-access-rights
-        HWINSTA ws = OpenWindowStationW(L"winsta0", /*inherit*/false, READ_CONTROL | WRITE_DAC);
-        assert(ws);
-        {
-            // Grant GENERIC_ALL to "logonSid"
-            EXPLICIT_ACCESS_W ea{
-                .grfAccessPermissions = GENERIC_ALL,
-                .grfAccessMode = GRANT_ACCESS,
-                .grfInheritance = false,
-            };
-            ea.Trustee = {
-                .pMultipleTrustee = NULL,
-                .MultipleTrusteeOperation = NO_MULTIPLE_TRUSTEE,
-                .TrusteeForm = TRUSTEE_IS_SID,
-                .TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP,
-                .ptstrName = (wchar_t*)logonSid,
-            };
-            AddWindowDaclRight(ws, ea);
-        }
-        CloseWindowStation(ws);
-    }
-    {
-        // https://learn.microsoft.com/en-us/windows/win32/winstation/desktop-security-and-access-rights
-        HDESK desk = OpenDesktopW(L"default", 0, /*inherit*/false, READ_CONTROL | WRITE_DAC | DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
-        assert(desk);
-        {
-            // Grant GENERIC_ALL to "logonSid"
-            EXPLICIT_ACCESS_W ea{
-                .grfAccessPermissions = GENERIC_ALL,
-                .grfAccessMode = GRANT_ACCESS,
-                .grfInheritance = false,
-            };
-            ea.Trustee = {
-                .pMultipleTrustee = NULL,
-                .MultipleTrusteeOperation = NO_MULTIPLE_TRUSTEE,
-                .TrusteeForm = TRUSTEE_IS_SID,
-                .TrusteeType = TRUSTEE_IS_WELL_KNOWN_GROUP,
-                .ptstrName = (wchar_t*)logonSid,
-            };
-            AddWindowDaclRight(desk, ea);
-        }
-        CloseDesktop(desk);
-    }
+    GrantWindowStationDesktopAccess(logonSid);
 
     STARTUPINFOW si = {
         .cb = sizeof(si),
