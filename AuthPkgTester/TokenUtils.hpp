@@ -250,7 +250,7 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
     }
     {
         // https://learn.microsoft.com/en-us/windows/win32/winstation/desktop-security-and-access-rights
-        HDESK desk = OpenDesktopW(L"default", 0, /*inherit*/false, READ_CONTROL | WRITE_DAC | DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
+        HDESK desk = OpenDesktopW(L"default", 0, /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(desk);
         {
             // Grant GENERIC_ALL to "logonSid" which grants:
