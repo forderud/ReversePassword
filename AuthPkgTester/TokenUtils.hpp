@@ -175,18 +175,22 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
 
 /** From https://learn.microsoft.com/en-us/previous-versions/aa446670(v=vs.85) */
 PSID GetLogonSID (HANDLE hToken) {
-    // Get required TOKEN_GROUPS buffer size
-    DWORD dwLength = 0;
-    if (GetTokenInformation(hToken, TokenGroups, nullptr, 0, &dwLength))
-        abort(); // call is supposed to fail
-    assert(GetLastError() == ERROR_INSUFFICIENT_BUFFER);
+    std::vector<BYTE> tokenGroupsBuf;
+    {
+        // Get TOKEN_GROUPS size
+        DWORD bufSize = 0;
+        if (GetTokenInformation(hToken, TokenGroups, nullptr, 0, &bufSize))
+            abort(); // call is supposed to fail
+        assert(GetLastError() == ERROR_INSUFFICIENT_BUFFER);
 
-    auto* ptg = (TOKEN_GROUPS*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwLength);
-
-    // Get the token group information from the access token.
-    if (!GetTokenInformation(hToken, TokenGroups, (LPVOID)ptg, dwLength, &dwLength)) {
-        abort();
+        // Get the token group information from the access token
+        tokenGroupsBuf.resize(bufSize, (BYTE)0);
+        if (!GetTokenInformation(hToken, TokenGroups, (LPVOID)tokenGroupsBuf.data(), bufSize, &bufSize)) {
+            abort();
+        }
     }
+    auto* ptg = (TOKEN_GROUPS*)tokenGroupsBuf.data();
+
 
     PSID ppsid = nullptr;
 
@@ -194,19 +198,15 @@ PSID GetLogonSID (HANDLE hToken) {
     for (DWORD dwIndex = 0; dwIndex < ptg->GroupCount; dwIndex++) {
         if ((ptg->Groups[dwIndex].Attributes & SE_GROUP_LOGON_ID) == SE_GROUP_LOGON_ID) {
             // Found the logon SID; make a copy of it.
-            dwLength = GetLengthSid(ptg->Groups[dwIndex].Sid);
+            DWORD dwLength = GetLengthSid(ptg->Groups[dwIndex].Sid);
             ppsid = (PSID)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwLength);
             if (!CopySid(dwLength, ppsid, ptg->Groups[dwIndex].Sid)) {
                 HeapFree(GetProcessHeap(), 0, (LPVOID)ppsid);
-                goto Cleanup;
+                abort();
             }
-            break;
+            return ppsid;
         }
     }
 
-Cleanup:
-    if (ptg)
-        HeapFree(GetProcessHeap(), 0, (LPVOID)ptg);
-
-    return ppsid;
+    abort(); // SE_GROUP_LOGON_ID not found
 }
