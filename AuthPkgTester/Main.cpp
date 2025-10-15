@@ -124,8 +124,8 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     };
     PROCESS_INFORMATION pi = {};
 
-    const wchar_t* appName = nullptr;
-    std::wstring cmdLine = L"cmd.exe";
+    std::wstring cmdLine = L"C:\\Windows\\System32\\cmd.exe";
+    const wchar_t* appName = cmdLine.c_str();
     DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP;
     const wchar_t* curDir = L"C:\\";
 #if 1
