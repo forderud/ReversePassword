@@ -189,18 +189,17 @@ PSID GetLogonSID (HANDLE hToken) {
             abort();
         }
     }
-    auto* ptg = (TOKEN_GROUPS*)tokenGroupsBuf.data();
-
+    auto* tg = (TOKEN_GROUPS*)tokenGroupsBuf.data();
 
     // Loop through the groups to find the logon SID.
-    for (DWORD dwIndex = 0; dwIndex < ptg->GroupCount; dwIndex++) {
-        if ((ptg->Groups[dwIndex].Attributes & SE_GROUP_LOGON_ID) != SE_GROUP_LOGON_ID)
+    for (DWORD i = 0; i < tg->GroupCount; i++) {
+        if ((tg->Groups[i].Attributes & SE_GROUP_LOGON_ID) != SE_GROUP_LOGON_ID)
             continue;
         
         // Found the logon SID; make a copy of it.
-        DWORD sidLength = GetLengthSid(ptg->Groups[dwIndex].Sid);
+        DWORD sidLength = GetLengthSid(tg->Groups[i].Sid);
         auto sid = (PSID)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sidLength); // allocator compatible with FreeSid
-        if (!CopySid(sidLength, sid, ptg->Groups[dwIndex].Sid))
+        if (!CopySid(sidLength, sid, tg->Groups[i].Sid))
             abort();
         return sid;
     }
