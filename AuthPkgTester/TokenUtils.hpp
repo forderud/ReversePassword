@@ -253,7 +253,9 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
         HDESK desk = OpenDesktopW(L"default", 0, /*inherit*/false, READ_CONTROL | WRITE_DAC | DESKTOP_READOBJECTS | DESKTOP_WRITEOBJECTS);
         assert(desk);
         {
-            // Grant GENERIC_ALL to "logonSid"
+            // Grant GENERIC_ALL to "logonSid" which grants:
+            //   DESKTOP_CREATEMENU DESKTOP_CREATEWINDOW DESKTOP_ENUMERATE DESKTOP_HOOKCONTROL DESKTOP_JOURNALPLAYBACK
+            //   DESKTOP_JOURNALRECORD DESKTOP_READOBJECTS DESKTOP_SWITCHDESKTOP DESKTOP_WRITEOBJECTS STANDARD_RIGHTS_REQUIRED
             EXPLICIT_ACCESS_W ea{
                 .grfAccessPermissions = GENERIC_ALL,
                 .grfAccessMode = GRANT_ACCESS,
