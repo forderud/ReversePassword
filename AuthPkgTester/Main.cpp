@@ -193,8 +193,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         }
         wprintf(L"SUCCESS: LsaLogonUser succeeded.\n");
 
-        BOOL ok = GetLogonSID(token, &logonSid);
-        assert(ok);
+        logonSid = GetLogonSID(token);
     }
 #endif
 

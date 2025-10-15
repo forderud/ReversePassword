@@ -174,9 +174,7 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
 }
 
 /** From https://learn.microsoft.com/en-us/previous-versions/aa446670(v=vs.85) */
-BOOL GetLogonSID (HANDLE hToken, PSID* ppsid) {
-    BOOL bSuccess = FALSE;
-
+PSID GetLogonSID (HANDLE hToken) {
     // Get required TOKEN_GROUPS buffer size
     DWORD dwLength = 0;
     if (GetTokenInformation(hToken, TokenGroups, nullptr, 0, &dwLength))
@@ -190,28 +188,25 @@ BOOL GetLogonSID (HANDLE hToken, PSID* ppsid) {
         abort();
     }
 
+    PSID ppsid = nullptr;
+
     // Loop through the groups to find the logon SID.
     for (DWORD dwIndex = 0; dwIndex < ptg->GroupCount; dwIndex++) {
         if ((ptg->Groups[dwIndex].Attributes & SE_GROUP_LOGON_ID) == SE_GROUP_LOGON_ID) {
             // Found the logon SID; make a copy of it.
             dwLength = GetLengthSid(ptg->Groups[dwIndex].Sid);
-            *ppsid = (PSID)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwLength);
-            if (*ppsid == NULL)
-                goto Cleanup;
-
-            if (!CopySid(dwLength, *ppsid, ptg->Groups[dwIndex].Sid)) {
-                HeapFree(GetProcessHeap(), 0, (LPVOID)*ppsid);
+            ppsid = (PSID)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwLength);
+            if (!CopySid(dwLength, ppsid, ptg->Groups[dwIndex].Sid)) {
+                HeapFree(GetProcessHeap(), 0, (LPVOID)ppsid);
                 goto Cleanup;
             }
             break;
         }
     }
 
-    bSuccess = TRUE;
-
 Cleanup:
     if (ptg)
         HeapFree(GetProcessHeap(), 0, (LPVOID)ptg);
 
-    return bSuccess;
+    return ppsid;
 }
