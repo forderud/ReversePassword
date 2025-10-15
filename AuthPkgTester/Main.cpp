@@ -155,8 +155,13 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         abort();
     creationFlags |= CREATE_UNICODE_ENVIRONMENT; // environment loading required for CreateProcessAsUserW
 
+    BOOL ok = ImpersonateLoggedOnUser(token); // required according to https://learn.microsoft.com/en-us/previous-versions/aa379608(v=vs.85)
+    assert(ok);
+
     // CreateProcessAsUserW require SE_INCREASE_QUOTA_NAME and may require SE_ASSIGNPRIMARYTOKEN_NAME that admin accounts usually lack
-    BOOL ok = CreateProcessAsUserW(token, appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/userEnvironment, curDir, &si, &pi);
+    ok = CreateProcessAsUserW(token, appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/userEnvironment, curDir, &si, &pi);
+
+    RevertToSelf();
 
     // cannot use CreateProcessW with ImpersonateLoggedOnUser, since it doesn't support impersonation
 
