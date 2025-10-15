@@ -20,6 +20,7 @@
 
 #define START_SEPARATE_WINDOW
 #define USE_LSA_LOGONUSER
+#define USE_CREATE_PROCESS_WITH_TOKEN
 
 
 /** Converts unicode string to ASCII */
@@ -141,7 +142,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     creationFlags |= CREATE_NO_WINDOW;
 #endif
     const wchar_t* curDir = L"C:\\";
-#if 1
+#ifdef USE_CREATE_PROCESS_WITH_TOKEN
     // WARNING: CreateProcessWithTokenW succeeds, but cmd.exe crashes immediately with 0xc0000142 (DLL initialization failed) if using token from LsaLogonUser
     // CreateProcessWithTokenW require TOKEN_QUERY, TOKEN_DUPLICATE & TOKEN_ASSIGN_PRIMARY access rights 
     DWORD logonFlags = LOGON_WITH_PROFILE;
