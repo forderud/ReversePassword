@@ -167,6 +167,9 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         return err;
     }
 
+    wprintf(L"Waiting for process to terminate...\n");
+    WaitForSingleObject(pi.hProcess, INFINITE);
+
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 
