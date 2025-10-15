@@ -18,6 +18,7 @@ const std::wstring ToString(DWORD err) {
     case ERROR_LOGON_TYPE_NOT_GRANTED: return L"ERROR_LOGON_TYPE_NOT_GRANTED";
     case STATUS_ACCESS_DENIED: return L"STATUS_ACCESS_DENIED";
     case STATUS_ACCOUNT_RESTRICTION: return L"STATUS_ACCOUNT_RESTRICTION";
+    case STATUS_LOGON_FAILURE: return L"STATUS_LOGON_FAILURE";
     default: return L"error " + std::to_wstring(err);
     }
 }
