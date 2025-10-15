@@ -84,7 +84,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         assert(err == NERR_Success);
         wprintf(L"USer profile path: %s\n", info.usri4_profile);
 #if 0
-        // not sure if this is needed when using LOGON_WITH_PROFILE
+        // not needed if using LOGON_WITH_PROFILE
         PROFILEINFOW profile = {
             .dwSize = sizeof(profile),
             .lpUserName = (wchar_t*)username.c_str(),
