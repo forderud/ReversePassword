@@ -121,6 +121,11 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     STARTUPINFOW si = {
         .cb = sizeof(si),
         //.lpDesktop = (wchar_t*)L"winsta0\\default",
+#if 0
+        .hStdInput = GetStdHandle(STD_INPUT_HANDLE),
+        .hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE),
+        .hStdError = GetStdHandle(STD_ERROR_HANDLE),
+#endif
     };
     PROCESS_INFORMATION pi = {};
 
