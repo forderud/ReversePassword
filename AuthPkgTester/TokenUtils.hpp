@@ -105,10 +105,12 @@ bool AdjustTokenPrivileges(HANDLE token) {
     Privilege IncreaseQuta(token, SE_INCREASE_QUOTA_NAME);
     Privilege AssignPrimaryToken(token, SE_ASSIGNPRIMARYTOKEN_NAME);
     Privilege Impersonate(token, SE_IMPERSONATE_NAME);
+    Privilege Security(token, SE_SECURITY_NAME); // required to get or set the SACL
 
     wprintf(L"  SE_INCREASE_QUOTA privilege %s\n", IncreaseQuta.ToString());
     wprintf(L"  SE_ASSIGNPRIMARYTOKEN privilege %s\n", AssignPrimaryToken.ToString());
     wprintf(L"  SE_IMPERSONATE privilege %s\n", Impersonate.ToString());
+    wprintf(L"  SE_SECURITY privilege %s\n", Security.ToString());
 
     // enable disabled privileges
     if (IncreaseQuta.state == Privilege::Disabled) {
@@ -122,6 +124,10 @@ bool AdjustTokenPrivileges(HANDLE token) {
     if (Impersonate.state == Privilege::Disabled) {
         wprintf(L"  Enabling SE_IMPERSONATE...\n");
         Impersonate.Modify(Privilege::Enabled);
+    }
+    if (Security.state == Privilege::Disabled) {
+        wprintf(L"  Enabling SE_SECURITY...\n");
+        Security.Modify(Privilege::Enabled);
     }
 
     return true;
