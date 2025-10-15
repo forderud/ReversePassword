@@ -18,6 +18,8 @@
 #pragma comment(lib, "Secur32.lib")
 #pragma comment(lib, "Userenv.lib")
 
+#define START_SEPARATE_WINDOW
+
 
 /** Converts unicode string to ASCII */
 inline std::string ToAscii(const std::wstring& w_str) {
@@ -121,7 +123,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     STARTUPINFOW si = {
         .cb = sizeof(si),
         //.lpDesktop = (wchar_t*)L"winsta0\\default",
-#if 0
+#ifndef START_SEPARATE_WINDOW
         .hStdInput = GetStdHandle(STD_INPUT_HANDLE),
         .hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE),
         .hStdError = GetStdHandle(STD_ERROR_HANDLE),
@@ -131,7 +133,12 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 
     std::wstring cmdLine = L"C:\\Windows\\System32\\cmd.exe";
     const wchar_t* appName = cmdLine.c_str();
-    DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_CONSOLE | CREATE_NEW_PROCESS_GROUP;
+    DWORD creationFlags = CREATE_DEFAULT_ERROR_MODE | CREATE_NEW_PROCESS_GROUP;
+#ifdef START_SEPARATE_WINDOW
+    creationFlags |= CREATE_NEW_CONSOLE;
+#else
+    creationFlags |= CREATE_NO_WINDOW;
+#endif
     const wchar_t* curDir = L"C:\\";
 #if 1
     // WARNING: CreateProcessWithTokenW succeeds, but cmd.exe crashes immediately with 0xc0000142 (DLL initialization failed) if using token from LsaLogonUser
