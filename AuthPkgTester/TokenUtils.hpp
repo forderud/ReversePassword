@@ -104,7 +104,7 @@ bool AdjustTokenPrivileges(HANDLE token) {
 
     Privilege IncreaseQuta(token, SE_INCREASE_QUOTA_NAME);
     Privilege AssignPrimaryToken(token, SE_ASSIGNPRIMARYTOKEN_NAME);
-    Privilege Impersonate(token, SE_IMPERSONATE_NAME);
+    Privilege Impersonate(token, SE_IMPERSONATE_NAME); // required for CreateProcessWithToken
     Privilege Security(token, SE_SECURITY_NAME); // required to get or set the SACL
 
     wprintf(L"  SE_INCREASE_QUOTA privilege %s\n", IncreaseQuta.ToString());
