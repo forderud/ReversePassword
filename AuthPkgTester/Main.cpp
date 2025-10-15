@@ -208,7 +208,6 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
             .SourceIdentifier{},
         };
         AllocateLocallyUniqueId(&sourceContext.SourceIdentifier);
-        wprintf(L"SourceContext ID: High=%u, Low=%u\n", sourceContext.SourceIdentifier.HighPart, sourceContext.SourceIdentifier.LowPart);
 
         NTSTATUS subStatus = 0;
         LUID logonId{};
@@ -219,7 +218,6 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
             abort();
         }
         wprintf(L"SUCCESS: LsaLogonUser succeeded.\n");
-        wprintf(L"LogonID: High=%u, Low=%u\n", logonId.HighPart, logonId.LowPart);
 
         BOOL ok = GetLogonSID(token, &logonSid);
         assert(ok);
