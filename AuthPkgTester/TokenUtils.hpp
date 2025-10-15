@@ -304,7 +304,8 @@ BOOL GetLogonSID (HANDLE hToken, PSID* ppsid) {
         if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
             goto Cleanup;
 
-        ptg = (PTOKEN_GROUPS)calloc(1, dwLength);
+        ptg = (PTOKEN_GROUPS)HeapAlloc(GetProcessHeap(),
+            HEAP_ZERO_MEMORY, dwLength);
 
         if (ptg == NULL)
             goto Cleanup;
@@ -326,12 +327,13 @@ BOOL GetLogonSID (HANDLE hToken, PSID* ppsid) {
         if ((ptg->Groups[dwIndex].Attributes & SE_GROUP_LOGON_ID) == SE_GROUP_LOGON_ID) {
             // Found the logon SID; make a copy of it.
             dwLength = GetLengthSid(ptg->Groups[dwIndex].Sid);
-            *ppsid = (PSID)calloc(1, dwLength);
+            *ppsid = (PSID)HeapAlloc(GetProcessHeap(),
+                HEAP_ZERO_MEMORY, dwLength);
             if (*ppsid == NULL)
                 goto Cleanup;
             if (!CopySid(dwLength, *ppsid, ptg->Groups[dwIndex].Sid))
             {
-                free(*ppsid);
+                HeapFree(GetProcessHeap(), 0, (LPVOID)*ppsid);
                 goto Cleanup;
             }
             break;
@@ -342,7 +344,7 @@ BOOL GetLogonSID (HANDLE hToken, PSID* ppsid) {
 
 Cleanup:
     if (ptg)
-        free(ptg);
+        HeapFree(GetProcessHeap(), 0, (LPVOID)ptg);
 
     return bSuccess;
 }
