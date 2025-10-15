@@ -19,6 +19,7 @@
 #pragma comment(lib, "Userenv.lib")
 
 #define START_SEPARATE_WINDOW
+#define USE_LSA_LOGONUSER
 
 
 /** Converts unicode string to ASCII */
@@ -182,7 +183,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
     QUOTA_LIMITS quotas{};
     PSID logonSid = nullptr; // logon session SID in "S-1-5-5-X-Y" format
 
-#if 0
+#ifndef USE_LSA_LOGONUSER
     {
 #if 0
         wchar_t domain[MAX_COMPUTERNAME_LENGTH + 1] = {};
@@ -223,7 +224,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
         NTSTATUS subStatus = 0;
         LUID logonId{};
-        // "LocalGroups" not set because it require SeTcbPrivilege
+        // "LocalGroups" argument not set because it require SeTcbPrivilege
         NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
         if (ret != STATUS_SUCCESS) {
             wprintf(L"LsaLogonUser failed (%s)\n", ToString(ret).c_str());
