@@ -248,23 +248,6 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
 
 
 int wmain(int argc, wchar_t* argv[]) {
-    {
-#if 0
-        SECURITY_PACKAGE_OPTIONS options{
-            .Size = sizeof(options),
-            .Type = SECPKG_OPTIONS_TYPE_LSA,
-            .Flags = 0, // reserved
-            .SignatureSize = 0,
-            .Signature = 0,
-        };
-        SECURITY_STATUS ret = AddSecurityPackageW((wchar_t*)L"C:\\Windows\\System32\\NoPasswordAuthPkg.dll", &options);
-        if (ret == SEC_E_OK)
-            wprintf(L"INFO: NoPasswordAuthPkg.dll loaded\n");
-        else
-            wprintf(L"WARNING: Unable to load NoPasswordAuthPkg.dll (error %u)\n", ret);
-#endif
-    }
-
     LsaHandle lsa;
 
     if (argc == 1) {
