@@ -280,14 +280,7 @@ int wmain(int argc, wchar_t* argv[]) {
 
         NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo, username, password);
         if (ret != STATUS_SUCCESS) {
-            if (ret == STATUS_INVALID_PARAMETER)
-                wprintf(L"ERROR: LsaLogonUser failed with STATUS_INVALID_PARAMETER\n");
-            else if (ret == STATUS_LOGON_FAILURE) // observed both for unknonw user and invalid password
-                wprintf(L"ERROR: LsaLogonUser failed with STATUS_LOGON_FAILURE\n");
-            else if (ret == RPC_NT_CALL_FAILED)
-                wprintf(L"ERROR: LsaLogonUser failed with RPC_NT_CALL_FAILED\n");
-            else
-                wprintf(L"ERROR: LsaLogonUser failed, ret: 0x%x\n", ret);
+            wprintf(L"ERROR: LsaLogonUser failed (%s)\n", ToString(ret).c_str());
         } else {
             wprintf(L"SUCCESS: User logon succeeded.\n");
         }

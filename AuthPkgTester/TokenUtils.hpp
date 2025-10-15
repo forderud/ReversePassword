@@ -16,9 +16,11 @@ const std::wstring ToString(DWORD err) {
     case ERROR_INVALID_SECURITY_DESCR: return L"ERROR_INVALID_SECURITY_DESCR";
     case ERROR_TOKEN_ALREADY_IN_USE: return L"ERROR_TOKEN_ALREADY_IN_USE";
     case ERROR_LOGON_TYPE_NOT_GRANTED: return L"ERROR_LOGON_TYPE_NOT_GRANTED";
+    case STATUS_INVALID_PARAMETER: return L"STATUS_INVALID_PARAMETER";
     case STATUS_ACCESS_DENIED: return L"STATUS_ACCESS_DENIED";
-    case STATUS_LOGON_FAILURE: return L"STATUS_LOGON_FAILURE";
+    case STATUS_LOGON_FAILURE: return L"STATUS_LOGON_FAILURE"; // observed both for unknonw user and invalid password
     case STATUS_ACCOUNT_RESTRICTION: return L"STATUS_ACCOUNT_RESTRICTION";
+    case RPC_NT_CALL_FAILED: return L"RPC_NT_CALL_FAILED";
     default: return L"error " + std::to_wstring(err);
     }
 }
