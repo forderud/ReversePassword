@@ -224,6 +224,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
             .SourceIdentifier{},
         };
         AllocateLocallyUniqueId(&sourceContext.SourceIdentifier);
+        wprintf(L"SourceContext ID: High=%u, Low=%u\n", sourceContext.SourceIdentifier.HighPart, sourceContext.SourceIdentifier.LowPart);
 
         NTSTATUS subStatus = 0;
         LUID logonId{};
