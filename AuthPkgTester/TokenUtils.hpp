@@ -273,13 +273,8 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
 /** From https://learn.microsoft.com/en-us/previous-versions/aa446670(v=vs.85) */
 BOOL GetLogonSID (HANDLE hToken, PSID* ppsid) {
     BOOL bSuccess = FALSE;
-    DWORD dwIndex;
     DWORD dwLength = 0;
     PTOKEN_GROUPS ptg = NULL;
-
-    // Verify the parameter passed in is not NULL.
-    if (NULL == ppsid)
-        goto Cleanup;
 
     // Get required buffer size and allocate the TOKEN_GROUPS buffer.
     if (!GetTokenInformation(
@@ -311,7 +306,7 @@ BOOL GetLogonSID (HANDLE hToken, PSID* ppsid) {
     }
 
     // Loop through the groups to find the logon SID.
-    for (dwIndex = 0; dwIndex < ptg->GroupCount; dwIndex++) {
+    for (DWORD dwIndex = 0; dwIndex < ptg->GroupCount; dwIndex++) {
         if ((ptg->Groups[dwIndex].Attributes & SE_GROUP_LOGON_ID) == SE_GROUP_LOGON_ID) {
             // Found the logon SID; make a copy of it.
             dwLength = GetLengthSid(ptg->Groups[dwIndex].Sid);
