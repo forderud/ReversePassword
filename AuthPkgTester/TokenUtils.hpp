@@ -304,12 +304,11 @@ BOOL GetLogonSID (HANDLE hToken, PSID* ppsid) {
         if ((ptg->Groups[dwIndex].Attributes & SE_GROUP_LOGON_ID) == SE_GROUP_LOGON_ID) {
             // Found the logon SID; make a copy of it.
             dwLength = GetLengthSid(ptg->Groups[dwIndex].Sid);
-            *ppsid = (PSID)HeapAlloc(GetProcessHeap(),
-                HEAP_ZERO_MEMORY, dwLength);
+            *ppsid = (PSID)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwLength);
             if (*ppsid == NULL)
                 goto Cleanup;
-            if (!CopySid(dwLength, *ppsid, ptg->Groups[dwIndex].Sid))
-            {
+
+            if (!CopySid(dwLength, *ppsid, ptg->Groups[dwIndex].Sid)) {
                 HeapFree(GetProcessHeap(), 0, (LPVOID)*ppsid);
                 goto Cleanup;
             }
