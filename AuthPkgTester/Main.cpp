@@ -7,6 +7,7 @@
 #include <ntstatus.h>
 #include <SubAuth.h>
 #include <userenv.h> // for CreateEnvironmentBlock
+#include <Lm.h>
 #include <sddl.h>
 #include <cassert>
 #include <iostream>
@@ -17,6 +18,7 @@
 
 #pragma comment(lib, "Secur32.lib")
 #pragma comment(lib, "Userenv.lib")
+#pragma comment(lib, "Netapi32.lib") // NetUserGetInfo
 
 #define START_SEPARATE_WINDOW
 #define USE_LSA_LOGONUSER
@@ -95,15 +97,21 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     wprintf(L"\n");
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
 
+    {
+        USER_INFO_4 info{};
+        DWORD err = NetUserGetInfo(nullptr, username.c_str(), 4, (BYTE**)&info);
+        assert(err == NERR_Success);
+        wprintf(L"USer profile path: %s\n", info.usri4_profile);
 #if 0
-    // not sure if this is needed when using LOGON_WITH_PROFILE
-    PROFILEINFOW profile = {
-        .dwSize = sizeof(profile),
-        .lpUserName = (wchar_t*)username.c_str(),
-    };
-    if (!LoadUserProfileW(token, &profile))
-        abort();
+        // not sure if this is needed when using LOGON_WITH_PROFILE
+        PROFILEINFOW profile = {
+            .dwSize = sizeof(profile),
+            .lpUserName = (wchar_t*)username.c_str(),
+        };
+        if (!LoadUserProfileW(token, &profile))
+            abort();
 #endif
+    }
 
     GrantWindowStationDesktopAccess(logonSid);
 
