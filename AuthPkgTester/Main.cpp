@@ -20,7 +20,6 @@
 
 #define START_SEPARATE_WINDOW
 #define USE_LSA_LOGONUSER
-#define USE_CREATE_PROCESS_WITH_TOKEN
 
 
 /** Converts unicode string to ASCII */
@@ -142,31 +141,10 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     creationFlags |= CREATE_NO_WINDOW;
 #endif
     const wchar_t* curDir = L"C:\\";
-#ifdef USE_CREATE_PROCESS_WITH_TOKEN
     // WARNING: CreateProcessWithTokenW succeeds, but cmd.exe crashes immediately with 0xc0000142 (DLL initialization failed) if using token from LsaLogonUser
     // CreateProcessWithTokenW require TOKEN_QUERY, TOKEN_DUPLICATE & TOKEN_ASSIGN_PRIMARY access rights 
     DWORD logonFlags = LOGON_WITH_PROFILE;
     BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
-#else
-    // WARNING: CreateProcessAsUserW fails, unless running through the SYSTEM account. Even then, cmd.exe crashes immediately with 0xc0000142 (DLL initialization failed) if using token from LsaLogonUser
-
-    void* userEnvironment = nullptr;
-    if (!CreateEnvironmentBlock(&userEnvironment, token, /*inherit*/false))
-        abort();
-    creationFlags |= CREATE_UNICODE_ENVIRONMENT; // environment loading required for CreateProcessAsUserW
-
-    BOOL ok = ImpersonateLoggedOnUser(token); // required according to https://learn.microsoft.com/en-us/previous-versions/aa379608(v=vs.85)
-    assert(ok);
-
-    // CreateProcessAsUserW require SE_INCREASE_QUOTA_NAME and may require SE_ASSIGNPRIMARYTOKEN_NAME that admin accounts usually lack
-    ok = CreateProcessAsUserW(token, appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/userEnvironment, curDir, &si, &pi);
-
-    RevertToSelf();
-
-    // cannot use CreateProcessW with ImpersonateLoggedOnUser, since it doesn't support impersonation
-
-    DestroyEnvironmentBlock(userEnvironment);
-#endif
     if (!ok) {
         DWORD err = GetLastError();
         wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (%s).\n", ToString(err).c_str());
