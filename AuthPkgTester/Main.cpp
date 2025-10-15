@@ -74,26 +74,7 @@ NTSTATUS GetAuthPackage(LsaHandle& lsa, const wchar_t* name, /*out*/ULONG* authP
     return status;
 }
 
-/** Aleternative to GetCurrentProcessToken() with more privileges. */
-HANDLE GetCurrentProcessTokenEx() {
-    HANDLE procToken = 0;
-    if (!OpenProcessToken(GetCurrentProcess(), MAXIMUM_ALLOWED, &procToken))
-        abort();
-
-    // copy token to avoid ERROR_TOKEN_ALREADY_IN_USE
-    HANDLE token = 0;
-    if (!DuplicateTokenEx(procToken, MAXIMUM_ALLOWED, NULL, SecurityDelegation, TokenPrimary, &token))
-        abort();
-    return token;
-}
-
 NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, PSID logonSid) {
-    wprintf(L"Inspecting current process privileges:\n");
-    AdjustTokenPrivileges(GetCurrentProcessTokenEx());
-
-    wprintf(L"Inspecting user token privileges:\n");
-    AdjustTokenPrivileges(token);
-
     wprintf(L"\n");
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
 
