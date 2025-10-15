@@ -176,36 +176,18 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
 /** From https://learn.microsoft.com/en-us/previous-versions/aa446670(v=vs.85) */
 BOOL GetLogonSID (HANDLE hToken, PSID* ppsid) {
     BOOL bSuccess = FALSE;
+
+    // Get required TOKEN_GROUPS buffer size
     DWORD dwLength = 0;
-    PTOKEN_GROUPS ptg = NULL;
+    if (GetTokenInformation(hToken, TokenGroups, nullptr, 0, &dwLength))
+        abort(); // call is supposed to fail
+    assert(GetLastError() == ERROR_INSUFFICIENT_BUFFER);
 
-    // Get required buffer size and allocate the TOKEN_GROUPS buffer.
-    if (!GetTokenInformation(
-        hToken,         // handle to the access token
-        TokenGroups,    // get information about the token's groups 
-        (LPVOID)ptg,   // pointer to TOKEN_GROUPS buffer
-        0,              // size of buffer
-        &dwLength       // receives required buffer size
-    )) {
-        if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
-            goto Cleanup;
-
-        ptg = (PTOKEN_GROUPS)HeapAlloc(GetProcessHeap(),
-            HEAP_ZERO_MEMORY, dwLength);
-
-        if (ptg == NULL)
-            goto Cleanup;
-    }
+    auto* ptg = (TOKEN_GROUPS*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwLength);
 
     // Get the token group information from the access token.
-    if (!GetTokenInformation(
-        hToken,         // handle to the access token
-        TokenGroups,    // get information about the token's groups 
-        (LPVOID)ptg,   // pointer to TOKEN_GROUPS buffer
-        dwLength,       // size of buffer
-        &dwLength       // receives required buffer size
-    )) {
-        goto Cleanup;
+    if (!GetTokenInformation(hToken, TokenGroups, (LPVOID)ptg, dwLength, &dwLength)) {
+        abort();
     }
 
     // Loop through the groups to find the logon SID.
