@@ -103,19 +103,13 @@ bool AdjustTokenPrivileges(HANDLE token) {
     }
 
     Privilege Impersonate(token, SE_IMPERSONATE_NAME);     // required by CreateProcessWithToken
-    Privilege Security(token, SE_SECURITY_NAME);           // required to get or set the SACL
 
     wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", Impersonate.ToString());
-    wprintf(L"  SE_SECURITY_NAME privilege %s\n", Security.ToString());
 
     // enable disabled privileges
     if (Impersonate.state == Privilege::Disabled) {
         wprintf(L"  Enabling SE_IMPERSONATE_NAME...\n");
         Impersonate.Modify(Privilege::Enabled);
-    }
-    if (Security.state == Privilege::Disabled) {
-        wprintf(L"  Enabling SE_SECURITY_NAME...\n");
-        Security.Modify(Privilege::Enabled);
     }
 
     return true;
