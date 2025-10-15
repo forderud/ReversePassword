@@ -237,7 +237,9 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
         HWINSTA ws = OpenWindowStationW(L"winsta0", /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(ws);
         {
-            // Grant GENERIC_ALL to "logonSid"
+            // Grant GENERIC_ALL to "logonSid" which grants:
+            //   STANDARD_RIGHTS_REQUIRED WINSTA_ACCESSCLIPBOARD WINSTA_ACCESSGLOBALATOMS WINSTA_CREATEDESKTOP WINSTA_ENUMDESKTOPS
+            //   WINSTA_ENUMERATE WINSTA_EXITWINDOWS WINSTA_READATTRIBUTES WINSTA_READSCREEN WINSTA_WRITEATTRIBUTES
             EXPLICIT_ACCESS_W ea{
                 .grfAccessPermissions = GENERIC_ALL,
                 .grfAccessMode = GRANT_ACCESS,
