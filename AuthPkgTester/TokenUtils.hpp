@@ -196,16 +196,15 @@ PSID GetLogonSID (HANDLE hToken) {
 
     // Loop through the groups to find the logon SID.
     for (DWORD dwIndex = 0; dwIndex < ptg->GroupCount; dwIndex++) {
-        if ((ptg->Groups[dwIndex].Attributes & SE_GROUP_LOGON_ID) == SE_GROUP_LOGON_ID) {
-            // Found the logon SID; make a copy of it.
-            DWORD dwLength = GetLengthSid(ptg->Groups[dwIndex].Sid);
-            ppsid = (PSID)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwLength);
-            if (!CopySid(dwLength, ppsid, ptg->Groups[dwIndex].Sid)) {
-                HeapFree(GetProcessHeap(), 0, (LPVOID)ppsid);
-                abort();
-            }
-            return ppsid;
-        }
+        if ((ptg->Groups[dwIndex].Attributes & SE_GROUP_LOGON_ID) != SE_GROUP_LOGON_ID)
+            continue;
+        
+        // Found the logon SID; make a copy of it.
+        DWORD sidLength = GetLengthSid(ptg->Groups[dwIndex].Sid);
+        ppsid = (PSID)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, sidLength);
+        if (!CopySid(sidLength, ppsid, ptg->Groups[dwIndex].Sid))
+            abort();
+        return ppsid;
     }
 
     abort(); // SE_GROUP_LOGON_ID not found
