@@ -173,7 +173,7 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
     }
 }
 
-/** From https://learn.microsoft.com/en-us/previous-versions/aa446670(v=vs.85) */
+/** Based on https://learn.microsoft.com/en-us/previous-versions/aa446670(v=vs.85) */
 PSID GetLogonSID (HANDLE hToken) {
     std::vector<BYTE> tokenGroupsBuf;
     {
