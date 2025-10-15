@@ -286,6 +286,7 @@ int wmain(int argc, wchar_t* argv[]) {
             authPkgName = argv[argIdx++];
 
         // try to login with username & password
+        std::wstring domain = L"";
         std::wstring username = argv[argIdx++];
         std::wstring password = argv[argIdx++];
 
@@ -293,9 +294,9 @@ int wmain(int argc, wchar_t* argv[]) {
         wprintf(L"Attempting local interactive logon against the %s authentication package...\n", authPkgName);
         std::vector<BYTE> authInfo;
         if (std::wstring(authPkgName) == MSV1_0_PACKAGE_NAMEW)
-            authInfo = PrepareLogon_MSV1_0(username, password);
+            authInfo = PrepareLogon_MSV1_0(domain, username, password);
         else
-            authInfo = PrepareLogon_MSV1_0(username, password); // TODO: Replace with suitable authInfo for the selected authPkg
+            authInfo = PrepareLogon_MSV1_0(domain, username, password); // TODO: Replace with suitable authInfo for the selected authPkg
 
         NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo, username, password);
         if (ret != STATUS_SUCCESS) {

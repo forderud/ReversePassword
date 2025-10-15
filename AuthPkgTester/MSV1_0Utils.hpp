@@ -11,9 +11,7 @@ inline std::wstring ToWstring(const LSA_UNICODE_STRING& lsa_str) {
 }
 
 /** Prepare MSV1_0_INTERACTIVE_LOGON struct to be passed to LsaLogonUser when using authPkg=MSV1_0_PACKAGE_NAME. */
-std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& username, std::wstring& password) {
-    std::wstring domain = L"";
-
+std::vector<BYTE> PrepareLogon_MSV1_0(std::wstring& domain, std::wstring& username, std::wstring& password) {
     // field sizes [bytes]
     auto domainSize = (USHORT)(2 * domain.size());
     auto usernameSize = (USHORT)(2 * username.size());
