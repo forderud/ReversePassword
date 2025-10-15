@@ -242,10 +242,15 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
         }
         wprintf(L"SUCCESS: LsaLogonUser succeeded.\n");
 
+#if 0
         // create logon session SID in "S-1-5-5-X-Y" format
         SID_IDENTIFIER_AUTHORITY ntAuthority = SECURITY_NT_AUTHORITY;
         BOOL ok = AllocateAndInitializeSid(&ntAuthority, 3, 5, logonId.HighPart, logonId.LowPart, 0, 0, 0, 0, 0, &logonSid);
         assert(ok);
+#else
+        BOOL ok = GetLogonSID(token, &logonSid);
+        assert(ok);
+#endif
     }
 #endif
 
