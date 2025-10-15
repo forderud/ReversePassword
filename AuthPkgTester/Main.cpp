@@ -241,6 +241,7 @@ NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, con
             abort();
         }
         wprintf(L"SUCCESS: LsaLogonUser succeeded.\n");
+        wprintf(L"LogonID: High=%u, Low=%u\n", logonId.HighPart, logonId.LowPart);
 
 #if 0
         // create logon session SID in "S-1-5-5-X-Y" format
