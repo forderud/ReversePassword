@@ -117,7 +117,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 #endif
     const wchar_t* curDir = L"C:\\";
     // CreateProcessWithTokenW require TOKEN_QUERY, TOKEN_DUPLICATE & TOKEN_ASSIGN_PRIMARY access rights 
-    DWORD logonFlags = LOGON_WITH_PROFILE;
+    DWORD logonFlags = LOGON_WITH_PROFILE; // confirmed to populate HKEY_CURRENT_USER
     BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
     if (!ok) {
         DWORD err = GetLastError();
