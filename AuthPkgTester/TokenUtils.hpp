@@ -107,26 +107,26 @@ bool AdjustTokenPrivileges(HANDLE token) {
     Privilege Impersonate(token, SE_IMPERSONATE_NAME); // required for CreateProcessWithToken
     Privilege Security(token, SE_SECURITY_NAME); // required to get or set the SACL
 
-    wprintf(L"  SE_INCREASE_QUOTA privilege %s\n", IncreaseQuta.ToString());
-    wprintf(L"  SE_ASSIGNPRIMARYTOKEN privilege %s\n", AssignPrimaryToken.ToString());
-    wprintf(L"  SE_IMPERSONATE privilege %s\n", Impersonate.ToString());
-    wprintf(L"  SE_SECURITY privilege %s\n", Security.ToString());
+    wprintf(L"  SE_INCREASE_QUOTA_NAME privilege %s\n", IncreaseQuta.ToString());
+    wprintf(L"  SE_ASSIGNPRIMARYTOKEN_NAME privilege %s\n", AssignPrimaryToken.ToString());
+    wprintf(L"  SE_IMPERSONATE_NAME privilege %s\n", Impersonate.ToString());
+    wprintf(L"  SE_SECURITY_NAME privilege %s\n", Security.ToString());
 
     // enable disabled privileges
     if (IncreaseQuta.state == Privilege::Disabled) {
-        wprintf(L"  Enabling SE_INCREASE_QUOTA...\n");
+        wprintf(L"  Enabling SE_INCREASE_QUOTA_NAME...\n");
         IncreaseQuta.Modify(Privilege::Enabled);
     }
     if (AssignPrimaryToken.state == Privilege::Disabled) {
-        wprintf(L"  Enabling SE_ASSIGNPRIMARYTOKEN...\n");
+        wprintf(L"  Enabling SE_ASSIGNPRIMARYTOKEN_NAME...\n");
         AssignPrimaryToken.Modify(Privilege::Enabled);
     }
     if (Impersonate.state == Privilege::Disabled) {
-        wprintf(L"  Enabling SE_IMPERSONATE...\n");
+        wprintf(L"  Enabling SE_IMPERSONATE_NAME...\n");
         Impersonate.Modify(Privilege::Enabled);
     }
     if (Security.state == Privilege::Disabled) {
-        wprintf(L"  Enabling SE_SECURITY...\n");
+        wprintf(L"  Enabling SE_SECURITY_NAME...\n");
         Security.Modify(Privilege::Enabled);
     }
 
