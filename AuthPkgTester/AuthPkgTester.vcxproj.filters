@@ -7,5 +7,6 @@
     <ClInclude Include="PrintInfo.hpp" />
     <ClInclude Include="TokenUtils.hpp" />
     <ClInclude Include="MSV1_0Utils.hpp" />
+    <ClInclude Include="LogonUser.hpp" />
   </ItemGroup>
 </Project>
