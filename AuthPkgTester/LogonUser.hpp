@@ -77,7 +77,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 #endif
     }
 
-    GrantWindowStationDesktopAccess(logonSid);
+    GrantWindowStationDesktopAccess(logonSid, username);
 
     STARTUPINFOW si = {
         .cb = sizeof(si),

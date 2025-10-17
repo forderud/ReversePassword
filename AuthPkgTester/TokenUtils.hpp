@@ -124,11 +124,18 @@ bool AddTokenDaclRight(HANDLE token, EXPLICIT_ACCESS_W& ea) {
 
 
 /** Grant "logonSid" access to the current window station and desktop. */
-void GrantWindowStationDesktopAccess(PSID logonSid) {
+void GrantWindowStationDesktopAccess(PSID logonSid, const std::wstring& username) {
     {
         // https://learn.microsoft.com/en-us/windows/win32/winstation/window-station-security-and-access-rights
         HWINSTA ws = OpenWindowStationW(L"winsta0", /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(ws);
+        {
+            // Grant GENERIC_ALL to "username"
+            EXPLICIT_ACCESS_W ea{};
+            BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), GENERIC_ALL, GRANT_ACCESS, /*inherit*/false);
+            ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+            AddWindowDaclRight(ws, ea);
+        }
         {
             // Grant GENERIC_ALL to "logonSid" which grants:
             //   STANDARD_RIGHTS_REQUIRED WINSTA_ACCESSCLIPBOARD WINSTA_ACCESSGLOBALATOMS WINSTA_CREATEDESKTOP WINSTA_ENUMDESKTOPS
@@ -153,6 +160,14 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
         // https://learn.microsoft.com/en-us/windows/win32/winstation/desktop-security-and-access-rights
         HDESK desk = OpenDesktopW(L"default", 0, /*inherit*/false, READ_CONTROL | WRITE_DAC);
         assert(desk);
+        {
+            // Grant GRANT_ACCESS to "username"
+            EXPLICIT_ACCESS_W ea{};
+            BuildExplicitAccessWithNameW(&ea, (wchar_t*)username.c_str(), GENERIC_ALL, GRANT_ACCESS, /*inherit*/false);
+            ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+
+            AddWindowDaclRight(desk, ea);
+        }
         {
             // Grant GENERIC_ALL to "logonSid" which grants:
             //   DESKTOP_CREATEMENU DESKTOP_CREATEWINDOW DESKTOP_ENUMERATE DESKTOP_HOOKCONTROL DESKTOP_JOURNALPLAYBACK
