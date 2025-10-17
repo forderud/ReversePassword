@@ -22,7 +22,7 @@
 #pragma comment(lib, "Netapi32.lib") // NetUserGetInfo
 
 #define START_SEPARATE_WINDOW
-#define USE_LSA_LOGONUSER
+//#define USE_LSA_LOGONUSER
 
 
 /** Converts unicode string to ASCII */
@@ -66,7 +66,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
         DWORD err = NetUserGetInfo(nullptr, username.c_str(), 4, (BYTE**)&info);
         assert(err == NERR_Success);
         wprintf(L"USer profile path: %s\n", info.usri4_profile);
-#if 0
+#if 1
         // not needed if using LOGON_WITH_PROFILE
         PROFILEINFOW profile = {
             .dwSize = sizeof(profile),
@@ -99,14 +99,29 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     creationFlags |= CREATE_NO_WINDOW;
 #endif
     const wchar_t* curDir = L"C:\\";
-    DWORD logonFlags = LOGON_WITH_PROFILE; // confirmed to populate HKEY_CURRENT_USER
-    // CreateProcessWithTokenW require SE_IMPERSONATE_NAME privilege
-    BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
+    // WARNING: CreateProcessAsUserW fails, unless running through the SYSTEM account.
+
+    void* userEnvironment = nullptr;
+    if (!CreateEnvironmentBlock(&userEnvironment, token, /*inherit*/false))
+        abort();
+    creationFlags |= CREATE_UNICODE_ENVIRONMENT; // environment loading required for CreateProcessAsUserW
+
+    //BOOL ok = ImpersonateLoggedOnUser(token); // required according to https://learn.microsoft.com/en-us/previous-versions/aa379608(v=vs.85)
+    //assert(ok);
+
+    // CreateProcessAsUserW require SE_INCREASE_QUOTA_NAME and may require SE_ASSIGNPRIMARYTOKEN_NAME that admin accounts usually lack
+    BOOL ok = CreateProcessAsUserW(token, appName, cmdLine.data(), /*proc.sec*/nullptr, /*thread sec*/nullptr, /*inherit*/false, creationFlags, /*env*/userEnvironment, curDir, &si, &pi);
     if (!ok) {
         DWORD err = GetLastError();
         wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (%s).\n", ToString(err).c_str());
         return err;
     }
+
+    //RevertToSelf();
+
+    // cannot use CreateProcessW with ImpersonateLoggedOnUser, since it doesn't support impersonation
+
+    DestroyEnvironmentBlock(userEnvironment);
 
     wprintf(L"Waiting for process to terminate...\n");
     WaitForSingleObject(pi.hProcess, INFINITE);
