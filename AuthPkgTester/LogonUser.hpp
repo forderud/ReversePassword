@@ -81,7 +81,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 
     STARTUPINFOW si = {
         .cb = sizeof(si),
-        //.lpDesktop = (wchar_t*)L"winsta0\\default",
+        .lpDesktop = (wchar_t*)L"winsta0\\default",
 #ifndef START_SEPARATE_WINDOW
         .hStdInput = GetStdHandle(STD_INPUT_HANDLE),
         .hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE),
