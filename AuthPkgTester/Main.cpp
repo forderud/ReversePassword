@@ -1,6 +1,27 @@
 #include "LogonUser.hpp"
 
 
+class LsaHandle {
+public:
+    LsaHandle() {
+        // establish LSA connection
+        NTSTATUS status = LsaConnectUntrusted(&m_lsa);
+        assert(status == STATUS_SUCCESS);
+    }
+    ~LsaHandle() {
+        // close LSA handle
+        NTSTATUS status = LsaDeregisterLogonProcess(m_lsa);
+        assert(status == STATUS_SUCCESS);
+    }
+
+    operator HANDLE() {
+        return m_lsa;
+    }
+private:
+    HANDLE m_lsa = 0;
+};
+
+
 int wmain(int argc, wchar_t* argv[]) {
     LsaHandle lsa;
 

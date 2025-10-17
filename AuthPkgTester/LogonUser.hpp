@@ -34,28 +34,8 @@ inline std::string ToAscii(const std::wstring& w_str) {
     return s_str;
 }
 
-class LsaHandle {
-public:
-    LsaHandle() {
-        // establish LSA connection
-        NTSTATUS status = LsaConnectUntrusted(&m_lsa);
-        assert(status == STATUS_SUCCESS);
-    }
-    ~LsaHandle() {
-        // close LSA handle
-        NTSTATUS status = LsaDeregisterLogonProcess(m_lsa);
-        assert(status == STATUS_SUCCESS);
-    }
 
-    operator HANDLE() {
-        return m_lsa;
-    }
-private:
-    HANDLE m_lsa = 0;
-};
-
-
-NTSTATUS GetAuthPackage(LsaHandle& lsa, const wchar_t* name, /*out*/ULONG* authPkg) {
+NTSTATUS GetAuthPackage(HANDLE lsa, const wchar_t* name, /*out*/ULONG* authPkg) {
     std::string name_a = ToAscii(name);
 
     LSA_STRING lsa_name{
@@ -138,7 +118,7 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 }
 
 
-NTSTATUS LsaLogonUserInteractive(LsaHandle& lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
+NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     // output arguments
