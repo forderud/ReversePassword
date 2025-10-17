@@ -22,7 +22,7 @@
 #pragma comment(lib, "Netapi32.lib") // NetUserGetInfo
 
 #define START_SEPARATE_WINDOW
-#define USE_LSA_LOGONUSER
+//#define USE_LSA_LOGONUSER
 
 
 /** Converts unicode string to ASCII */
@@ -57,7 +57,7 @@ NTSTATUS GetAuthPackage(HANDLE lsa, const wchar_t* name, /*out*/ULONG* authPkg) 
 }
 
 
-NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, PSID logonSid) {
+NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, const std::wstring& password, PSID logonSid) {
     wprintf(L"\n");
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
 
@@ -76,8 +76,6 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
             abort();
 #endif
     }
-
-    GrantWindowStationDesktopAccess(logonSid, username);
 
     STARTUPINFOW si = {
         .cb = sizeof(si),
@@ -100,13 +98,22 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
 #endif
     const wchar_t* curDir = L"C:\\";
     DWORD logonFlags = LOGON_WITH_PROFILE; // confirmed to populate HKEY_CURRENT_USER
-    // CreateProcessWithTokenW require SE_IMPERSONATE_NAME privilege
-    BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
+    // WARNING: CreateProcessAsUserW fails, unless running through the SYSTEM account. Even then, cmd.exe crashes immediately with 0xc0000142 (DLL initialization failed) if using token from LsaLogonUser
+
+    void* userEnvironment = nullptr;
+    if (!CreateEnvironmentBlock(&userEnvironment, token, /*inherit*/false))
+        abort();
+    creationFlags |= CREATE_UNICODE_ENVIRONMENT; // environment loading required for CreateProcessAsUserW
+
+    // change NULL to '.' to use local account database
+    BOOL ok = CreateProcessWithLogonW(username.c_str(), NULL, password.c_str(), logonFlags,  appName, cmdLine.data(), creationFlags, userEnvironment, curDir, &si, &pi);
     if (!ok) {
         DWORD err = GetLastError();
         wprintf(L"ERROR: Unable to start cmd.exe through the logged in user (%s).\n", ToString(err).c_str());
         return err;
     }
+
+    DestroyEnvironmentBlock(userEnvironment);
 
     wprintf(L"Waiting for process to terminate...\n");
     WaitForSingleObject(pi.hProcess, INFINITE);
@@ -196,7 +203,7 @@ NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const s
         Print(*profile);
     }
 
-    NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, logonSid);
+    NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, password, logonSid);
 
     LsaFreeReturnBuffer(profileBuffer);
     CloseHandle(token);
