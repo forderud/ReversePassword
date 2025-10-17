@@ -99,8 +99,8 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     creationFlags |= CREATE_NO_WINDOW;
 #endif
     const wchar_t* curDir = L"C:\\";
-    // CreateProcessWithTokenW require TOKEN_QUERY, TOKEN_DUPLICATE & TOKEN_ASSIGN_PRIMARY access rights 
     DWORD logonFlags = LOGON_WITH_PROFILE; // confirmed to populate HKEY_CURRENT_USER
+    // CreateProcessWithTokenW require SE_IMPERSONATE_NAME privilege
     BOOL ok = CreateProcessWithTokenW(token, logonFlags, appName, cmdLine.data(), creationFlags, /*env*/nullptr, curDir, &si, &pi);
     if (!ok) {
         DWORD err = GetLastError();
