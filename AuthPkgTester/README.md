@@ -6,7 +6,7 @@ Command-line tool for authentication package testing and running `cmd.exe` throg
 * [`CreateProcessWithToken`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) is used to start `cmd.exe` through the authenticated user account.
 
 ### Open issues
-* [issue #25](../../../issues/25)
+* [issue #25](../../../issues/25) UI theme settings not applied
 
 
 ### Links
