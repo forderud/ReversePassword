@@ -3,7 +3,7 @@ Command-line tool for authentication package testing and running `cmd.exe` throg
 Calls [`LsaLogonUser`](https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsalogonuser) to authenticate against a given authentication package. Afterwards, [`CreateProcessWithToken`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) is used to start `cmd.exe` through the authenticated user account.
 
 ## Open issues
-* [#25](https://github.com/forderud/ReversePassword/issues/25)
+* [issue #25](../../issues/25)
 
 
 ### Links
