@@ -62,11 +62,12 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
 
     {
+#if 0
         USER_INFO_4 info{}; // WARNING: struct not filled out
         DWORD err = NetUserGetInfo(nullptr, username.c_str(), 4, (BYTE**)&info);
         assert(err == NERR_Success);
         wprintf(L"USer profile path: %s\n", info.usri4_profile);
-#if 0
+
         // not needed if using LOGON_WITH_PROFILE
         PROFILEINFOW profile = {
             .dwSize = sizeof(profile),
