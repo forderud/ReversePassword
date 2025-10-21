@@ -26,8 +26,7 @@ const std::wstring ToString(DWORD err) {
 }
 
 
-/** Add a DACL entry to the window station or desktop security descriptor.
-    Use BuildExplicitAccessWithNameW to initialize the "ea" argument. */
+/** Add a DACL entry to the window station or desktop security descriptor. */
 void AddWindowDaclRight(HANDLE ws, EXPLICIT_ACCESS_W& ea) {
     PSID owner = nullptr;
     PSID group = nullptr;
@@ -133,7 +132,7 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
             // Grant GENERIC_ALL to "logonSid" which grants:
             //   STANDARD_RIGHTS_REQUIRED WINSTA_ACCESSCLIPBOARD WINSTA_ACCESSGLOBALATOMS WINSTA_CREATEDESKTOP WINSTA_ENUMDESKTOPS
             //   WINSTA_ENUMERATE WINSTA_EXITWINDOWS WINSTA_READATTRIBUTES WINSTA_READSCREEN WINSTA_WRITEATTRIBUTES
-            EXPLICIT_ACCESS_W ea{
+            EXPLICIT_ACCESS_W ea {
                 .grfAccessPermissions = GENERIC_ALL,
                 .grfAccessMode = GRANT_ACCESS,
                 .grfInheritance = false,
@@ -157,7 +156,7 @@ void GrantWindowStationDesktopAccess(PSID logonSid) {
             // Grant GENERIC_ALL to "logonSid" which grants:
             //   DESKTOP_CREATEMENU DESKTOP_CREATEWINDOW DESKTOP_ENUMERATE DESKTOP_HOOKCONTROL DESKTOP_JOURNALPLAYBACK
             //   DESKTOP_JOURNALRECORD DESKTOP_READOBJECTS DESKTOP_SWITCHDESKTOP DESKTOP_WRITEOBJECTS STANDARD_RIGHTS_REQUIRED
-            EXPLICIT_ACCESS_W ea{
+            EXPLICIT_ACCESS_W ea {
                 .grfAccessPermissions = GENERIC_ALL,
                 .grfAccessMode = GRANT_ACCESS,
                 .grfInheritance = false,
