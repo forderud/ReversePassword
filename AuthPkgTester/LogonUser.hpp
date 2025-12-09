@@ -8,6 +8,7 @@
 #include <ntstatus.h>
 #include <SubAuth.h>
 #include <userenv.h> // for CreateEnvironmentBlock
+#include <uxtheme.h> // for SetWindowTheme
 #include <Lm.h>
 #include <sddl.h>
 #include <cassert>
@@ -20,6 +21,7 @@
 #pragma comment(lib, "Secur32.lib")
 #pragma comment(lib, "Userenv.lib")
 #pragma comment(lib, "Netapi32.lib") // NetUserGetInfo
+#pragma comment(lib, "UxTheme.lib") // SetWindowTheme 
 
 #define START_SEPARATE_WINDOW
 #define USE_LSA_LOGONUSER
