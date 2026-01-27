@@ -59,7 +59,7 @@ NTSTATUS GetAuthPackage(HANDLE lsa, const wchar_t* name, /*out*/ULONG* authPkg) 
 }
 
 
-NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, PSID logonSid) {
+DWORD CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, PSID logonSid) {
     wprintf(L"\n");
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
 
@@ -114,10 +114,14 @@ NTSTATUS CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, 
     wprintf(L"Waiting for process to terminate...\n");
     WaitForSingleObject(pi.hProcess, INFINITE);
 
+    DWORD exitCode = 0;
+    ok = GetExitCodeProcess(pi.hProcess, &exitCode);
+    assert(ok);
+
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
 
-    return STATUS_SUCCESS;
+    return exitCode;
 }
 
 
@@ -199,7 +203,7 @@ NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const s
         Print(*profile);
     }
 
-    NTSTATUS ret = CreateCmdProcessWithTokenW(token, username, logonSid);
+    DWORD ret = CreateCmdProcessWithTokenW(token, username, logonSid);
 
     LsaFreeReturnBuffer(profileBuffer);
     CloseHandle(token);
