@@ -47,3 +47,8 @@ Password entering can be avoided altogether if `NoPasswordAuthPkg` is also insta
 * [LSA Authentication Model](https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-authentication-model)
 * [Creating Custom Security Packages](https://learn.microsoft.com/en-us/windows/win32/secauthn/creating-custom-security-packages)
 * [MSV1_0 Authentication Package](https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package) is used for local machine logons (Kerberos is used for network logons).
+
+#### Windows Credential manager
+[Winodws Credential Manager](https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/credentials-processes-in-windows-authentication) lets users store credentials relevant to _other_ systems and websites in the secure Windows Vault. It is _not_ used for local on-device authentication.
+
+Startup: `control.exe keymgr.dll`
