@@ -53,4 +53,4 @@ Password entering can be avoided altogether if `NoPasswordAuthPkg` is also insta
 
 Links:
 * GUI tool: `control.exe keymgr.dll`
-* Microsoft [wincred.h](https://learn.microsoft.com/en-us/windows/win32/api/wincred/) API listing (use `CredWrite` and `CredRead`)
+* Microsoft [wincred.h](https://learn.microsoft.com/en-us/windows/win32/api/wincred/) API listing (use `CredWriteW` and `CredReadW`)
