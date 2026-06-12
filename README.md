@@ -51,4 +51,6 @@ Password entering can be avoided altogether if `NoPasswordAuthPkg` is also insta
 #### Windows Credential manager
 [Windows Credential Manager](https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/credentials-processes-in-windows-authentication) lets users store credentials relevant to _other_ systems and websites in the secure Windows Vault. It is _not_ used for local on-device authentication.
 
-Startup: `control.exe keymgr.dll`
+Links:
+* GUI tool: `control.exe keymgr.dll`
+* Microsoft [wincred.h](https://learn.microsoft.com/en-us/windows/win32/api/wincred/) API listing (use `CredWrite` and `CredRead`)
