@@ -4,12 +4,13 @@
 #include <cassert>
 
 /** Store credential in Windows Credential Manager. */
-bool StoreCredential(const std::wstring& username, const std::wstring& secret) {
+bool StoreCredential(const std::wstring& url, const std::wstring& username, const std::wstring& secret) {
     CREDENTIALW cred{};
     cred.Flags = 0;
     cred.Type = CRED_TYPE_GENERIC;
     cred.Persist = CRED_PERSIST_LOCAL_MACHINE; // disable roaming
-    cred.TargetName = const_cast<WCHAR*>(username.c_str());
+    cred.TargetName = const_cast<WCHAR*>(url.c_str());
+    cred.UserName = const_cast<WCHAR*>(username.c_str());
     cred.CredentialBlob = reinterpret_cast<BYTE*>(const_cast<WCHAR*>(secret.data()));
     cred.CredentialBlobSize = (DWORD)secret.length()*sizeof(WCHAR);
 
@@ -18,9 +19,9 @@ bool StoreCredential(const std::wstring& username, const std::wstring& secret) {
 }
 
 /** Load credential from Windows Credential Manager. */
-bool LoadCredential(const std::wstring& username, /*out*/std::wstring& secret) {
+bool LoadCredential(const std::wstring& url, /*out*/std::wstring& secret) {
     CREDENTIALW* cred = nullptr;
-    BOOL ok = CredReadW(username.c_str(), CRED_TYPE_GENERIC, 0, &cred);
+    BOOL ok = CredReadW(url.c_str(), CRED_TYPE_GENERIC, 0, &cred);
     if (!ok)
         return false;
     
@@ -37,10 +38,12 @@ int wmain(int argc, wchar_t* argv[]) {
         return 1;
     }
 
+    const std::wstring url = L"https://myserver.com/";
+
     if (argc == 2) {
         // load credential
         std::wstring password;
-        bool ok = LoadCredential(argv[1], /*out*/password);
+        bool ok = LoadCredential(url, /*out*/password);
         if (!ok) {
             wprintf(L"Failed to load credential. Error code: %u\n", GetLastError());
             return 1;
@@ -50,7 +53,7 @@ int wmain(int argc, wchar_t* argv[]) {
         wprintf(L"Password: %s\n", password.c_str());
     } else if (argc == 3) {
         // store/overwrite credential
-        bool ok = StoreCredential(argv[1], argv[2]);
+        bool ok = StoreCredential(url, argv[1], argv[2]);
         if (!ok) {
             wprintf(L"Failed to store credential. Error code: %u\n", GetLastError());
             return 1;
