@@ -1,7 +1,9 @@
+/** Simple utility for reading and writing to the Windows Credential Manager. */
 #include <Windows.h>
 #include <wincred.h>
 #include <iostream>
 #include <cassert>
+
 
 /** Store credential in Windows Credential Manager. */
 bool StoreCredential(const std::wstring& url, const std::wstring& username, const std::wstring& secret) {
@@ -32,7 +34,7 @@ bool LoadCredential(const std::wstring& url, /*out*/std::wstring& secret) {
 
 
 int wmain(int argc, wchar_t* argv[]) {
-    // web addres to associate the credentals with
+    // web addres to associate the credentals against
     const std::wstring url = L"https://myserver.com/";
 
     if (argc == 1) {
