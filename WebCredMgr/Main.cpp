@@ -37,23 +37,27 @@ int wmain(int argc, wchar_t* argv[]) {
         return 1;
     }
 
-    const WCHAR username[] = L"TestUser";
+    if (argc == 2) {
+        // load credential
+        std::wstring password;
+        bool ok = LoadCredential(argv[1], password);
+        if (!ok) {
+            wprintf(L"Failed to load credential. Error code: %u\n", GetLastError());
+            return 1;
+        }
 
-    bool ok = StoreCredential(username, L"Password_123");
-    if (!ok) {
-        wprintf(L"Failed to store credential. Error code: %u\n", GetLastError());
-        return 1;
+        wprintf(L"Credential loaded successfully!\n");
+        wprintf(L"Password: %s\n", password.c_str());
+    } else if (argc == 3) {
+        // store/overwrite credential
+        bool ok = StoreCredential(argv[1], argv[2]);
+        if (!ok) {
+            wprintf(L"Failed to store credential. Error code: %u\n", GetLastError());
+            return 1;
+        }
+
+        wprintf(L"Credential stored successfully.\n");
     }
-
-    std::wstring password;
-    ok = LoadCredential(username, password);
-    if (!ok) {
-        wprintf(L"Failed to load credential. Error code: %u\n", GetLastError());
-        return 1;
-    }
-
-    wprintf(L"Credential loaded successfully!\n");
-    wprintf(L"Password: %s\n",password.c_str());
 
     return 0;
 }
