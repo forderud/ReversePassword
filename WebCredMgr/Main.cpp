@@ -40,7 +40,7 @@ int wmain(int argc, wchar_t* argv[]) {
     if (argc == 2) {
         // load credential
         std::wstring password;
-        bool ok = LoadCredential(argv[1], password);
+        bool ok = LoadCredential(argv[1], /*out*/password);
         if (!ok) {
             wprintf(L"Failed to load credential. Error code: %u\n", GetLastError());
             return 1;
