@@ -32,15 +32,10 @@ bool LoadCredential(const std::wstring& url, /*out*/std::wstring& secret) {
 
 
 int wmain(int argc, wchar_t* argv[]) {
-    if (argc < 2) {
-        wprintf(L"Usage load: %s <username>\n", argv[0]);
-        wprintf(L"Usage store: %s <username> <secret>\n", argv[0]);
-        return 1;
-    }
-
+    // web addres to associate the credentals with
     const std::wstring url = L"https://myserver.com/";
 
-    if (argc == 2) {
+    if (argc == 1) {
         // load credential
         std::wstring password;
         bool ok = LoadCredential(url, /*out*/password);
@@ -60,6 +55,10 @@ int wmain(int argc, wchar_t* argv[]) {
         }
 
         wprintf(L"Credential stored successfully.\n");
+    } else {
+        wprintf(L"Usage load: %s \n", argv[0]);
+        wprintf(L"Usage store: %s <username> <secret>\n", argv[0]);
+        return 1;
     }
 
     return 0;
