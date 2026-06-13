@@ -8,7 +8,7 @@ bool StoreCredential(const std::wstring& url, const std::wstring& username, cons
     CREDENTIALW cred{};
     cred.Flags = 0;
     cred.Type = CRED_TYPE_GENERIC;
-    cred.Persist = CRED_PERSIST_LOCAL_MACHINE; // disable roaming
+    cred.Persist = CRED_PERSIST_LOCAL_MACHINE; // disable network sync if domain joined
     cred.TargetName = const_cast<WCHAR*>(url.c_str());
     cred.UserName = const_cast<WCHAR*>(username.c_str());
     cred.CredentialBlob = reinterpret_cast<BYTE*>(const_cast<WCHAR*>(secret.data()));
