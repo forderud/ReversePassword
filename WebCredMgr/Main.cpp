@@ -54,7 +54,7 @@ int wmain(int argc, wchar_t* argv[]) {
         std::wstring username, password;
         bool ok = LoadCredential(url, /*out*/username, /*out*/password);
         if (!ok) {
-            wprintf(L"Failed to load credential. Error code: %u\n", GetLastError());
+            wprintf(L"Failed to load credential. Error: %u\n", GetLastError());
             return 1;
         }
 
@@ -65,7 +65,7 @@ int wmain(int argc, wchar_t* argv[]) {
         // store/overwrite credential
         bool ok = StoreCredential(url, argv[2], argv[3]);
         if (!ok) {
-            wprintf(L"Failed to store credential. Error code: %u\n", GetLastError());
+            wprintf(L"Failed to store credential. Error: %u\n", GetLastError());
             return 1;
         }
 
