@@ -21,13 +21,14 @@ bool StoreCredential(const std::wstring& target, const std::wstring& username, c
 }
 
 /** Load credential from Windows Credential Manager. */
-bool LoadCredential(const std::wstring& target, /*out*/std::wstring& secret) {
+bool LoadCredential(const std::wstring& target, /*out*/std::wstring& username ,/*out*/std::wstring& secret) {
     CREDENTIALW* cred = nullptr;
     BOOL ok = CredReadW(target.c_str(), CRED_TYPE_GENERIC, 0, &cred);
     if (!ok)
         return false;
-    
-    secret.assign(reinterpret_cast<WCHAR*>(cred->CredentialBlob), cred->CredentialBlobSize/sizeof(WCHAR));
+
+    username = cred->UserName;
+    secret.assign(reinterpret_cast<WCHAR*>(cred->CredentialBlob), cred->CredentialBlobSize/sizeof(WCHAR)); // might not be null-terminated
     CredFree(cred);
     return true;
 }
@@ -50,14 +51,15 @@ int wmain(int argc, wchar_t* argv[]) {
     
     if (argc == 2) {
         // load credential associated with a target/URL
-        std::wstring password;
-        bool ok = LoadCredential(url, /*out*/password);
+        std::wstring username, password;
+        bool ok = LoadCredential(url, /*out*/username, /*out*/password);
         if (!ok) {
             wprintf(L"Failed to load credential. Error code: %u\n", GetLastError());
             return 1;
         }
 
         wprintf(L"Credential loaded successfully!\n");
+        wprintf(L"Username: %s\n", username.c_str());
         wprintf(L"Password: %s\n", password.c_str());
     } else if (argc == 4) {
         // store/overwrite credential
