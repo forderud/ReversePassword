@@ -35,7 +35,7 @@ bool LoadCredential(const std::wstring& target, /*out*/std::wstring& secret) {
 
 void PrintUsage() {
     wprintf(L"Usage:\n");
-    wprintf(L"  Load stored credential: WebCredMgr.exe <TargetName>\n");
+    wprintf(L"  Load stored credential:     WebCredMgr.exe <TargetName>\n");
     wprintf(L"  Store/overwrite credential: WebCredMgr.exe <TargetName> <UserName> <Secret>\n");
 }
 
