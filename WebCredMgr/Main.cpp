@@ -33,12 +33,23 @@ bool LoadCredential(const std::wstring& target, /*out*/std::wstring& secret) {
 }
 
 
-int wmain(int argc, wchar_t* argv[]) {
-    // web addres to associate the credentals against
-    const std::wstring url = L"https://myserver.com/";
+void PrintUsage() {
+    wprintf(L"Usage:\n");
+    wprintf(L"  Load stored credential: WebCredMgr.exe <TargetName>\n");
+    wprintf(L"  Store/overwrite credential: WebCredMgr.exe <TargetName> <UserName> <Secret>\n");
+}
 
-    if (argc == 1) {
-        // load credential
+
+int wmain(int argc, wchar_t* argv[]) {
+    if (argc < 2) {
+        PrintUsage();
+        return 1;
+    } 
+    
+    std::wstring url = argv[1];
+    
+    if (argc == 2) {
+        // load credential associated with a target/URL
         std::wstring password;
         bool ok = LoadCredential(url, /*out*/password);
         if (!ok) {
@@ -48,9 +59,9 @@ int wmain(int argc, wchar_t* argv[]) {
 
         wprintf(L"Credential loaded successfully!\n");
         wprintf(L"Password: %s\n", password.c_str());
-    } else if (argc == 3) {
+    } else if (argc == 4) {
         // store/overwrite credential
-        bool ok = StoreCredential(url, argv[1], argv[2]);
+        bool ok = StoreCredential(url, argv[2], argv[3]);
         if (!ok) {
             wprintf(L"Failed to store credential. Error code: %u\n", GetLastError());
             return 1;
@@ -58,8 +69,7 @@ int wmain(int argc, wchar_t* argv[]) {
 
         wprintf(L"Credential stored successfully.\n");
     } else {
-        wprintf(L"Usage load: %s \n", argv[0]);
-        wprintf(L"Usage store: %s <username> <secret>\n", argv[0]);
+        PrintUsage();
         return 1;
     }
 
