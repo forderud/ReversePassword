@@ -23,7 +23,7 @@ bool StoreCredential(const std::wstring& target, const std::wstring& username, c
 /** Load credential from Windows Credential Manager. */
 bool LoadCredential(const std::wstring& target, /*out*/std::wstring& username ,/*out*/std::wstring& secret) {
     CREDENTIALW* cred = nullptr;
-    BOOL ok = CredReadW(target.c_str(), CRED_TYPE_GENERIC, 0, &cred);
+    BOOL ok = CredReadW(target.c_str(), CRED_TYPE_GENERIC, 0, &cred); // or CRED_TYPE_DOMAIN_PASSWORD
     if (!ok)
         return false;
 
