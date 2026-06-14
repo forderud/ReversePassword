@@ -6,12 +6,12 @@
 
 
 /** Store credential in Windows Credential Manager. */
-bool StoreCredential(const std::wstring& url, const std::wstring& username, const std::wstring& secret) {
+bool StoreCredential(const std::wstring& target, const std::wstring& username, const std::wstring& secret) {
     CREDENTIALW cred{};
     cred.Flags = 0;
     cred.Type = CRED_TYPE_GENERIC;
     cred.Persist = CRED_PERSIST_LOCAL_MACHINE; // disable network sync if domain joined
-    cred.TargetName = const_cast<WCHAR*>(url.c_str());
+    cred.TargetName = const_cast<WCHAR*>(target.c_str());
     cred.UserName = const_cast<WCHAR*>(username.c_str());
     cred.CredentialBlob = reinterpret_cast<BYTE*>(const_cast<WCHAR*>(secret.data()));
     cred.CredentialBlobSize = (DWORD)secret.length()*sizeof(WCHAR);
@@ -21,9 +21,9 @@ bool StoreCredential(const std::wstring& url, const std::wstring& username, cons
 }
 
 /** Load credential from Windows Credential Manager. */
-bool LoadCredential(const std::wstring& url, /*out*/std::wstring& secret) {
+bool LoadCredential(const std::wstring& target, /*out*/std::wstring& secret) {
     CREDENTIALW* cred = nullptr;
-    BOOL ok = CredReadW(url.c_str(), CRED_TYPE_GENERIC, 0, &cred);
+    BOOL ok = CredReadW(target.c_str(), CRED_TYPE_GENERIC, 0, &cred);
     if (!ok)
         return false;
     
