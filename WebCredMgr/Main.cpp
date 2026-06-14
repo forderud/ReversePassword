@@ -58,9 +58,9 @@ int wmain(int argc, wchar_t* argv[]) {
             return 1;
         }
 
-        wprintf(L"Credential loaded successfully!\n");
-        wprintf(L"Username: %s\n", username.c_str());
-        wprintf(L"Password: %s\n", password.c_str());
+        wprintf(L"Credential information:\n");
+        wprintf(L"  Username: %s\n", username.c_str());
+        wprintf(L"  Password: %s\n", password.c_str());
     } else if (argc == 4) {
         // store/overwrite credential
         bool ok = StoreCredential(url, argv[2], argv[3]);
