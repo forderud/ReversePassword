@@ -36,8 +36,8 @@ Doc quote:
 | Project | Limitation |
 |---------|------------|
 | Win32 [runas](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc771525(v=ws.11)) tool | Doesn't support custom authentication packages |
-| [antonioCoco/RunasCs](https://github.com/antonioCoco/RunasCs) | issue: https://github.com/antonioCoco/RunasCs/issues/20) |
-| [JetBrains.runAs](https://github.com/JetBrains/runAs) | issue: https://github.com/JetBrains/runAs/issues/9) |
+| [antonioCoco/RunasCs](https://github.com/antonioCoco/RunasCs) | issue: [UI theme not applied](https://github.com/antonioCoco/RunasCs/issues/20) |
+| [JetBrains.runAs](https://github.com/JetBrains/runAs) | issue: [GUI applications doesn't show on screen](https://github.com/JetBrains/runAs/issues/9) |
 
 ### Links
 * Microsoft: [Starting an Interactive Client Process in C++](https://learn.microsoft.com/en-us/previous-versions/aa379608(v=vs.85))
