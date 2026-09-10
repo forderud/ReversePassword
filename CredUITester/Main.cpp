@@ -98,6 +98,8 @@ int main() {
                 return -1;
             }
         }
+
+        wprintf(L"Authentication package used: %u\n", authPackage);
     }
 
     std::wstring username;
