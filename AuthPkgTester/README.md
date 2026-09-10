@@ -21,6 +21,9 @@ The `<authPkgName>` argument is optional and will default to MSV1_0.
 | [`CreateProcessWithToken`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) | Admin privileges | Need to grant access manually | Not applied |
 | [`CreateProcessAsUser`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessasuserw) | `SE_INCREASE_QUOTA_NAME` and `SE_ASSIGNPRIMARYTOKEN_NAME` (grant with `PsExec.exe -i -s cmd.exe`) | Need to grant access manually | Not applied |
 
+Doc quote:
+> you must change the discretionary access control list (DACL) of both the default interactive window station and the default desktop. The DACLs for the window station and desktop must grant access to the user or the logon session represented by the hToken parameter.
+
 ### Implementation details
 * [`LsaLogonUser`](https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsalogonuser) is used to authenticate against a given authentication package.
 * The logon session ID ([`SE_GROUP_LOGON_ID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)) is granted access to the window station and desktop.
