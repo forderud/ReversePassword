@@ -4,6 +4,12 @@ Command-line tool for authentication package testing and running `cmd.exe` throg
 * List installed security packages: `AuthPkgTester.exe`
 * Authenticate: `AuthPkgTester.exe <authPkgName> <usename> <password>`
 
+Preinstalled authentication packages:
+* `MICROSOFT_AUTHENTICATION_PACKAGE_V1_0`
+* `Negotiate`
+* `Kerberos`
+
+
 ### API alternative overview
 | API | Privileges required | Desktop/window station | UI theme |
 |-----|----------------|----------------------------|--------------|
