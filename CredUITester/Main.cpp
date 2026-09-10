@@ -105,7 +105,7 @@ int main() {
     std::wstring username;
     SecureString password;
     // get username, password & domain strings
-    BOOL ok = CredUnPackAuthenticationBufferWrap(CRED_PACK_PROTECTED_CREDENTIALS, authBuffer, username, password);
+    BOOL ok = CredUnPackAuthenticationBufferWrap(CRED_PACK_PROTECTED_CREDENTIALS, authBuffer, /*out*/username, /*out*/password);
     if (!ok) {
         DWORD err = GetLastError();
         if (err == ERROR_NOT_CAPABLE) {
