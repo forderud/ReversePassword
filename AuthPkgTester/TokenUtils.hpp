@@ -8,6 +8,7 @@
 
 const std::wstring ToString(DWORD err) {
     switch (err) {
+    case STATUS_QUOTA_EXCEEDED: return L"STATUS_QUOTA_EXCEEDED";
     case ERROR_ACCESS_DENIED: return L"ERROR_ACCESS_DENIED";
     case ERROR_INVALID_HANDLE: return L"ERROR_INVALID_HANDLE";
     case ERROR_INVALID_PARAMETER: return L"ERROR_INVALID_PARAMETER";
@@ -19,7 +20,12 @@ const std::wstring ToString(DWORD err) {
     case STATUS_INVALID_PARAMETER: return L"STATUS_INVALID_PARAMETER";
     case STATUS_ACCESS_DENIED: return L"STATUS_ACCESS_DENIED";
     case STATUS_LOGON_FAILURE: return L"STATUS_LOGON_FAILURE"; // observed both for unknonw user and invalid password
+    case STATUS_NO_LOGON_SERVERS: return L"STATUS_NO_LOGON_SERVERS";
+    case STATUS_NO_SUCH_PACKAGE: return L"STATUS_NO_SUCH_PACKAGE";
+    case STATUS_PKINIT_FAILURE: return L"STATUS_PKINIT_FAILURE";
+    case STATUS_PKINIT_CLIENT_FAILURE: return L"STATUS_PKINIT_CLIENT_FAILURE";
     case STATUS_ACCOUNT_RESTRICTION: return L"STATUS_ACCOUNT_RESTRICTION";
+    case STATUS_BAD_VALIDATION_CLASS: return L"STATUS_BAD_VALIDATION_CLASS";
     case RPC_NT_CALL_FAILED: return L"RPC_NT_CALL_FAILED";
     default: return L"error " + std::to_wstring(err);
     }
