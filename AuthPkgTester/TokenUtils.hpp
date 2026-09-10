@@ -28,6 +28,7 @@ const std::wstring ToString(DWORD err) {
     case STATUS_BAD_VALIDATION_CLASS: return L"STATUS_BAD_VALIDATION_CLASS";
     case RPC_NT_CALL_FAILED: return L"RPC_NT_CALL_FAILED";
     case STATUS_CONTROL_C_EXIT: return L"STATUS_CONTROL_C_EXIT";
+    case STATUS_FAIL_FAST_EXCEPTION: return L"STATUS_FAIL_FAST_EXCEPTION";
     default: return L"error " + std::to_wstring(err);
     }
 }
