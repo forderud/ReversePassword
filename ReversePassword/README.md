@@ -8,7 +8,7 @@ Overall class diagram:
 | `CredentialView` | Instances are created when `CredentialProvider` initializes its `_view` member when receiving `SetUsageScenario` calls. |
 | `CredentialProviderCredential` <[ICredentialProviderCredential](https://learn.microsoft.com/en-us/windows/win32/api/credentialprovider/nn-credentialprovider-icredentialprovidercredential), [ICredentialProviderCredential2](https://learn.microsoft.com/en-us/windows/win32/api/credentialprovider/nn-credentialprovider-icredentialprovidercredential2)>| Instances are created on-demand by `CredentialView` when `CredentialProvider` receives `GetCredentialAt` calls. |
 
-The project logs to the `C:\Windows\Logs\ReversePassword` folder.
+The project logs to the `C:\Windows\Logs\ReversePassword` folder. CredUITester need to run as administrator in order for ReversePassword usage to be logged.
 
 
 ## Acknowledgement
