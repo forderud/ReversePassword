@@ -1,5 +1,9 @@
 Command-line tool for authentication package testing and running `cmd.exe` throgh other user accounts.
 
+#### Usage
+* List installed security packages: `AuthPkgTester.exe`
+* Authenticate: `AuthPkgTester.exe <authPkgName> <usename> <password>`
+
 ### API alternative overview
 | API | Privileges required | Desktop/window station | UI theme |
 |-----|----------------|----------------------------|--------------|
