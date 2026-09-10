@@ -22,6 +22,9 @@ Local Security Authority (LSA) protection needs to be disabled in order for the 
 ## Installation
 Run `Install_NoPasswordAuthPkg.ps1` as admin.
 
+Debug builds log to `C:\NoPasswordAuthPkg_log.txt`.
+
+
 ## External links
 * [Registering SSP/AP DLLs](https://learn.microsoft.com/en-us/windows/win32/secauthn/registering-ssp-ap-dlls) 
 * [LSA Mode Initialization](https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-mode-initialization)
