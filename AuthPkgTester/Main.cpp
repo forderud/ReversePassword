@@ -71,6 +71,13 @@ int wmain(int argc, wchar_t* argv[]) {
         std::wstring username = argv[argIdx++];
         std::wstring password = argv[argIdx++];
 
+        // split "<domain>\<username>" strings
+        size_t idx = username.find(L'\\');
+        if (idx != username.npos) {
+            domain = username.substr(0, idx);
+            username = username.substr(idx + 1);
+        }
+
         wprintf(L"\n");
         wprintf(L"Attempting local interactive logon against the %s authentication package...\n", authPkgName);
         std::vector<BYTE> authInfo;
