@@ -5,7 +5,9 @@ Command-line tool for authentication package testing and running `cmd.exe` throg
 * Local account authentication: `AuthPkgTester.exe <authPkgName> <usename> <password>`
 * Network account authentication: `AuthPkgTester.exe <authPkgName> <domain>\<usename> <password>`
 
-Preinstalled authentication packages:
+The `<authPkgName>` argument is optional and will default to MSV1_0.
+
+#### Preinstalled authentication packages
 * [`MICROSOFT_AUTHENTICATION_PACKAGE_V1_0`](https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package) (MSV1_0): For _local_ logons
 * [`Negotiate`](https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-negotiate): Automatically selects Kerberos or NTLM for _network_ logon
 * ~~[`Kerberos`](https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-kerberos): For logging on to a _network_ (don't access directly)~~
