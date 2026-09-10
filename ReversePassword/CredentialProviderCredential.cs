@@ -23,14 +23,12 @@ namespace ReversePassword
             if (cpce is ICredentialProviderCredentialEvents2 ev2)
                 Logger.Write("pcpce is ICredentialProviderCredentialEvents2");
 
-            Logger.Write("throw new NotImplementedException");
-            throw new NotImplementedException();
+            Logger.Write("NotImplemented");
         }
 
         public virtual void UnAdvise()
         {
-            Logger.Write("throw new NotImplementedException");
-            throw new NotImplementedException();
+            Logger.Write("NotImplemented");
         }
 
         public virtual void SetSelected(out int autoLogon)
