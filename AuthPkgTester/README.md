@@ -33,7 +33,7 @@ Doc quote:
 * [issue #25](../../../issues/25) UI theme settings not applied
 
 ### Related projects
-* Win32 [runas](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc771525(v=ws.11)) tool
+* Win32 [runas](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc771525(v=ws.11)) tool (doesn't support custom authentication packages)
 * [antonioCoco/RunasCs](https://github.com/antonioCoco/RunasCs) (issue: https://github.com/antonioCoco/RunasCs/issues/20)
 * [JetBrains.runAs](https://github.com/JetBrains/runAs) (issue: https://github.com/JetBrains/runAs/issues/9)
 
