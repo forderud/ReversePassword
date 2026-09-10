@@ -1,6 +1,13 @@
 Command-line tool for authentication package testing and running `cmd.exe` throgh other user accounts.
 
-### Details
+### API alternative overview
+| API | Privileges required | Desktop/window station | UI theme |
+|-----|----------------|----------------------------|--------------|
+| [`CreateProcessWithLogon`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithlogonw) (incompatible with authentication packages) | Admin privileges | Works automatically | Applied |
+| [`CreateProcessWithToken`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) | Admin privileges | Need to grant access manually | Not applied |
+| [`CreateProcessAsUser`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessasuserw) | `SE_INCREASE_QUOTA_NAME` and `SE_ASSIGNPRIMARYTOKEN_NAME` (grant with `PsExec.exe -i -s cmd.exe`) | Need to grant access manually | Not applied |
+
+### Implementation details
 * [`LsaLogonUser`](https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsalogonuser) is used to authenticate against a given authentication package.
 * The logon session ID ([`SE_GROUP_LOGON_ID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)) is granted access to the window station and desktop.
 * [`CreateProcessWithToken`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) is used to start `cmd.exe` under the authenticated user account.
@@ -8,6 +15,10 @@ Command-line tool for authentication package testing and running `cmd.exe` throg
 ### Open issues
 * [issue #25](../../../issues/25) UI theme settings not applied
 
+### Related projects
+* Win32 [runas](https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-r2-and-2012/cc771525(v=ws.11)) tool
+* [antonioCoco/RunasCs](https://github.com/antonioCoco/RunasCs) issue: https://github.com/antonioCoco/RunasCs/issues/20
+* [JetBrains.runAs](https://github.com/JetBrains/runAs) issue: https://github.com/JetBrains/runAs/issues/9
 
 ### Links
 * Microsoft: [Starting an Interactive Client Process in C++](https://learn.microsoft.com/en-us/previous-versions/aa379608(v=vs.85))
