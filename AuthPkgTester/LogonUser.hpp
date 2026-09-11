@@ -58,7 +58,9 @@ inline std::string ToAscii(const std::wstring& w_str) {
 }
 
 
-NTSTATUS GetAuthPackage(HANDLE lsa, const wchar_t* name, /*out*/ULONG* authPkg) {
+NTSTATUS GetAuthPackage(const wchar_t* name, /*out*/ULONG* authPkg) {
+    LsaHandle lsa;
+
     std::string name_a = ToAscii(name);
 
     LSA_STRING lsa_name{
@@ -215,7 +217,7 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(const wchar_t* authPkgName, co
         };
 
         ULONG authPkg = 0;
-        NTSTATUS status = GetAuthPackage(lsa, authPkgName, &authPkg);
+        NTSTATUS status = GetAuthPackage(authPkgName, &authPkg);
         if (status != STATUS_SUCCESS) {
             wprintf(L"GetAuthPackage failed (%s)\n", ToString(status).c_str());
             abort();

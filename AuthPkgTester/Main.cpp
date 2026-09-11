@@ -22,7 +22,7 @@ int wmain(int argc, wchar_t* argv[]) {
                 PrintSecPkgInfo(pkg);
 
                 ULONG authPkg = 0;
-                if (GetAuthPackage(lsa, pkg.Name, &authPkg) == STATUS_SUCCESS)
+                if (GetAuthPackage(pkg.Name, &authPkg) == STATUS_SUCCESS)
                     wprintf(L"  AuthPkgID: %u\n", authPkg);
             }
 
@@ -35,7 +35,7 @@ int wmain(int argc, wchar_t* argv[]) {
         for (auto* package : predefined_packages) {
             ULONG authPkg = 0;
             wprintf(L"* Package: %s\n", package);
-            if (GetAuthPackage(lsa, package, &authPkg) == STATUS_SUCCESS)
+            if (GetAuthPackage(package, &authPkg) == STATUS_SUCCESS)
                 wprintf(L"  AuthPkgID: %u\n", authPkg);
         }
     } else if (argc >= 3) {
