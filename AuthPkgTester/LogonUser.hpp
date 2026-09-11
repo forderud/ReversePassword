@@ -126,9 +126,7 @@ DWORD CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, PSI
 
 
 /** Returns (token, logonSid) tuple. */
-std::tuple< HANDLE, PSID>  LogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
-    //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
-
+std::tuple< HANDLE, PSID>  LogonUserInteractive(const std::wstring& username, const std::wstring& password) {
     // output arguments
     void* profileBuffer = nullptr;
     ULONG profileBufferLen = 0;
@@ -175,7 +173,7 @@ std::tuple< HANDLE, PSID>  LogonUserInteractive(HANDLE lsa, const wchar_t* authP
 }
 
 /** Returns (token, logonSid) tuple. */
-std::tuple< HANDLE, PSID> LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
+std::tuple< HANDLE, PSID> LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     // output arguments
