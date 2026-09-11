@@ -1,5 +1,5 @@
 #include <cassert>
-#include <windows.h>
+#include "../AuthPkgTester/LogonUser.hpp"
 #include <wincred.h> // for CredUIPromptForWindowsCredentialsW
 #include <iostream>
 
@@ -132,7 +132,8 @@ int main() {
     wprintf(L"Attempting to authenticate with the provided credentials...\n");
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
     HANDLE token = 0;
-    // TODO: Switch to LsaLogonUser to support custom authentication packages
+#if 1
+    // WARNING: LogonUserW does not support custom authentication packages
     ok = LogonUserW(username.c_str(), domain.c_str(), password.c_str(), LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
     if (!ok) {
         DWORD err = GetLastError();
@@ -144,6 +145,12 @@ int main() {
             return -2;
         }
     }
+#else
+    // TODO: Switch to LsaLogonUser to support custom authentication packages
+    PSID logonSid = nullptr;
+    std::tie(token, logonSid) = LsaLogonUserInteractive(authPackage, authBuffer);
+    FreeSid(logonSid);
+#endif
 
     wprintf(L"SUCCESS: Authentication succeeded.\n");
     CloseHandle(token);
