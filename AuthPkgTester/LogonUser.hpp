@@ -27,6 +27,27 @@
 #define USE_LSA_LOGONUSER
 
 
+class LsaHandle {
+public:
+    LsaHandle() {
+        // establish LSA connection
+        NTSTATUS status = LsaConnectUntrusted(&m_lsa);
+        assert(status == STATUS_SUCCESS);
+    }
+    ~LsaHandle() {
+        // close LSA handle
+        NTSTATUS status = LsaDeregisterLogonProcess(m_lsa);
+        assert(status == STATUS_SUCCESS);
+    }
+
+    operator HANDLE() {
+        return m_lsa;
+    }
+private:
+    HANDLE m_lsa = 0;
+};
+
+
 /** Converts unicode string to ASCII */
 inline std::string ToAscii(const std::wstring& w_str) {
     std::string s_str(w_str.size(), '\0');
@@ -176,10 +197,7 @@ std::tuple< HANDLE, PSID>  LogonUserInteractive(const std::wstring& username, co
 std::tuple< HANDLE, PSID> LsaLogonUserInteractive(const wchar_t* authPkgName, const std::vector<BYTE>& authInfo) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
-    // establish LSA connection
-    HANDLE lsa = 0;
-    NTSTATUS status = LsaConnectUntrusted(&lsa);
-    assert(status == STATUS_SUCCESS);
+    LsaHandle lsa;
 
     // output arguments
     void* profileBuffer = nullptr;
@@ -197,7 +215,7 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(const wchar_t* authPkgName, co
         };
 
         ULONG authPkg = 0;
-        status = GetAuthPackage(lsa, authPkgName, &authPkg);
+        NTSTATUS status = GetAuthPackage(lsa, authPkgName, &authPkg);
         if (status != STATUS_SUCCESS) {
             wprintf(L"GetAuthPackage failed (%s)\n", ToString(status).c_str());
             abort();
@@ -237,10 +255,6 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(const wchar_t* authPkgName, co
         Print(*profile);
     }
     LsaFreeReturnBuffer(profileBuffer);
-
-    // close LSA handle
-    status = LsaDeregisterLogonProcess(lsa);
-    assert(status == STATUS_SUCCESS);
 
     return std::make_tuple(token, logonSid);
 }
