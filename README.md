@@ -22,8 +22,8 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 * Observe that there's now a new "RP" sign-in option that requires the password to be typed backwards:  
 ![screenshot](Screenshot.png)  
 
-* `CredUITester.exe` can also be used for testing the credential provider:  
-![CredUIPrompt](CredUIPrompt.png)  
+* It's also possible to test the "RP" credential provider by right-clicking on an application in the Windows start menu, and selecting "_Run as Administrator_":  
+![UACPrompt](UACPrompt.png)  
 
 Password entering can be avoided altogether if `NoPasswordAuthPkg` is also installed. This can be done by running `Install_NoPasswordAuthPkg.ps1` as administrator and restarting afterwards.
 
