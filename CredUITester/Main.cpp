@@ -63,6 +63,7 @@ BOOL CredUnPackAuthenticationBufferWrap(DWORD flags, const CredentialBlob& authB
 
 
 int main() {
+    ULONG authPackage = 0;
     CredentialBlob authBuffer;
     {
         CREDUI_INFOW cred_info = {};
@@ -77,7 +78,6 @@ int main() {
         // REF: https://github.com/chromium/chromium/blob/main/chrome/browser/password_manager/password_manager_util_win.cc
         DWORD flags = CREDUIWIN_ENUMERATE_CURRENT_USER;
 
-        ULONG authPackage = 0;
         DWORD res = CredUIPromptForWindowsCredentialsW(
             &cred_info,
             0, // don't display any error message
