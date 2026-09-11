@@ -18,6 +18,8 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 * Install [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet)
 * Copy the build artifacts to the test environment.
 * Run `REGISTER_ReversePassword.bat` as administrator.
+
+#### Test steps
 * Log screen, log out or restart the computer.
 * Observe that there's now a new "RP" sign-in option that requires the password to be typed backwards:  
 ![screenshot](Screenshot.png)  
