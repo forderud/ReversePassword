@@ -125,7 +125,8 @@ DWORD CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, PSI
 }
 
 
-NTSTATUS LogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
+/** Returns (token, logonSid) tuple. */
+std::tuple< HANDLE, PSID>  LogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     // output arguments
@@ -168,16 +169,13 @@ NTSTATUS LogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std:
         // print fields to console
         Print(*profile);
     }
-
-    DWORD ret = CreateCmdProcessWithTokenW(token, username, logonSid);
-
     LsaFreeReturnBuffer(profileBuffer);
-    CloseHandle(token);
-    FreeSid(logonSid);
-    return ret;
+
+    return std::make_tuple(token, logonSid);
 }
 
-NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
+/** Returns (token, logonSid) tuple. */
+std::tuple< HANDLE, PSID> LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     // output arguments
@@ -197,8 +195,10 @@ NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const s
 
         ULONG authPkg = 0;
         NTSTATUS status = GetAuthPackage(lsa, authPkgName, &authPkg);
-        if (status != STATUS_SUCCESS)
-            return status;
+        if (status != STATUS_SUCCESS) {
+            wprintf(L"GetAuthPackage failed (%s)\n", ToString(status).c_str());
+            abort();
+        }
 
         TOKEN_SOURCE sourceContext{
             .SourceName = "APtest",
@@ -233,11 +233,7 @@ NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const s
         // print fields to console
         Print(*profile);
     }
-
-    DWORD ret = CreateCmdProcessWithTokenW(token, username, logonSid);
-
     LsaFreeReturnBuffer(profileBuffer);
-    CloseHandle(token);
-    FreeSid(logonSid);
-    return ret;
+
+    return std::make_tuple(token, logonSid);
 }

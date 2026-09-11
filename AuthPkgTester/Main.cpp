@@ -86,16 +86,26 @@ int wmain(int argc, wchar_t* argv[]) {
         else
             authInfo = PrepareLogon_MSV1_0(domain, username, password); // TODO: Replace with suitable authInfo for the selected authPkg
 
+        HANDLE token = 0;
+        PSID logonSid = nullptr;
 #ifndef USE_LSA_LOGONUSER
-        NTSTATUS ret = LogonUserInteractive(lsa, authPkgName, authInfo, username, password);
+        std::tie(token, logonSid) = LogonUserInteractive(lsa, authPkgName, authInfo, username, password);
 #else
-        NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo, username, password);
+        std::tie(token, logonSid) = LsaLogonUserInteractive(lsa, authPkgName, authInfo, username, password);
 #endif
+
+        wprintf(L"SUCCESS: User logon succeeded.\n");
+
+        DWORD ret = CreateCmdProcessWithTokenW(token, username, logonSid);
         if (ret != STATUS_SUCCESS) {
-            wprintf(L"ERROR: LsaLogonUser failed (%s)\n", ToString(ret).c_str());
-        } else {
-            wprintf(L"SUCCESS: User logon succeeded.\n");
+            wprintf(L"ERROR: CreateProcessWithTokenW failed (%s)\n", ToString(ret).c_str());
         }
+        else {
+            wprintf(L"SUCCESS: CreateProcessWithTokenW succeeded.\n");
+        }
+
+        CloseHandle(token);
+        FreeSid(logonSid);
     } else {
         wprintf(L"USAGE:\n");
         wprintf(L"  List security packages: AuthPkgTester.exe\n");
