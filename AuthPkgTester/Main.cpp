@@ -65,7 +65,14 @@ int wmain(int argc, wchar_t* argv[]) {
 #ifndef USE_LSA_LOGONUSER
         std::tie(token, logonSid) = LogonUserInteractive(username, password);
 #else
-        std::tie(token, logonSid) = LsaLogonUserInteractive(authPkgName, authInfo);
+        ULONG authPkg = 0;
+        NTSTATUS status = GetAuthPackage(authPkgName, &authPkg);
+        if (status != STATUS_SUCCESS) {
+            wprintf(L"GetAuthPackage failed (%s)\n", ToString(status).c_str());
+            abort();
+        }
+
+        std::tie(token, logonSid) = LsaLogonUserInteractive(authPkg, authInfo);
 #endif
 
         wprintf(L"SUCCESS: User logon succeeded.\n");

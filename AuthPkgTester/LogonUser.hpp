@@ -196,7 +196,7 @@ std::tuple< HANDLE, PSID>  LogonUserInteractive(const std::wstring& username, co
 }
 
 /** Returns (token, logonSid) tuple. */
-std::tuple< HANDLE, PSID> LsaLogonUserInteractive(const wchar_t* authPkgName, const std::vector<BYTE>& authInfo) {
+std::tuple< HANDLE, PSID> LsaLogonUserInteractive(ULONG authPkg, const std::vector<BYTE>& authInfo) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     LsaHandle lsa;
@@ -215,13 +215,6 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(const wchar_t* authPkgName, co
             .MaximumLength = (USHORT)strlen(ORIGIN),
             .Buffer = (char*)ORIGIN,
         };
-
-        ULONG authPkg = 0;
-        NTSTATUS status = GetAuthPackage(authPkgName, &authPkg);
-        if (status != STATUS_SUCCESS) {
-            wprintf(L"GetAuthPackage failed (%s)\n", ToString(status).c_str());
-            abort();
-        }
 
         TOKEN_SOURCE sourceContext{
             .SourceName = "APtest",
