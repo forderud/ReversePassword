@@ -148,7 +148,7 @@ int main() {
 #else
     // TODO: Switch to LsaLogonUser to support custom authentication packages
     PSID logonSid = nullptr;
-    std::tie(token, logonSid) = LsaLogonUserInteractive(authPackage, authBuffer);
+    std::tie(token, logonSid) = LsaLogonUserInteractive(authPackage, std::vector<BYTE>((BYTE*)authBuffer.ptr, (BYTE*)authBuffer.ptr + authBuffer.size));
     FreeSid(logonSid);
 #endif
 
