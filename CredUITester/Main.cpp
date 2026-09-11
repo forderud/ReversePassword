@@ -102,55 +102,41 @@ int main() {
         wprintf(L"Authentication package used: %u\n", authPackage);
     }
 
-    std::wstring username;
-    SecureString password;
-    // get username, password & domain strings
-    BOOL ok = CredUnPackAuthenticationBufferWrap(CRED_PACK_PROTECTED_CREDENTIALS, authBuffer, /*out*/username, /*out*/password);
-    if (!ok) {
-        DWORD err = GetLastError();
-        if (err == ERROR_NOT_CAPABLE) {
-            wprintf(L"ERROR: CredUnPackAuthenticationBuffer is unable to decrypt credentials. This happens with PIN code credentials on non-domain-joined computers.\n");
-            wprintf(L"Run from a \"psexec.exe -i -accepteula -s cmd.exe\" command prompt to bypass this problem.\n");
-        } else {
-            wprintf(L"ERROR: CredUnPackAuthenticationBuffer failed (err=%u)\n", err);
+    {
+        std::wstring username;
+        SecureString password;
+        // get username, password & domain strings
+        BOOL ok = CredUnPackAuthenticationBufferWrap(CRED_PACK_PROTECTED_CREDENTIALS, authBuffer, /*out*/username, /*out*/password);
+        if (!ok) {
+            DWORD err = GetLastError();
+            if (err == ERROR_NOT_CAPABLE) {
+                wprintf(L"ERROR: CredUnPackAuthenticationBuffer is unable to decrypt credentials. This happens with PIN code credentials on non-domain-joined computers.\n");
+                wprintf(L"Run from a \"psexec.exe -i -accepteula -s cmd.exe\" command prompt to bypass this problem.\n");
+            } else {
+                wprintf(L"ERROR: CredUnPackAuthenticationBuffer failed (err=%u)\n", err);
+            }
+            return -1;
         }
-        return -1;
-    }
 
-    wprintf(L"Provided credentials (not checked):\n");
-    wprintf(L"Username: %s\n", username.c_str());
-    wprintf(L"Password: %s\n", password.c_str());
+        wprintf(L"Provided credentials (not checked):\n");
+        wprintf(L"Username: %s\n", username.c_str());
+        wprintf(L"Password: %s\n", password.c_str());
 
-    std::wstring domain;
-    if (size_t idx = username.find(L'\\'); idx != std::wstring::npos) {
-        // split usernae from domain
-        domain = username.substr(0, idx);
-        username = username.substr(idx + 1);
+        std::wstring domain;
+        if (size_t idx = username.find(L'\\'); idx != std::wstring::npos) {
+            // split usernae from domain
+            domain = username.substr(0, idx);
+            username = username.substr(idx + 1);
+        }
     }
 
     wprintf(L"\n");
     wprintf(L"Attempting to authenticate with the provided credentials...\n");
     // Failures are logged in the Event Viewer "Security" log with "Logon" category
     HANDLE token = 0;
-#if 0
-    // WARNING: LogonUserW does not support custom authentication packages
-    ok = LogonUserW(username.c_str(), domain.c_str(), password.c_str(), LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, &token);
-    if (!ok) {
-        DWORD err = GetLastError();
-        if (err == ERROR_LOGON_FAILURE) {
-            wprintf(L"ERROR: The user name or password is incorrect.\n");
-            return -1;
-        } else {
-            wprintf(L"ERROR: Other LogonUser error (err=%u)\n", err);
-            return -2;
-        }
-    }
-#else
-    // TODO: Switch to LsaLogonUser to support custom authentication packages
     PSID logonSid = nullptr;
     std::tie(token, logonSid) = LsaLogonUserInteractive(authPackage, std::vector<BYTE>((BYTE*)authBuffer.ptr, (BYTE*)authBuffer.ptr + authBuffer.size));
     FreeSid(logonSid);
-#endif
 
     wprintf(L"SUCCESS: Authentication succeeded.\n");
     CloseHandle(token);
