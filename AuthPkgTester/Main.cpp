@@ -23,10 +23,9 @@ private:
 
 
 int wmain(int argc, wchar_t* argv[]) {
-    LsaHandle lsa;
-
     if (argc == 1) {
         // query installed security packages
+        LsaHandle lsa;
         {
             // NOTE: EnumerateSecurityPackages doesn't seem to detect MSV1_0
             ULONG package_count = 0;
@@ -91,7 +90,7 @@ int wmain(int argc, wchar_t* argv[]) {
 #ifndef USE_LSA_LOGONUSER
         std::tie(token, logonSid) = LogonUserInteractive(username, password);
 #else
-        std::tie(token, logonSid) = LsaLogonUserInteractive(lsa, authPkgName, authInfo);
+        std::tie(token, logonSid) = LsaLogonUserInteractive(authPkgName, authInfo);
 #endif
 
         wprintf(L"SUCCESS: User logon succeeded.\n");
