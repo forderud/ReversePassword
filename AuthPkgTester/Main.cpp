@@ -86,7 +86,11 @@ int wmain(int argc, wchar_t* argv[]) {
         else
             authInfo = PrepareLogon_MSV1_0(domain, username, password); // TODO: Replace with suitable authInfo for the selected authPkg
 
+#ifndef USE_LSA_LOGONUSER
+        NTSTATUS ret = LogonUserInteractive(lsa, authPkgName, authInfo, username, password);
+#else
         NTSTATUS ret = LsaLogonUserInteractive(lsa, authPkgName, authInfo, username, password);
+#endif
         if (ret != STATUS_SUCCESS) {
             wprintf(L"ERROR: LsaLogonUser failed (%s)\n", ToString(ret).c_str());
         } else {

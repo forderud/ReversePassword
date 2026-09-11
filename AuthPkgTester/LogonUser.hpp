@@ -125,7 +125,7 @@ DWORD CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, PSI
 }
 
 
-NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
+NTSTATUS LogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
     //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
 
     // output arguments
@@ -135,7 +135,6 @@ NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const s
     QUOTA_LIMITS quotas{};
     PSID logonSid = nullptr; // logon session SID in "S-1-5-5-X-Y" format
 
-#ifndef USE_LSA_LOGONUSER
     {
 #if 0
         wchar_t domain[MAX_COMPUTERNAME_LENGTH + 1] = {};
@@ -154,7 +153,40 @@ NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const s
         }
         wprintf(L"SUCCESS: LogonUserExW succeeded.\n");
     }
-#else
+
+    {
+        wchar_t* sidStr = nullptr;
+        ConvertSidToStringSidW(logonSid, &sidStr);
+        wprintf(L"Logon session SID: %s\n", sidStr);
+        LocalFree(sidStr);
+    }
+
+    wprintf(L"profileBufferLen: %u\n", profileBufferLen);
+    if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
+        static_assert(sizeof(MSV1_0_INTERACTIVE_PROFILE) == 160);
+        auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer;
+        // print fields to console
+        Print(*profile);
+    }
+
+    DWORD ret = CreateCmdProcessWithTokenW(token, username, logonSid);
+
+    LsaFreeReturnBuffer(profileBuffer);
+    CloseHandle(token);
+    FreeSid(logonSid);
+    return ret;
+}
+
+NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const std::vector<BYTE>& authInfo, const std::wstring& username, const std::wstring& password) {
+    //wprintf(L"INFO: AuthenticationInformationLength: %u\n", (uint32_t)authInfo.size());
+
+    // output arguments
+    void* profileBuffer = nullptr;
+    ULONG profileBufferLen = 0;
+    HANDLE token = 0;
+    QUOTA_LIMITS quotas{};
+    PSID logonSid = nullptr; // logon session SID in "S-1-5-5-X-Y" format
+
     {
         const char ORIGIN[] = "AuthPkgTester"; // "Advapi32 Logon";
         LSA_STRING origin{
@@ -186,7 +218,6 @@ NTSTATUS LsaLogonUserInteractive(HANDLE lsa, const wchar_t* authPkgName, const s
 
         logonSid = GetLogonSID(token);
     }
-#endif
 
     {
         wchar_t* sidStr = nullptr;
