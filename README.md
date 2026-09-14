@@ -3,7 +3,7 @@
 | [**`AuthPkgTester`**](AuthPkgTester/) | Tool for testing custom authentication packages. |
 | `CredUITester` | Tool for testing CredUI-based authentication  |
 | [**`NoPasswordAuthPkg`**](NoPasswordAuthPkg/) | Sample authentication package to allow interactive **logon without having to type the password**. |
-| [**`ReversePassword`**](ReversePassword/) | Sample Windows Credential Provider that **require the password to by typed backwards**. Written in C#. |
+| [**`ReversePassword`**](ReversePassword/) | Sample Windows Credential Provider that **require the password to by typed backwards**. |
 | `WebCredMgr` | Read and write to the Windows Credential Manager secure storage. |
 
 

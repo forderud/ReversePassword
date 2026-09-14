@@ -1,3 +1,5 @@
+Sample Windows Credential Provider that **require the password to by typed backwards**. Written in C#.
+
 ## ReversePassword design
 Overall class diagram:  
 ![class diagram](class_diagram.svg)
