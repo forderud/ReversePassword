@@ -111,11 +111,11 @@ NTSTATUS LsaApLogonUser (
     }
 
     // input arguments
-    LogMessage("  LogonType: %i", LogonType); // Interactive=2, RemoteInteractive=10
+    LogMessage("  LogonType: %i", LogonType); // Interactive=2 (local), RemoteInteractive=10 (remote-desktop)
     ClientBufferBase;
     LogMessage("  ProtocolSubmitBuffer size: %i", SubmitBufferSize);
 
-    // deliberately restrict supported logontypes
+    // deliberately restrict supported logontypes to local and remote-desktop
     if ((LogonType != Interactive) && (LogonType != RemoteInteractive)) {
         LogMessage("  return STATUS_NOT_IMPLEMENTED (unsupported LogonType)");
         return STATUS_NOT_IMPLEMENTED;
