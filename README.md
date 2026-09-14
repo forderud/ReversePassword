@@ -26,7 +26,7 @@ It's recommended to **test in a disposable Virtual Machine (VM)**, since credent
 * It's also possible to test the "RP" credential provider by either right-clicking on an application in the Windows start menu, and selecting "_Run as administrator_", or run `Start-Process cmd.exe -Verb RunAs` from PowerShell:  
 ![UACPrompt](UACPrompt.png)  
 
-Password entering can be avoided altogether if `NoPasswordAuthPkg` is also installed and a removable drive with a magic file is present. This can be done by running `Install_NoPasswordAuthPkg.ps1` as administrator and restarting afterwards.
+Password entering can be avoided altogether if `NoPasswordAuthPkg` is also installed and a removable drive with a magic file present. This can be done by running `Install_NoPasswordAuthPkg.ps1` as administrator and restarting afterwards.
 
 #### Uninstallation steps
 * Right click on `UNREGISTER_ReversePassword.bat` and select "Run as administrator".
