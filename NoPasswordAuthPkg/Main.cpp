@@ -101,7 +101,7 @@ NTSTATUS LsaApLogonUser (
         *ProfileBuffer = nullptr;
         *ProfileBufferSize = 0;
         *LogonId = {};
-        *SubStatus = 0;
+        *SubStatus = STATUS_SUCCESS; // reason for error
         *TokenInformationType = {};
         *TokenInformation = nullptr;
         *AccountName = nullptr;
@@ -171,8 +171,6 @@ NTSTATUS LsaApLogonUser (
 
         LogMessage("  LogonId: High=0x%x , Low=0x%x", LogonId->HighPart, LogonId->LowPart);
     }
-
-    *SubStatus = STATUS_SUCCESS; // reason for error
 
     {
         // Assign "TokenInformation" output argument
