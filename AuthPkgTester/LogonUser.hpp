@@ -24,7 +24,6 @@
 #pragma comment(lib, "UxTheme.lib") // SetWindowTheme 
 
 #define START_SEPARATE_WINDOW
-#define USE_LSA_LOGONUSER
 
 
 class LsaHandle {
@@ -145,54 +144,6 @@ DWORD CreateCmdProcessWithTokenW(HANDLE token, const std::wstring& username, PSI
     CloseHandle(pi.hThread);
 
     return exitCode;
-}
-
-
-/** Returns (token, logonSid) tuple. */
-std::tuple< HANDLE, PSID>  LogonUserInteractive(const std::wstring& username, const std::wstring& password) {
-    // output arguments
-    void* profileBuffer = nullptr;
-    ULONG profileBufferLen = 0;
-    HANDLE token = 0;
-    QUOTA_LIMITS quotas{};
-    PSID logonSid = nullptr; // logon session SID in "S-1-5-5-X-Y" format
-
-    {
-#if 0
-        wchar_t domain[MAX_COMPUTERNAME_LENGTH + 1] = {};
-        DWORD domainLen = MAX_COMPUTERNAME_LENGTH;
-        GetComputerNameW(domain, &domainLen);
-        DWORD logonProvider = LOGON32_PROVIDER_WINNT50; // use negotiate logon provider (require passing domain=computername)
-#else
-        wchar_t* domain = nullptr;
-        DWORD logonProvider = LOGON32_PROVIDER_DEFAULT; // default logon (seem to work better for local accounts)
-#endif
-        BOOL ok = LogonUserExW(username.c_str(), domain, password.c_str(), SECURITY_LOGON_TYPE::Interactive, logonProvider, &token, &logonSid, &profileBuffer, &profileBufferLen, &quotas);
-        if (!ok) {
-            DWORD err = GetLastError();
-            wprintf(L"LogonUserExW failed (%s)\n", ToString(err).c_str());
-            abort();
-        }
-        wprintf(L"SUCCESS: LogonUserExW succeeded.\n");
-    }
-
-    {
-        wchar_t* sidStr = nullptr;
-        ConvertSidToStringSidW(logonSid, &sidStr);
-        wprintf(L"Logon session SID: %s\n", sidStr);
-        LocalFree(sidStr);
-    }
-
-    wprintf(L"profileBufferLen: %u\n", profileBufferLen);
-    if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
-        static_assert(sizeof(MSV1_0_INTERACTIVE_PROFILE) == 160);
-        auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer;
-        // print fields to console
-        Print(*profile);
-    }
-    LsaFreeReturnBuffer(profileBuffer);
-
-    return std::make_tuple(token, logonSid);
 }
 
 /** Returns (token, logonSid) tuple. */

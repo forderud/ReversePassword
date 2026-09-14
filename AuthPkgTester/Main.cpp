@@ -60,11 +60,6 @@ int wmain(int argc, wchar_t* argv[]) {
         wprintf(L"Attempting local interactive logon against the %s authentication package...\n", authPkgName);
         std::vector<BYTE> authInfo = PrepareLogon_MSV1_0(domain, username, password); // Might need to replace with suitable authInfo for the selected authPkg
 
-        HANDLE token = 0;
-        PSID logonSid = nullptr;
-#ifndef USE_LSA_LOGONUSER
-        std::tie(token, logonSid) = LogonUserInteractive(username, password);
-#else
         ULONG authPkg = 0;
         NTSTATUS status = GetAuthPackage(authPkgName, &authPkg);
         if (status != STATUS_SUCCESS) {
@@ -72,9 +67,9 @@ int wmain(int argc, wchar_t* argv[]) {
             abort();
         }
 
+        HANDLE token = 0;
+        PSID logonSid = nullptr;
         std::tie(token, logonSid) = LsaLogonUserInteractive(authPkg, authInfo);
-#endif
-
         wprintf(L"SUCCESS: User logon succeeded.\n");
 
         DWORD ret = CreateCmdProcessWithTokenW(token, username, logonSid);
