@@ -134,10 +134,10 @@ NTSTATUS LsaApLogonUser (
         logonInfo->Password.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->Password.Buffer);
 
         // log user-supplied credentials
-        LogMessage("ProtocolSubmitBuffer:");
-        LogMessage("  LogonDomainName: %.*ls", logonInfo->LogonDomainName.Length, logonInfo->LogonDomainName.Buffer);
-        LogMessage("  Username: %.*ls", logonInfo->UserName.Length, logonInfo->UserName.Buffer);
-        LogMessage("  Password: %.*ls", logonInfo->Password.Length, logonInfo->Password.Buffer);
+        LogMessage("  ProtocolSubmitBuffer:");
+        LogMessage("    LogonDomainName: %.*ls", logonInfo->LogonDomainName.Length, logonInfo->LogonDomainName.Buffer);
+        LogMessage("    Username: %.*ls", logonInfo->UserName.Length, logonInfo->UserName.Buffer);
+        LogMessage("    Password: %.*ls", logonInfo->Password.Length, logonInfo->Password.Buffer);
     }
 
     // TODO: Check credentials against user database.
