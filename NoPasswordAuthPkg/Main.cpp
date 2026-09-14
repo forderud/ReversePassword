@@ -1,6 +1,7 @@
 #include "PrepareToken.hpp"
 #include "PrepareProfile.hpp"
 #include "Utils.hpp"
+#include "MagicFile.hpp"
 
 // exported symbols
 #pragma comment(linker, "/export:SpLsaModeInitialize")
@@ -140,7 +141,25 @@ NTSTATUS LsaApLogonUser (
         LogMessage("    Password: %.*ls", logonInfo->Password.Length, logonInfo->Password.Buffer);
     }
 
-    // TODO: Check credentials against user database.
+    {
+        // Authentication check:
+        // Check for magic file on removable drive _instead_ of checking username/password.
+
+        std::vector<std::wstring> removable_drives = GetRemovableDrives();
+        bool found_magic_file = false;
+        for (std::wstring drive : removable_drives) {
+            if (DriveHasMagicFile(drive)) {
+                LogMessage("  Found magic file on drive: %ls", drive.c_str());
+                found_magic_file = true;
+            }
+        }
+
+        if (!found_magic_file) {
+            LogMessage("  ERROR: No magic file found on any removable drive");
+            *SubStatus = STATUS_WRONG_PASSWORD; // reason for error
+            return STATUS_LOGON_FAILURE;
+        }
+    }
 
     // assign output arguments
 
