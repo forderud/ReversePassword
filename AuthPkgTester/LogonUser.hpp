@@ -32,12 +32,12 @@ public:
     LsaHandle() {
         // establish LSA connection
         NTSTATUS status = LsaConnectUntrusted(&m_lsa);
-        assert(status == STATUS_SUCCESS);
+        assert(status == STATUS_SUCCESS); status;
     }
     ~LsaHandle() {
         // close LSA handle
         NTSTATUS status = LsaDeregisterLogonProcess(m_lsa);
-        assert(status == STATUS_SUCCESS);
+        assert(status == STATUS_SUCCESS); status;
     }
 
     operator HANDLE() {

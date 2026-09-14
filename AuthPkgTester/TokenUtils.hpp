@@ -109,7 +109,7 @@ bool AddTokenDaclRight(HANDLE token, EXPLICIT_ACCESS_W& ea) {
 
         ACL* newDacl = nullptr;
         DWORD ret = SetEntriesInAclW(1, &ea, /*oldAcl*/dacl, &newDacl);
-        assert(ret == ERROR_SUCCESS);
+        assert(ret == ERROR_SUCCESS); ret;
 
         // replace DACL (SD must be in absolute format)
         ok = SetSecurityDescriptorDacl(absSd, daclPresent, newDacl, daclDefaulted);
