@@ -24,7 +24,7 @@ static bool NameToSid(const wchar_t* username, PSID* userSid) {
     return true;
 }
 
-static void GetPrimaryGroupSidFromUserSid(PSID userSID, PSID* primaryGroupSID) {
+static void GetPrimaryGroupSidFromUserSid(PSID userSID, /*out*/PSID* primaryGroupSID) {
     // duplicate the user sid
     *primaryGroupSID = (PSID)FunctionTable.AllocateLsaHeap(GetLengthSid(userSID));
     CopySid(GetLengthSid(userSID), *primaryGroupSID, userSID);
@@ -123,7 +123,7 @@ NTSTATUS UserNameToToken(
         token->Groups = tokenGroups;
     }
 
-    GetPrimaryGroupSidFromUserSid(userSid, &token->PrimaryGroup.PrimaryGroup);
+    GetPrimaryGroupSidFromUserSid(userSid, /*out*/&token->PrimaryGroup.PrimaryGroup);
 
     // TOKEN_PRIVILEGES Privileges not currently configured
     token->Privileges = nullptr;
