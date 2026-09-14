@@ -1,5 +1,9 @@
 Command-line tool for authentication package testing and running `cmd.exe` throgh other user accounts.
 
+
+**WARNING**: Not for production usage! End-users are usually better off running `Start-Process cmd.exe -Verb RunAs` from PowerShell.
+
+
 #### Usage
 * List installed security packages: `AuthPkgTester.exe`
 * Local account authentication: `AuthPkgTester.exe <authPkgName> <usename> <password>`
