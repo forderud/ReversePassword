@@ -8,7 +8,7 @@
 
 
 ## How to test
-It's recommended to **test in a disposable Virtual Machine (VM)**, since credential provider problems might break the windows logon screen. You don't want to risk that on your main computer.
+It's recommended to <mark>**test in a disposable Virtual Machine (VM)**</mark>, since credential provider problems might break the windows logon screen. You don't want to risk that on your main computer.
 
 #### Build steps
 * Open solution in Visual Studio and build the projects in release or debug mode.
