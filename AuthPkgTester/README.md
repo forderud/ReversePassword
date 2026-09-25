@@ -7,7 +7,7 @@ Command-line tool for authentication package testing and running `cmd.exe` throg
 #### Usage
 * List installed security packages: `AuthPkgTester.exe`
 * Test authentication: `AuthPkgTester.exe <authPkgName> <usename> <password>`, where `<authPkgName>` is optional and will default to `MICROSOFT_AUTHENTICATION_PACKAGE_V1_0`
-* Start process (runas): `AuthPkgTester.exe <authPkgName> <usename> <password> <cmdLine>`, where `<cmdLine>` is the application to start (e.g. `cmd.exe`)
+* Start process (runas): `AuthPkgTester.exe <authPkgName> <usename> <password> <cmdLine>`, where `<cmdLine>` is the executable to start (e.g. `cmd.exe`)
 
 Pass username on `<domain>\<usename>` format for domain accounts.
 
@@ -20,7 +20,7 @@ Pass username on `<domain>\<usename>` format for domain accounts.
 ### Implementation details
 * [`LsaLogonUser`](https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsalogonuser) is used to authenticate against a given authentication package.
 * The logon session ID ([`SE_GROUP_LOGON_ID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)) is granted access to the window station and desktop.
-* [`CreateProcessWithToken`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) is used to start `cmd.exe` under the authenticated user account.
+* [`CreateProcessWithToken`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) is used to start the executable under the authenticated user account.
 
 ### CreateProcess alternatives
 | API | Privileges required | Desktop/window station | UI theme |
