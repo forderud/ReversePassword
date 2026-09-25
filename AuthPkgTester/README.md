@@ -6,10 +6,10 @@ Command-line tool for authentication package testing and running `cmd.exe` throg
 
 #### Usage
 * List installed security packages: `AuthPkgTester.exe`
-* Local account authentication: `AuthPkgTester.exe <authPkgName> <usename> <password>`
-* Network account authentication: `AuthPkgTester.exe <authPkgName> <domain>\<usename> <password>`
+* Local account authentication: `AuthPkgTester.exe <authPkgName> <usename> <password> <cmdLine>`
+* Network account authentication: `AuthPkgTester.exe <authPkgName> <domain>\<usename> <password> <cmdLine>`
 
-The `<authPkgName>` argument is optional and will default to MSV1_0.
+The `<authPkgName>` argument is optional and will default to MSV1_0. The optional `<cmdLine>` argument will start `<cmdLine>` with the given credentials if specified.
 
 #### Preinstalled authentication packages
 * [`MICROSOFT_AUTHENTICATION_PACKAGE_V1_0`](https://learn.microsoft.com/en-us/windows/win32/secauthn/msv1-0-authentication-package) (MSV1_0): For _local_ logons
