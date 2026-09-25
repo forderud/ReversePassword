@@ -72,7 +72,8 @@ int wmain(int argc, wchar_t* argv[]) {
         std::tie(token, logonSid) = LsaLogonUserInteractive(authPkg, authInfo);
         wprintf(L"SUCCESS: User logon succeeded.\n");
 
-        DWORD ret = CreateCmdProcessWithTokenW(token, username, logonSid);
+        std::wstring cmdLine = L"C:\\Windows\\System32\\cmd.exe";
+        DWORD ret = CreateProcessWithTokenW(token, cmdLine, username, logonSid);
         if (ret != STATUS_SUCCESS) {
             wprintf(L"ERROR: CreateProcessWithTokenW failed (%s)\n", ToString(ret).c_str());
         }
