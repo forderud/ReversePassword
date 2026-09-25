@@ -88,6 +88,7 @@ int wmain(int argc, wchar_t* argv[]) {
     } else {
         wprintf(L"USAGE:\n");
         wprintf(L"  List security packages: AuthPkgTester.exe\n");
-        wprintf(L"  Attempt MSV1_0 login: AuthPkgTester.exe [auth-package] <username> <password>\n");
+        wprintf(L"  Test authentication: AuthPkgTester.exe [auth-package] <username> <password>\n");
+        wprintf(L"  Start process (runas): AuthPkgTester.exe <auth-package> <username> <password> <cmdLine>\n");
     }
 }
