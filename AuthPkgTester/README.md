@@ -17,8 +17,12 @@ The `<authPkgName>` argument is optional and will default to MSV1_0. The optiona
 * ~~[`Kerberos`](https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-kerberos): For logging on to a _network_ (don't access directly)~~
 * ~~[`NTLM`](https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm): Authentication protocol used on _networks_ (don't access directly)~~
 
+### Implementation details
+* [`LsaLogonUser`](https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsalogonuser) is used to authenticate against a given authentication package.
+* The logon session ID ([`SE_GROUP_LOGON_ID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)) is granted access to the window station and desktop.
+* [`CreateProcessWithToken`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) is used to start `cmd.exe` under the authenticated user account.
 
-### API alternative overview
+### CreateProcess alternatives
 | API | Privileges required | Desktop/window station | UI theme |
 |-----|----------------|----------------------------|--------------|
 | [`CreateProcessWithLogon`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithlogonw) (incompatible with authentication packages) | Admin privileges | Works automatically | Applied |
@@ -27,11 +31,6 @@ The `<authPkgName>` argument is optional and will default to MSV1_0. The optiona
 
 Doc quote:
 > you must change the discretionary access control list (DACL) of both the default interactive window station and the default desktop. The DACLs for the window station and desktop must grant access to the user or the logon session represented by the hToken parameter.
-
-### Implementation details
-* [`LsaLogonUser`](https://learn.microsoft.com/en-us/windows/win32/api/ntsecapi/nf-ntsecapi-lsalogonuser) is used to authenticate against a given authentication package.
-* The logon session ID ([`SE_GROUP_LOGON_ID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)) is granted access to the window station and desktop.
-* [`CreateProcessWithToken`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createprocesswithtokenw) is used to start `cmd.exe` under the authenticated user account.
 
 ### Open issues
 * [issue #25](../../../issues/25) UI theme settings not applied
