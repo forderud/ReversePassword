@@ -6,7 +6,7 @@ Command-line tool for authentication package testing and running `cmd.exe` throg
 
 #### Usage
 * List installed security packages: `AuthPkgTester.exe`
-* Test authentication: `AuthPkgTester.exe <authPkgName> <usename> <password>`, where `<authPkgName>` is optional and will default to "MICROSOFT_AUTHENTICATION_PACKAGE_V1_0"
+* Test authentication: `AuthPkgTester.exe <authPkgName> <usename> <password>`, where `<authPkgName>` is optional and will default to `MICROSOFT_AUTHENTICATION_PACKAGE_V1_0`
 * Start process (runas): `AuthPkgTester.exe <authPkgName> <usename> <password> <cmdLine>`, where `<cmdLine>` is the application to start (e.g. `cmd.exe`)
 
 Pass username on `<domain>\<usename>` format for domain accounts.
