@@ -14,7 +14,6 @@ It's recommended to <mark>**test in a disposable Virtual Machine (VM)**</mark>, 
 * Open solution in Visual Studio and build the projects in release or debug mode.
 
 #### Installation steps
-* Install [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/en-us/download/dotnet)
 * Copy the build artifacts to the test environment.
 * Run `REGISTER_ReversePassword.bat` as administrator.
 
