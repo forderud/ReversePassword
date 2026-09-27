@@ -4,7 +4,6 @@ namespace ReversePassword
 {
     static class Common
     {
-        //Determine authentication package required
         public static uint GetAuthenticationPackage(out uint authPackage)
         {
             Logger.Write();
