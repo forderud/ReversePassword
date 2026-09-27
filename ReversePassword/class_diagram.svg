@@ -7,7 +7,7 @@
    viewBox="0 0 250 80"
    version="1.1"
    id="svg1"
-   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
    sodipodi:docname="class_diagram.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,12 +24,12 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="1.0467522"
-     inkscape:cx="474.80196"
+     inkscape:cx="475.27963"
      inkscape:cy="178.64782"
      inkscape:window-width="1682"
      inkscape:window-height="1138"
-     inkscape:window-x="3551"
-     inkscape:window-y="129"
+     inkscape:window-x="867"
+     inkscape:window-y="150"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer1" />
   <defs
@@ -297,7 +297,7 @@
          id="tspan1-4"
          style="font-size:4.23333px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
          x="207.14668"
-         y="21.717934">CredentialProviderCredential</tspan><tspan
+         y="21.717934">Credential</tspan><tspan
          sodipodi:role="line"
          style="font-size:4.23333px;text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.758;stroke-dasharray:none;stroke-dashoffset:0"
          x="207.14668"
