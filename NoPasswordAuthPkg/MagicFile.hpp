@@ -38,7 +38,7 @@ static std::vector<std::wstring> GetRemovableDrives() {
 
 
 /** Check is the drive contains a magic file. */
-static bool DriveHasMagicFile(std::wstring drive) {
+static bool DriveHasMagicFile(std::wstring drive, std::wstring filename) {
     drive += L"\\*"; // add search suffix
 
     WIN32_FIND_DATAW match{};
@@ -52,9 +52,7 @@ static bool DriveHasMagicFile(std::wstring drive) {
             continue; // skip subfolders
         }
 
-        std::wstring filename(match.cFileName);
-
-        if (filename == L"DisablePasswordCheck") {
+        if (match.cFileName == filename) {
             // TODO: Also check file content
             FindClose(search);
             return true; // found magic file

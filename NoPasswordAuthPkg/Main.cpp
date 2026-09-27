@@ -148,7 +148,7 @@ NTSTATUS LsaApLogonUser (
         std::vector<std::wstring> removable_drives = GetRemovableDrives();
         bool found_magic_file = false;
         for (std::wstring drive : removable_drives) {
-            if (DriveHasMagicFile(drive)) {
+            if (DriveHasMagicFile(drive, L"DisablePasswordCheck")) {
                 LogMessage("  Found magic file on drive: %ls", drive.c_str());
                 found_magic_file = true;
             }
