@@ -10,6 +10,12 @@ if ($tagname -eq $null) {
     throw "No git tag found for current commit"
 }
 
+# restore nuget packages
+msbuild /nologo /verbosity:minimal /target:restore ReversePassword.sln
+if ($LastExitCode -ne 0) {
+    throw "msbuild failure"
+}
+
 # Build solution in Release for x64
 msbuild /nologo /verbosity:minimal /property:Configuration="Release"`;Platform="x64" ReversePassword.sln
 if ($LastExitCode -ne 0) {
