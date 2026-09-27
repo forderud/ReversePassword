@@ -147,7 +147,7 @@ namespace ReversePassword
             }
 
             // add credential to dict
-            credential = new CredentialProviderCredential(this, sid);
+            credential = new Credential(this, sid);
             _credentials[sid] = credential;
 
             Logger.Write($"Returning new credential for username={Common.GetNameFromSid(sid)}");

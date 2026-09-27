@@ -4,13 +4,13 @@ using System.Reflection;
 
 namespace ReversePassword
 {
-    public class CredentialProviderCredential : ICredentialProviderCredential2
+    public class Credential : ICredentialProviderCredential2
     {
         private readonly CredentialView _view;
         private readonly string _sid;
         private Bitmap _tileIcon;
 
-        public CredentialProviderCredential(CredentialView view, string sid)
+        public Credential(CredentialView view, string sid)
         {
             Logger.Write($"username: {Common.GetNameFromSid(sid)}");
 
