@@ -30,7 +30,6 @@ namespace ReversePassword
         public int FieldsCount { get { return _fields.Count; } }
 
         private readonly List<CredentialDescriptor> _fields = new List<CredentialDescriptor>();
-        private readonly Dictionary<string, ICredentialProviderCredential> _credentials = new Dictionary<string, ICredentialProviderCredential>(); // sid as key
 
 
         public CredentialView(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus) 
@@ -140,23 +139,6 @@ namespace ReversePassword
                 return null;
 
             return _fields[(int)idx];
-        }
-
-        public ICredentialProviderCredential GetCredential(string sid)
-        {
-            // cache lookup
-            if (_credentials.TryGetValue(sid, out ICredentialProviderCredential credential))
-            {
-                Logger.Write("Returning existing credential.");
-                return credential;
-            }
-
-            // add credential to dict
-            credential = new Credential(this, sid);
-            _credentials[sid] = credential;
-
-            Logger.Write($"Returning new credential for username={Common.GetNameFromSid(sid)}");
-            return credential;
         }
     }
 }

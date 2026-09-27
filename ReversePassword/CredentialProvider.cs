@@ -13,6 +13,7 @@ namespace ReversePassword
         private ICredentialProviderEvents _events;
         private CredentialView _view;
         private List<ICredentialProviderUser> _users;
+        private readonly Dictionary<string, ICredentialProviderCredential> _credentials = new Dictionary<string, ICredentialProviderCredential>(); // sid as key
 
         public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint flags_)
         {
@@ -108,8 +109,26 @@ namespace ReversePassword
 
             _users[(int)idx].GetSid(out string sid);
 
-            cpc = _view.GetCredential(sid);
+            cpc = GetCredential(sid);
         }
+
+        private ICredentialProviderCredential GetCredential(string sid)
+        {
+            // cache lookup
+            if (_credentials.TryGetValue(sid, out ICredentialProviderCredential credential))
+            {
+                Logger.Write("Returning existing credential.");
+                return credential;
+            }
+
+            // add credential to dict
+            credential = new Credential(_view, sid);
+            _credentials[sid] = credential;
+
+            Logger.Write($"Returning new credential for username={Common.GetNameFromSid(sid)}");
+            return credential;
+        }
+
 
         public virtual void SetUserArray(ICredentialProviderUserArray users)
         {
