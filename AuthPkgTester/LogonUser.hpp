@@ -152,7 +152,7 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(ULONG authPkg, const std::vect
     LsaHandle lsa;
 
     // output arguments
-    void* profileBuffer = nullptr;
+    void* profileBuffer = nullptr; // MSV1_0_INTERACTIVE_PROFILE struct
     ULONG profileBufferLen = 0;
     HANDLE token = 0;
     QUOTA_LIMITS quotas{};
@@ -192,6 +192,7 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(ULONG authPkg, const std::vect
         LocalFree(sidStr);
     }
 
+#if 0
     wprintf(L"profileBufferLen: %u\n", profileBufferLen);
     if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
         static_assert(sizeof(MSV1_0_INTERACTIVE_PROFILE) == 160);
@@ -199,6 +200,7 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(ULONG authPkg, const std::vect
         // print fields to console
         Print(*profile);
     }
+#endif
     LsaFreeReturnBuffer(profileBuffer);
 
     return std::make_tuple(token, logonSid);
