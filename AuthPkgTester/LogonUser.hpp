@@ -195,7 +195,6 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(ULONG authPkg, const std::vect
 #if 0
     wprintf(L"profileBufferLen: %u\n", profileBufferLen);
     if (profileBufferLen >= sizeof(MSV1_0_INTERACTIVE_PROFILE)) {
-        static_assert(sizeof(MSV1_0_INTERACTIVE_PROFILE) == 160);
         auto* profile = (MSV1_0_INTERACTIVE_PROFILE*)profileBuffer;
         // print fields to console
         Print(*profile);
