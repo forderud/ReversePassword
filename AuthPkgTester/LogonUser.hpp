@@ -177,7 +177,7 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(ULONG authPkg, const std::vect
         // "LocalGroups" argument not set because it require SeTcbPrivilege
         NTSTATUS ret = LsaLogonUser(lsa, &origin, SECURITY_LOGON_TYPE::Interactive, authPkg, (void*)authInfo.data(), (ULONG)authInfo.size(), /*LocalGroups*/nullptr, &sourceContext, &profileBuffer, &profileBufferLen, &logonId, &token, &quotas, &subStatus);
         if (ret != STATUS_SUCCESS) {
-            wprintf(L"LsaLogonUser failed (%s)\n", ToString(ret).c_str());
+            wprintf(L"LsaLogonUser failed (%s, %s)\n", ToString(ret).c_str(), ToString(subStatus).c_str());
             abort();
         }
         wprintf(L"SUCCESS: LsaLogonUser succeeded.\n");
