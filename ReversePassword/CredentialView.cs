@@ -18,6 +18,10 @@ namespace ReversePassword
 
     public class CredentialView
     {
+        public const int FIELD_USERNAME = 1;
+        public const int FIELD_PASSWORD = 2;
+        public const int FIELD_NEW_PASSWORD = 3;
+
         public const string CPFG_LOGON_PASSWORD_GUID = "60624cfa-a477-47b1-8a8e-3a4a19981827";
         public const string CPFG_CREDENTIAL_PROVIDER_LOGO = "2d837775-f6cd-464e-a745-482fd0b47493";
         public const string CPFG_CREDENTIAL_PROVIDER_LABEL = "286bbff3-bad4-438f-b007-79b7267c3d48";
@@ -42,6 +46,7 @@ namespace ReversePassword
                     _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
             uint lastPwdField = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ? (uint)3 : (uint)2;
 
+            // icon
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_TILE_IMAGE,
                 label: "Icon",
@@ -49,7 +54,7 @@ namespace ReversePassword
                 visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
                 value: null
             );
-
+            // FIELD_USERNAME
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT,
                 label: "Username",
@@ -57,7 +62,7 @@ namespace ReversePassword
                 visibility: userNameState,
                 value: null
             );
-
+            // FIELD_PASSWORD
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 label: "Password",
@@ -65,7 +70,7 @@ namespace ReversePassword
                 visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
                 value: null
             );
-
+            // FIELD_NEW_PASSWORD
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 label: "New password",
@@ -73,7 +78,7 @@ namespace ReversePassword
                 visibility: confirmPasswordState,
                 value: null
             );
-
+            // submit button
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SUBMIT_BUTTON,
                 label: "Submit",
@@ -81,7 +86,7 @@ namespace ReversePassword
                 visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
                 value: lastPwdField // adjacentTo fieldID
             );
-
+            // text label
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT,
                 label: null,

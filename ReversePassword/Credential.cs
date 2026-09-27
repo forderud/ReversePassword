@@ -241,11 +241,11 @@ namespace ReversePassword
                 //Get username and password
                 string username;
                 if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI)
-                    username = (string)_view.GetField(1).Value; // user-entered
+                    username = (string)_view.GetField(CredentialView.FIELD_USERNAME).Value; // user-entered
                 else
                     username = Common.GetNameFromSid(_sid); // implicit
 
-                var password = (string)_view.GetField(2).Value;
+                var password = (string)_view.GetField(CredentialView.FIELD_PASSWORD).Value;
                 if (password == null)
                         password = "";
                 password = Reverse(password);
@@ -273,9 +273,9 @@ namespace ReversePassword
             {
                 // Password change logic..
                 string username = Common.GetNameFromSid(_sid); // in <domain>\<user> format
-                string oldPwd = (string)_view.GetField(2).Value;
+                string oldPwd = (string)_view.GetField(CredentialView.FIELD_PASSWORD).Value;
                 oldPwd = Reverse(oldPwd);
-                string newPwd = (string)_view.GetField(3).Value;
+                string newPwd = (string)_view.GetField(CredentialView.FIELD_NEW_PASSWORD).Value;
                 newPwd = Reverse(newPwd);
 
                 string[] domainUser = username.Split('\\');
