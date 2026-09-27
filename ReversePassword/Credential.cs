@@ -233,7 +233,7 @@ namespace ReversePassword
                 || usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI) // triggered by CredUIPromptForWindowsCredentials
             {
                 //Determine the authentication package
-                Common.RetrieveNegotiateAuthPackage(out var authPackage);
+                Common.GetAuthenticationPackage(out var authPackage);
 
                 //Only credential packing for msv1_0 is supported using this code
                 Logger.Write($"Using authentication package: {authPackage}.");
