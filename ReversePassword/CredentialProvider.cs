@@ -39,11 +39,7 @@ namespace ReversePassword
         public virtual void Advise(ICredentialProviderEvents cpe, ulong adviseContext)
         {
             Logger.Write($"upAdviseContext: {adviseContext}");
-
-            if (cpe != null)
-            {
-                _events = cpe;
-            }
+            _events = cpe;
         }
 
         public virtual void UnAdvise()

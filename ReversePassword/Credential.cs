@@ -20,15 +20,10 @@ namespace ReversePassword
 
         public virtual void Advise(ICredentialProviderCredentialEvents cpce)
         {
-            if (cpce is ICredentialProviderCredentialEvents2 ev2)
-                Logger.Write("pcpce is ICredentialProviderCredentialEvents2");
-
-            Logger.Write("NotImplemented");
         }
 
         public virtual void UnAdvise()
         {
-            Logger.Write("NotImplemented");
         }
 
         public virtual void SetSelected(out int autoLogon)
