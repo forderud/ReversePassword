@@ -124,35 +124,14 @@ namespace ReversePassword
 
         public virtual void GetComboBoxValueCount(uint fieldID, out uint itemCount, out uint selectedItem)
         {
-            Logger.Write($"dwFieldID: {fieldID}");
-
-            CredentialDescriptor desc = _view.GetField(fieldID);
-            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
-            {
-                Logger.Write("throw new InvalidCastException");
-                throw new InvalidCastException();
-            }
-
-            var cb = desc.Value as ComboBox;
-            itemCount = (uint)cb.items.Count;
-            selectedItem = cb.selectedItem;
-            Logger.Write($"Returning itemCount: {itemCount}, selectedItem: {selectedItem}");
+            Logger.Write("throw new NotImplementedException");
+            throw new NotImplementedException();
         }
 
         public virtual void GetComboBoxValueAt(uint fieldID, uint item, out string val)
         {
-            Logger.Write($"dwFieldID: {fieldID}; dwItem: {item}");
-
-            CredentialDescriptor desc = _view.GetField(fieldID);
-            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
-            {
-                Logger.Write("throw new InvalidCastException");
-                throw new InvalidCastException();
-            }
-
-            var cb = desc.Value as ComboBox;
-            val = cb.items[(int)item];
-            Logger.Write($"Returning val: {val}");
+            Logger.Write("throw new NotImplementedException");
+            throw new NotImplementedException();
         }
 
         public virtual void SetStringValue(uint fieldID, string val)
@@ -182,18 +161,8 @@ namespace ReversePassword
 
         public virtual void SetComboBoxSelectedValue(uint fieldID, uint selectedItem)
         {
-            Logger.Write($"dwFieldID: {fieldID}; dwSelectedItem: {selectedItem}");
-
-            CredentialDescriptor desc = _view.GetField(fieldID);
-            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMBOBOX)
-            {
-                Logger.Write("throw new InvalidCastException");
-                throw new InvalidCastException();
-            }
-
-            var cb = desc.Value as ComboBox;
-            cb.selectedItem = selectedItem;
-            Logger.Write($"Returning");
+            Logger.Write("throw new NotImplementedException");
+            throw new NotImplementedException();
         }
 
         public virtual void CommandLinkClicked(uint fieldID)
