@@ -79,7 +79,7 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
     const DWORD submitAdjacentTo = usage == CPUS_CHANGE_PASSWORD ? kNewPasswordField : kPasswordField;
 
     const auto addField = [&view](CREDENTIAL_PROVIDER_FIELD_TYPE type, PCWSTR label,
-                                  CREDENTIAL_PROVIDER_FIELD_STATE state, PCWSTR value = L"")
+                                  CREDENTIAL_PROVIDER_FIELD_STATE state, std::variant<std::wstring, DWORD> value)
     {
         Field field{};
         field.descriptor.dwFieldID = static_cast<DWORD>(view->fields.size());
@@ -90,12 +90,11 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
         view->fields.push_back(std::move(field));
     };
 
-    addField(CPFT_TILE_IMAGE, L"Icon", CPFS_DISPLAY_IN_BOTH);
-    addField(CPFT_EDIT_TEXT, L"Username", userNameState);
-    addField(CPFT_PASSWORD_TEXT, L"Password", CPFS_DISPLAY_IN_SELECTED_TILE);
-    addField(CPFT_PASSWORD_TEXT, L"New password", newPasswordState);
-    addField(CPFT_SUBMIT_BUTTON, L"Submit", CPFS_DISPLAY_IN_SELECTED_TILE,
-             submitAdjacentTo == kNewPasswordField ? L"3" : L"2");
+    addField(CPFT_TILE_IMAGE, L"Icon", CPFS_DISPLAY_IN_BOTH, {});
+    addField(CPFT_EDIT_TEXT, L"Username", userNameState, {});
+    addField(CPFT_PASSWORD_TEXT, L"Password", CPFS_DISPLAY_IN_SELECTED_TILE, {});
+    addField(CPFT_PASSWORD_TEXT, L"New password", newPasswordState, {});
+    addField(CPFT_SUBMIT_BUTTON, L"Submit", CPFS_DISPLAY_IN_SELECTED_TILE, submitAdjacentTo);
     addField(CPFT_LARGE_TEXT, nullptr, CPFS_DISPLAY_IN_BOTH, L"Reverse Password");
     return view;
 }
@@ -297,7 +296,11 @@ HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap)
 HRESULT Credential::GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo)
 {
     if (fieldId != kSubmitButtonField || !adjacentTo) return E_INVALIDARG;
-    *adjacentTo = view_->usage == CPUS_CHANGE_PASSWORD ? kNewPasswordField : kPasswordField;
+
+    Field* field = GetField(fieldId);
+    if (!field) return E_INVALIDARG;
+
+    *adjacentTo = std::get<DWORD>(field->value);
     return S_OK;
 }
 
