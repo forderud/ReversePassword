@@ -1,5 +1,7 @@
 #pragma once
 #include <Windows.h>
+#include <string>
+#include <vector>
 
 
 /** Return a listing of drives that are either removable (USB sticks) or CD-ROM'ish. */
