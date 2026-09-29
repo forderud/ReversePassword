@@ -12,6 +12,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <variant>
 #include <vector>
 
 #pragma comment(lib, "Credui.lib")
@@ -41,7 +42,7 @@ struct Field
 {
     CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR descriptor{};
     CREDENTIAL_PROVIDER_FIELD_STATE state{};
-    std::wstring value;
+    std::variant<std::wstring, DWORD> value;
 };
 
 struct CredentialView
@@ -261,8 +262,8 @@ HRESULT Credential::SetSelected(BOOL* autoLogon)
 
 HRESULT Credential::SetDeselected()
 {
-    if (Field* password = GetField(kPasswordField)) password->value.clear();
-    if (Field* password = GetField(kNewPasswordField)) password->value.clear();
+    if (Field* password = GetField(kPasswordField)) password->value = {};
+    if (Field* password = GetField(kNewPasswordField)) password->value = {};
     return S_OK;
 }
 
@@ -282,7 +283,7 @@ HRESULT Credential::GetStringValue(DWORD fieldId, PWSTR* value)
     if (!field || !value) return E_INVALIDARG;
     if (field->descriptor.cpft < CPFT_LARGE_TEXT || field->descriptor.cpft > CPFT_PASSWORD_TEXT)
         return E_INVALIDARG;
-    return DuplicateString(field->value.c_str(), value);
+    return DuplicateString(std::get<std::wstring>(field->value).c_str(), value);
 }
 
 HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap)
@@ -330,8 +331,8 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         const size_t separator = accountName.find(L'\\');
         if (separator == std::wstring::npos) return E_FAIL;
 
-        const std::wstring oldPassword = Reverse(GetField(kPasswordField)->value);
-        const std::wstring newPassword = Reverse(GetField(kNewPasswordField)->value);
+        const std::wstring oldPassword = Reverse(std::get<std::wstring>(GetField(kPasswordField)->value));
+        const std::wstring newPassword = Reverse(std::get<std::wstring>(GetField(kNewPasswordField)->value));
         const NET_API_STATUS resultCode = NetUserChangePassword(accountName.substr(0, separator).c_str(),
                                                                  accountName.substr(separator + 1).c_str(),
                                                                  oldPassword.c_str(), newPassword.c_str());
@@ -357,11 +358,11 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
 
     std::wstring userName;
     if (view_->usage == CPUS_CREDUI)
-        userName = GetField(kUserNameField)->value;
+        userName = std::get<std::wstring>(GetField(kUserNameField)->value);
     else if (FAILED(result = GetAccountName(sid_.c_str(), userName)))
         return result;
 
-    const std::wstring password = Reverse(GetField(kPasswordField)->value);
+    const std::wstring password = Reverse(std::get<std::wstring>(GetField(kPasswordField)->value));
     result = CredPackAuthenticationBufferWrap(userName.c_str(), password.c_str(), &serialization->rgbSerialization,
                              &serialization->cbSerialization);
     if (FAILED(result))
