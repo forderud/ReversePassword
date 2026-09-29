@@ -9,6 +9,12 @@ Set-Location $PSScriptRoot
 
 $p = Start-Process -FilePath "git.exe" -ArgumentList "tag --points-at HEAD" -NoNewWindow -Wait -RedirectStandardOutput  "tagname.txt"
 $tagname = Get-Content -Path "tagname.txt"
+if ($tagname -eq $null) {
+    $mode = "Debug" # debug builds of non-tags
+    $tagname = "debug"
+} else {
+    $mode = "Release" # release build of tags
+}
 
 # restore nuget packages
 msbuild /nologo /verbosity:minimal /target:restore ReversePassword.sln
@@ -16,8 +22,7 @@ if ($LastExitCode -ne 0) {
     throw "msbuild failure"
 }
 
-# Build solution in Release for x64
-$mode = "Release"
+# Build projects
 msbuild /nologo /verbosity:minimal /property:Configuration="$mode"`;Platform="x64" ReversePassword.sln
 if ($LastExitCode -ne 0) {
     throw "msbuild failure"
