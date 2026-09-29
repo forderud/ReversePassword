@@ -100,18 +100,15 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
     return view;
 }
 
-HRESULT DuplicateString(PCWSTR value, PWSTR* copy)
+WCHAR* DuplicateString(PCWSTR value)
 {
-    if (!copy)
-        return E_POINTER;
-    *copy = nullptr;
     if (!value)
-        return S_OK;
+        return nullptr;
 
     const size_t bytes = (wcslen(value) + 1) * sizeof(wchar_t);
-    *copy = static_cast<PWSTR>(CoTaskMemAlloc(bytes));
-    memcpy(*copy, value, bytes);
-    return S_OK;
+    WCHAR* copy = static_cast<PWSTR>(CoTaskMemAlloc(bytes));
+    memcpy(copy, value, bytes);
+    return copy;
 }
 
 HRESULT GetAccountName(PCWSTR sidText, std::wstring& accountName)
@@ -241,7 +238,7 @@ public:
                                 CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
     HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, PWSTR* statusText,
                             CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
-    HRESULT GetUserSid(PWSTR* sid) override { return DuplicateString(sid_.c_str(), sid); }
+    HRESULT GetUserSid(PWSTR* sid) override { *sid = DuplicateString(sid_.c_str()); return *sid ? S_OK : E_POINTER; }
 
 private:
     Field* GetField(DWORD fieldId)
@@ -283,7 +280,8 @@ HRESULT Credential::GetStringValue(DWORD fieldId, PWSTR* value)
     if (!field || !value) return E_INVALIDARG;
     if (field->descriptor.cpft < CPFT_LARGE_TEXT || field->descriptor.cpft > CPFT_PASSWORD_TEXT)
         return E_INVALIDARG;
-    return DuplicateString(std::get<std::wstring>(field->value).c_str(), value);
+    *value = DuplicateString(std::get<std::wstring>(field->value).c_str());
+    return *value ? S_OK : E_POINTER;
 }
 
 HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap)
@@ -343,13 +341,13 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         if (resultCode == NERR_Success)
         {
             *statusIcon = CPSI_SUCCESS;
-            DuplicateString(L"Password changed.", statusText);
+            *statusText = DuplicateString(L"Password changed.");
         }
         else
         {
             *statusIcon = CPSI_ERROR;
             const std::wstring message = L"Password change failed with error: " + std::to_wstring(resultCode);
-            DuplicateString(message.c_str(), statusText);
+            *statusText = DuplicateString(message.c_str());
         }
         *response = CPGSR_NO_CREDENTIAL_FINISHED;
         return S_OK;
@@ -372,7 +370,7 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     if (FAILED(result))
     {
         *statusIcon = CPSI_ERROR;
-        DuplicateString(L"Failed to pack credentials.", statusText);
+        *statusText = DuplicateString(L"Failed to pack credentials.");
         return result;
     }
 
@@ -395,7 +393,7 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, PWSTR* sta
         message += _com_error(status).ErrorMessage();
         message += L", substatus: ";
         message += _com_error(substatus).ErrorMessage();
-        return DuplicateString(message.c_str(), statusText);
+        *statusText = DuplicateString(message.c_str());
     }
     return S_OK;
 }
@@ -454,12 +452,7 @@ HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDE
 
     auto copy = static_cast<CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR*>(CoTaskMemAlloc(sizeof(CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR)));
     *copy = view_->fields[index].descriptor;
-    const HRESULT result = DuplicateString(copy->pszLabel, &copy->pszLabel);
-    if (FAILED(result))
-    {
-        CoTaskMemFree(copy);
-        return result;
-    }
+    copy->pszLabel = DuplicateString(view_->fields[index].descriptor.pszLabel);
     *descriptor = copy;
     return S_OK;
 }
