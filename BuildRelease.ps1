@@ -4,6 +4,9 @@
 # stop script on first error
 $ErrorActionPreference = "Stop"
 
+# Go to script directory
+Set-Location $PSScriptRoot
+
 $p = Start-Process -FilePath "git.exe" -ArgumentList "tag --points-at HEAD" -NoNewWindow -Wait -RedirectStandardOutput  "tagname.txt"
 $tagname = Get-Content -Path "tagname.txt"
 
