@@ -49,7 +49,6 @@ namespace ReversePassword
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_TILE_IMAGE,
                 label: "Icon",
-                guidFieldType: default(Guid),
                 visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
                 value: null
             );
@@ -57,7 +56,6 @@ namespace ReversePassword
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_EDIT_TEXT,
                 label: "Username",
-                guidFieldType: default(Guid),
                 visibility: userNameState,
                 value: null
             );
@@ -65,7 +63,6 @@ namespace ReversePassword
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 label: "Password",
-                guidFieldType: default(Guid),
                 visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
                 value: null
             );
@@ -73,7 +70,6 @@ namespace ReversePassword
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_PASSWORD_TEXT,
                 label: "New password",
-                guidFieldType: default(Guid),
                 visibility: confirmPasswordState,
                 value: null
             );
@@ -81,7 +77,6 @@ namespace ReversePassword
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_SUBMIT_BUTTON,
                 label: "Submit",
-                guidFieldType: default(Guid),
                 visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE,
                 value: lastPwdField // adjacentTo fieldID
             );
@@ -89,7 +84,6 @@ namespace ReversePassword
             AddField(
                 cpft: _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_LARGE_TEXT,
                 label: null,
-                guidFieldType: default(Guid),
                 visibility: _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH,
                 value: "Reverse Password"
             );
@@ -98,7 +92,6 @@ namespace ReversePassword
         private void AddField(
             _CREDENTIAL_PROVIDER_FIELD_TYPE cpft,
             string label,
-            Guid guidFieldType,
             _CREDENTIAL_PROVIDER_FIELD_STATE visibility,
             object value)
         {
@@ -111,7 +104,7 @@ namespace ReversePassword
                     dwFieldID = (uint)_fields.Count,
                     cpft = cpft,
                     pszLabel = label,
-                    guidFieldType = guidFieldType
+                    guidFieldType = default(Guid)
                 }
             });
         }
