@@ -31,9 +31,9 @@ namespace ReversePassword
             return status;
         }
 
-        public static string GetNameFromSid(string value)
+        public static string GetAccountName(string sidStr)
         {
-            var sid = new SecurityIdentifier(value);
+            var sid = new SecurityIdentifier(sidStr);
             var ntAccount = (NTAccount)sid.Translate(typeof(NTAccount));
 
             return ntAccount.ToString();

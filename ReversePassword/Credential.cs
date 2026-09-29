@@ -12,7 +12,7 @@ namespace ReversePassword
 
         public Credential(CredentialView view, string sid)
         {
-            Logger.Write($"username: {Common.GetNameFromSid(sid)}");
+            Logger.Write($"username: {Common.GetAccountName(sid)}");
 
             _view = view;
             _sid = sid;
@@ -194,7 +194,7 @@ namespace ReversePassword
                 if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI)
                     username = (string)_view.GetField(CredentialView.FIELD_USERNAME).Value; // user-entered
                 else
-                    username = Common.GetNameFromSid(_sid); // implicit
+                    username = Common.GetAccountName(_sid); // implicit
 
                 var password = (string)_view.GetField(CredentialView.FIELD_PASSWORD).Value;
                 if (password == null)
@@ -223,7 +223,7 @@ namespace ReversePassword
             else if (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD)
             {
                 // Password change logic..
-                string username = Common.GetNameFromSid(_sid); // in <domain>\<user> format
+                string username = Common.GetAccountName(_sid); // in <domain>\<user> format
                 string oldPwd = (string)_view.GetField(CredentialView.FIELD_PASSWORD).Value;
                 oldPwd = Reverse(oldPwd);
                 string newPwd = (string)_view.GetField(CredentialView.FIELD_NEW_PASSWORD).Value;
@@ -281,7 +281,7 @@ namespace ReversePassword
         {
             sid = _sid;
 
-            Logger.Write($"username: {Common.GetNameFromSid(sid)}");
+            Logger.Write($"username: {Common.GetAccountName(sid)}");
         }
 
         private static string Reverse (string text)

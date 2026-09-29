@@ -125,7 +125,7 @@ namespace ReversePassword
             credential = new Credential(_view, sid);
             _credentials[sid] = credential;
 
-            Logger.Write($"Returning new credential for username={Common.GetNameFromSid(sid)}");
+            Logger.Write($"Returning new credential for username={Common.GetAccountName(sid)}");
             return credential;
         }
 
@@ -148,7 +148,7 @@ namespace ReversePassword
 
                 _users.Add(user);
 
-                Logger.Write($"providerId: {providerId}; username: {Common.GetNameFromSid(sid)}");
+                Logger.Write($"providerId: {providerId}; username: {Common.GetAccountName(sid)}");
             }
         }
     }
