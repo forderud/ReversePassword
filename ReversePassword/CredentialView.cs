@@ -32,18 +32,18 @@ namespace ReversePassword
         private readonly List<CredentialDescriptor> _fields = new List<CredentialDescriptor>();
 
 
-        public CredentialView(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus) 
+        public CredentialView(_CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) 
         {
-            Usage = cpus;
+            Usage = usage;
 
-            if (!IsSupportedScenario(cpus))
+            if (!IsSupportedScenario(usage))
                 return;
 
-            var userNameState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI) ?
+            var userNameState = (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CREDUI) ?
                     _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_SELECTED_TILE : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
-            var confirmPasswordState = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ?
+            var confirmPasswordState = (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ?
                     _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_DISPLAY_IN_BOTH : _CREDENTIAL_PROVIDER_FIELD_STATE.CPFS_HIDDEN;
-            uint lastPwdField = (cpus == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ? (uint)3 : (uint)2;
+            uint lastPwdField = (usage == _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_CHANGE_PASSWORD) ? (uint)3 : (uint)2;
 
             // icon
             AddField(
@@ -116,9 +116,9 @@ namespace ReversePassword
             });
         }
 
-        private static bool IsSupportedScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus)
+        private static bool IsSupportedScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO usage)
         {
-            switch (cpus)
+            switch (usage)
             {
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_LOGON:
                 case _CREDENTIAL_PROVIDER_USAGE_SCENARIO.CPUS_UNLOCK_WORKSTATION:

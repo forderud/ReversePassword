@@ -15,12 +15,12 @@ namespace ReversePassword
         private List<ICredentialProviderUser> _users;
         private readonly Dictionary<string, ICredentialProviderCredential> _credentials = new Dictionary<string, ICredentialProviderCredential>(); // sid as key
 
-        public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint flags_)
+        public virtual void SetUsageScenario(_CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, uint flags_)
         {
             var flags = (CredentialFlag)flags_;
-            Logger.Write($"cpus: {cpus}; dwFlags: {flags}");
+            Logger.Write($"usage: {usage}; dwFlags: {flags}");
 
-            _view = new CredentialView(cpus);
+            _view = new CredentialView(usage);
 
             if (_view.FieldsCount == 0)
             {
