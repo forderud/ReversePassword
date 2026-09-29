@@ -6,9 +6,6 @@ $ErrorActionPreference = "Stop"
 
 $p = Start-Process -FilePath "git.exe" -ArgumentList "tag --points-at HEAD" -NoNewWindow -Wait -RedirectStandardOutput  "tagname.txt"
 $tagname = Get-Content -Path "tagname.txt"
-if ($tagname -eq $null) {
-    throw "No git tag found for current commit"
-}
 
 # restore nuget packages
 msbuild /nologo /verbosity:minimal /target:restore ReversePassword.sln
