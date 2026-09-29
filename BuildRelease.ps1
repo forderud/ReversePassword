@@ -14,11 +14,12 @@ if ($LastExitCode -ne 0) {
 }
 
 # Build solution in Release for x64
-msbuild /nologo /verbosity:minimal /property:Configuration="Release"`;Platform="x64" ReversePassword.sln
+$mode = "Release"
+msbuild /nologo /verbosity:minimal /property:Configuration="$mode"`;Platform="x64" ReversePassword.sln
 if ($LastExitCode -ne 0) {
     throw "msbuild failure"
 }
 
 # Create ZIP archive with binaries
-Copy-Item -Path "ReversePassword\bin\Release\net8.0-windows\*" -Destination "x64\Release" -Recurse
-Compress-Archive -Path "x64\Release\*" -DestinationPath "ReversePassword-$tagname.zip"
+Copy-Item -Path "ReversePassword\bin\$mode\net8.0-windows\*" -Destination "x64\$mode" -Recurse
+Compress-Archive -Path "x64\$mode\*" -DestinationPath "ReversePassword-$tagname.zip"
