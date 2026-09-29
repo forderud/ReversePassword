@@ -3,6 +3,7 @@
 
 #include <atlbase.h>
 #include <atlcom.h>
+#include <comdef.h> // for _com_error
 #include <credentialprovider.h>
 #include <lm.h>
 #include <ntsecapi.h>
@@ -382,7 +383,7 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     return S_OK;
 }
 
-HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS, PWSTR* statusText,
+HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, PWSTR* statusText,
                                       CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon)
 {
     if (!statusText || !statusIcon) return E_POINTER;
@@ -390,7 +391,10 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS, PWSTR* statusText,
     *statusIcon = CPSI_NONE;
     if (status != kStatusSuccess)
     {
-        const std::wstring message = L"Logon failed with status: 0x" + std::to_wstring(static_cast<unsigned long>(status));
+        std::wstring message = L"Logon failed with status: ";
+        message += _com_error(status).ErrorMessage();
+        message += L", substatus: ";
+        message += _com_error(substatus).ErrorMessage();
         return DuplicateString(message.c_str(), statusText);
     }
     return S_OK;
