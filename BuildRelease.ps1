@@ -29,5 +29,4 @@ if ($LastExitCode -ne 0) {
 }
 
 # Create ZIP archive with binaries
-Copy-Item -Path "ReversePassword\bin\$mode\net8.0-windows\*" -Destination "x64\$mode" -Recurse
 Compress-Archive -Path "x64\$mode\*" -DestinationPath "ReversePassword-$tagname.zip"
