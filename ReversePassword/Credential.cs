@@ -167,17 +167,6 @@ namespace ReversePassword
 
         public virtual void CommandLinkClicked(uint fieldID)
         {
-            Logger.Write($"dwFieldID: {fieldID}");
-
-            CredentialDescriptor desc = _view.GetField(fieldID);
-            if (desc.Descriptor.cpft != _CREDENTIAL_PROVIDER_FIELD_TYPE.CPFT_COMMAND_LINK)
-            {
-                Logger.Write("throw new InvalidCastException");
-                throw new InvalidCastException();
-            }
-
-            string url = (string)desc.Value;
-            // TODO: Open URL in some way
             Logger.Write("throw new NotImplementedException");
             throw new NotImplementedException();
         }
