@@ -412,8 +412,8 @@ public:
 
     HRESULT SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD flags) override;
     HRESULT SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION*) override { return S_OK; }
-    HRESULT Advise(ICredentialProviderEvents* events, UINT_PTR) override { events_ = events; return S_OK; }
-    HRESULT UnAdvise() override { events_.Release(); return S_OK; }
+    HRESULT Advise(ICredentialProviderEvents* events, UINT_PTR) override { m_events = events; return S_OK; }
+    HRESULT UnAdvise() override { m_events.Release(); return S_OK; }
     HRESULT GetFieldDescriptorCount(DWORD* count) override;
     HRESULT GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor) override;
     HRESULT GetCredentialCount(DWORD* count, DWORD* defaultIndex, BOOL* autoLogonWithDefault) override;
@@ -421,26 +421,26 @@ public:
     HRESULT SetUserArray(ICredentialProviderUserArray* users) override;
 
 private:
-    std::shared_ptr<CredentialView> view_;
-    ATL::CComPtr<ICredentialProviderEvents> events_;
-    std::vector<ATL::CComPtr<ICredentialProviderUser>> users_;
-    std::map<std::wstring, ATL::CComPtr<ICredentialProviderCredential>> credentials_;
+    std::shared_ptr<CredentialView> m_view;
+    ATL::CComPtr<ICredentialProviderEvents> m_events;
+    std::vector<ATL::CComPtr<ICredentialProviderUser>> m_users;
+    std::map<std::wstring, ATL::CComPtr<ICredentialProviderCredential>> m_credentials;
 };
 
 HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
-    view_ = CreateView(usage);
-    credentials_.clear();
-    return view_ ? S_OK : E_NOTIMPL;
+    m_view = CreateView(usage);
+    m_credentials.clear();
+    return m_view ? S_OK : E_NOTIMPL;
 }
 
 HRESULT CredentialProvider::GetFieldDescriptorCount(DWORD* count) {
     if (!count)
         return E_POINTER;
 
-    if (!view_)
+    if (!m_view)
         return E_UNEXPECTED;
 
-    *count = static_cast<DWORD>(view_->fields.size());
+    *count = static_cast<DWORD>(m_view->fields.size());
     return S_OK;
 }
 
@@ -449,12 +449,12 @@ HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDE
         return E_POINTER;
 
     *descriptor = nullptr;
-    if (!view_ || index >= view_->fields.size())
+    if (!m_view || index >= m_view->fields.size())
         return E_INVALIDARG;
 
     auto copy = static_cast<CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR*>(CoTaskMemAlloc(sizeof(CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR)));
-    *copy = view_->fields[index].descriptor;
-    copy->pszLabel = DuplicateString(view_->fields[index].descriptor.pszLabel);
+    *copy = m_view->fields[index].descriptor;
+    copy->pszLabel = DuplicateString(m_view->fields[index].descriptor.pszLabel);
     *descriptor = copy;
     return S_OK;
 }
@@ -463,7 +463,7 @@ HRESULT CredentialProvider::GetCredentialCount(DWORD* count, DWORD* defaultIndex
     if (!count || !defaultIndex || !autoLogonWithDefault)
         return E_POINTER;
 
-    *count = static_cast<DWORD>(users_.size());
+    *count = static_cast<DWORD>(m_users.size());
     *defaultIndex = kNoDefaultCredential;
     *autoLogonWithDefault = FALSE;
     return S_OK;
@@ -474,30 +474,30 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
         return E_POINTER;
 
     *credential = nullptr;
-    if (!view_ || index >= users_.size())
+    if (!m_view || index >= m_users.size())
         return E_INVALIDARG;
 
     WCHAR* sid = nullptr;
-    HRESULT result = users_[index]->GetSid(&sid);
+    HRESULT result = m_users[index]->GetSid(&sid);
     if (FAILED(result))
         return result;
     const std::wstring sidValue(sid);
     CoTaskMemFree(sid);
 
     // cache lookup
-    auto existing = credentials_.find(sidValue);
-    if (existing == credentials_.end()) {
+    auto existing = m_credentials.find(sidValue);
+    if (existing == m_credentials.end()) {
         // add credential to cache
         ATL::CComObject<Credential>* object = nullptr;
         result = ATL::CComObject<Credential>::CreateInstance(&object);
         if (FAILED(result))
             return result;
         object->AddRef();
-        result = object->Initialize(view_, sidValue.c_str());
+        result = object->Initialize(m_view, sidValue.c_str());
         if (SUCCEEDED(result))
             result = object->QueryInterface(credential);
         if (SUCCEEDED(result))
-            credentials_.emplace(sidValue, object);
+            m_credentials.emplace(sidValue, object);
         object->Release();
         return result;
     }
@@ -508,8 +508,8 @@ HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
     if (!users)
         return E_POINTER;
 
-    users_.clear();
-    credentials_.clear();
+    m_users.clear();
+    m_credentials.clear();
     DWORD count = 0;
     HRESULT result = users->GetCount(&count);
     if (FAILED(result))
@@ -520,7 +520,7 @@ HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
         result = users->GetAt(index, &user);
         if (FAILED(result))
             return result;
-        users_.push_back(std::move(user));
+        m_users.push_back(std::move(user));
     }
     return S_OK;
 }
