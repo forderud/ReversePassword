@@ -196,8 +196,8 @@ public:
     END_COM_MAP()
 
     HRESULT Initialize(std::shared_ptr<CredentialView> view, const WCHAR* sid) {
-        view_ = std::move(view);
-        sid_ = sid;
+        m_view = std::move(view);
+        m_sid = sid;
         return S_OK;
     }
 
@@ -223,15 +223,15 @@ public:
                                 CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
     HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText,
                             CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
-    HRESULT GetUserSid(WCHAR** sid) override { *sid = DuplicateString(sid_.c_str()); return *sid ? S_OK : E_POINTER; }
+    HRESULT GetUserSid(WCHAR** sid) override { *sid = DuplicateString(m_sid.c_str()); return *sid ? S_OK : E_POINTER; }
 
 private:
     Field* GetField(DWORD fieldId) {
-        return view_ && fieldId < view_->fields.size() ? &view_->fields[fieldId] : nullptr;
+        return m_view && fieldId < m_view->fields.size() ? &m_view->fields[fieldId] : nullptr;
     }
 
-    std::shared_ptr<CredentialView> view_;
-    std::wstring sid_;
+    std::shared_ptr<CredentialView> m_view;
+    std::wstring m_sid;
 };
 
 HRESULT Credential::SetSelected(BOOL* autoLogon) {
@@ -320,10 +320,10 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     *statusText = nullptr;
     *statusIcon = CPSI_NONE;
 
-    if (view_->usage == CPUS_CHANGE_PASSWORD) {
+    if (m_view->usage == CPUS_CHANGE_PASSWORD) {
         // pasword change logic
         std::wstring accountName;
-        HRESULT result = GetAccountName(sid_.c_str(), accountName);
+        HRESULT result = GetAccountName(m_sid.c_str(), accountName);
         if (FAILED(result))
             return result;
 
@@ -358,9 +358,9 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         return result;
 
     std::wstring userName;
-    if (view_->usage == CPUS_CREDUI)
+    if (m_view->usage == CPUS_CREDUI)
         userName = std::get<std::wstring>(GetField(USER_NAME_FIELD)->value);
-    else if (FAILED(result = GetAccountName(sid_.c_str(), userName)))
+    else if (FAILED(result = GetAccountName(m_sid.c_str(), userName)))
         return result;
 
     const std::wstring password = Reverse(std::get<std::wstring>(GetField(PASSWORD_FIELD)->value));
