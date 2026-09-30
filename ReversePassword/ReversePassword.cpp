@@ -331,10 +331,13 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         return result;
 
     std::wstring userName;
-    if (m_view->usage == CPUS_CREDUI)
-        userName = std::get<std::wstring>(GetField(USER_NAME_FIELD)->value);
-    else if (FAILED(result = GetAccountName(m_sid.c_str(), userName)))
-        return result;
+    if (m_view->usage == CPUS_CREDUI) {
+        userName = std::get<std::wstring>(GetField(USER_NAME_FIELD)->value); // user entered
+    } else {
+        result = GetAccountName(m_sid.c_str(), userName); // implicit
+        if (FAILED(result))
+            return result;
+    }
 
     const std::wstring password = Reverse(std::get<std::wstring>(GetField(PASSWORD_FIELD)->value));
     result = CredPackAuthenticationBufferWrap(userName.c_str(), password.c_str(), &serialization->rgbSerialization,
