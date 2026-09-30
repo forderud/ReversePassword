@@ -195,10 +195,9 @@ public:
         COM_INTERFACE_ENTRY(ICredentialProviderCredential2)
     END_COM_MAP()
 
-    HRESULT Initialize(std::shared_ptr<CredentialView> view, const WCHAR* sid) {
+    void Initialize(std::shared_ptr<CredentialView> view, const WCHAR* sid) {
         m_view = std::move(view);
         m_sid = sid;
-        return S_OK;
     }
 
     HRESULT Advise(ICredentialProviderCredentialEvents*) override { return S_OK; }
@@ -495,9 +494,8 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
     if (FAILED(result))
         return result;
     object->AddRef();
-    result = object->Initialize(m_view, sidValue.c_str());
-    if (SUCCEEDED(result))
-        result = object->QueryInterface(credential); // assign output
+    object->Initialize(m_view, sidValue.c_str());
+    result = object->QueryInterface(credential); // assign output
     if (SUCCEEDED(result))
         m_credentials.emplace(sidValue, object); // store in cache
     object->Release();
