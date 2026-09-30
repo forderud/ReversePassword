@@ -25,7 +25,6 @@ ReversePasswordModule g_module;
 
 namespace {
 
-constexpr DWORD kNoDefaultCredential = 0xffffffff;
 constexpr DWORD ICON_FIELD = 0;
 constexpr DWORD USER_NAME_FIELD = 1;
 constexpr DWORD PASSWORD_FIELD = 2;
@@ -470,7 +469,7 @@ HRESULT CredentialProvider::GetCredentialCount(DWORD* count, DWORD* defaultIndex
         return E_POINTER;
 
     *count = static_cast<DWORD>(m_users.size());
-    *defaultIndex = kNoDefaultCredential;
+    *defaultIndex = 0xffffffff; // NoDefaultCredential;
     *autoLogonWithDefault = FALSE;
     return S_OK;
 }
