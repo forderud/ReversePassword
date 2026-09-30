@@ -486,22 +486,22 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
 
     // cache lookup
     auto existing = m_credentials.find(sidValue);
-    if (existing == m_credentials.end()) {
-        // add credential to cache
-        ATL::CComObject<Credential>* object = nullptr;
-        result = ATL::CComObject<Credential>::CreateInstance(&object);
-        if (FAILED(result))
-            return result;
-        object->AddRef();
-        result = object->Initialize(m_view, sidValue.c_str());
-        if (SUCCEEDED(result))
-            result = object->QueryInterface(credential);
-        if (SUCCEEDED(result))
-            m_credentials.emplace(sidValue, object);
-        object->Release();
+    if (existing != m_credentials.end())
+        return existing->second.CopyTo(credential);
+
+    // add credential to cache
+    ATL::CComObject<Credential>* object = nullptr;
+    result = ATL::CComObject<Credential>::CreateInstance(&object);
+    if (FAILED(result))
         return result;
-    }
-    return existing->second.CopyTo(credential);
+    object->AddRef();
+    result = object->Initialize(m_view, sidValue.c_str());
+    if (SUCCEEDED(result))
+        result = object->QueryInterface(credential);
+    if (SUCCEEDED(result))
+        m_credentials.emplace(sidValue, object);
+    object->Release();
+    return result;
 }
 
 HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
