@@ -90,14 +90,16 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
     return view;
 }
 
-WCHAR* DuplicateString(const WCHAR* value) {
-    if (!value)
+WCHAR* DuplicateString(const WCHAR* source) {
+    if (!source)
         return nullptr;
 
-    const size_t bytes = (wcslen(value) + 1) * sizeof(wchar_t);
-    WCHAR* copy = static_cast<WCHAR*>(CoTaskMemAlloc(bytes));
-    memcpy(copy, value, bytes);
-    return copy;
+    WCHAR* result = nullptr;
+    HRESULT hr = SHStrDupW(source, &result); // uses CoTaskMemAlloc internally
+    if (FAILED(hr))
+        return nullptr;
+
+    return result;
 }
 
 HRESULT GetAccountName(const WCHAR* sidText, std::wstring& accountName) {
