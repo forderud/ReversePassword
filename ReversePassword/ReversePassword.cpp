@@ -296,9 +296,9 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     if (m_view->usage == CPUS_CHANGE_PASSWORD) {
         // pasword change logic
         std::wstring accountName;
-        HRESULT result = GetAccountName(m_sid.c_str(), accountName);
-        if (FAILED(result))
-            return result;
+        HRESULT hr = GetAccountName(m_sid.c_str(), accountName);
+        if (FAILED(hr))
+            return hr;
 
         const size_t separator = accountName.find(L'\\');
         if (separator == std::wstring::npos)
@@ -326,26 +326,26 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
 
     // CPUS_LOGON, CPUS_UNLOCK_WORKSTATION or CPUS_CREDUI logic
     ULONG authenticationPackage = 0;
-    HRESULT result = GetAuthenticationPackage(&authenticationPackage);
-    if (FAILED(result))
-        return result;
+    HRESULT hr = GetAuthenticationPackage(&authenticationPackage);
+    if (FAILED(hr))
+        return hr;
 
     std::wstring userName;
     if (m_view->usage == CPUS_CREDUI) {
         userName = std::get<std::wstring>(GetField(USER_NAME_FIELD)->value); // user entered
     } else {
-        result = GetAccountName(m_sid.c_str(), userName); // implicit
-        if (FAILED(result))
-            return result;
+        hr = GetAccountName(m_sid.c_str(), userName); // implicit
+        if (FAILED(hr))
+            return hr;
     }
 
     const std::wstring password = Reverse(std::get<std::wstring>(GetField(PASSWORD_FIELD)->value));
-    result = CredPackAuthenticationBufferWrap(userName.c_str(), password.c_str(), &serialization->rgbSerialization,
+    hr = CredPackAuthenticationBufferWrap(userName.c_str(), password.c_str(), &serialization->rgbSerialization,
                              &serialization->cbSerialization);
-    if (FAILED(result)) {
+    if (FAILED(hr)) {
         *statusIcon = CPSI_ERROR;
         *statusText = DuplicateString(L"Failed to pack credentials.");
-        return result;
+        return hr;
     }
 
     serialization->clsidCredentialProvider = CLSID_ReversePassword;
