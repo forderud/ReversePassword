@@ -336,7 +336,7 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         const size_t separator = userName.find(L'\\');
         if (separator == std::wstring::npos) {
             // prepend domain name
-            wchar_t domain[MAX_COMPUTERNAME_LENGTH + 1];
+            wchar_t domain[MAX_COMPUTERNAME_LENGTH + 1]{};
             DWORD size = std::size(domain);
             if (GetComputerNameW(domain, &size)) {
                 userName = domain + std::wstring(L"\\") + userName;

@@ -164,8 +164,8 @@ NTSTATUS LsaApLogonUser (
     // assign output arguments
 
     {
-        wchar_t computerName[MAX_COMPUTERNAME_LENGTH + 1] = {};
-        DWORD computerNameSize = ARRAYSIZE(computerName);
+        wchar_t computerName[MAX_COMPUTERNAME_LENGTH + 1]{};
+        DWORD computerNameSize = std::size(computerName);
         if (!GetComputerNameW(computerName, &computerNameSize)) {
             LogMessage("  return STATUS_INTERNAL_ERROR (GetComputerNameW failed)");
             return STATUS_INTERNAL_ERROR;
