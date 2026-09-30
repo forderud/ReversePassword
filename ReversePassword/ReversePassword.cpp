@@ -26,11 +26,11 @@ ReversePasswordModule g_module;
 namespace {
 
 constexpr DWORD kNoDefaultCredential = 0xffffffff;
-constexpr DWORD kTileImageField = 0;
-constexpr DWORD kUserNameField = 1;
-constexpr DWORD kPasswordField = 2;
-constexpr DWORD kNewPasswordField = 3;
-constexpr DWORD kSubmitButtonField = 4;
+constexpr DWORD TITLE_IMAGE_FIELD = 0;
+constexpr DWORD USER_NAME_FIELD = 1;
+constexpr DWORD PASSWORD_FIELD = 2;
+constexpr DWORD NEW_PASSWORD_FIELD = 3;
+constexpr DWORD SUBMIT_BUTTON_FIELD = 4;
 constexpr NTSTATUS kStatusSuccess = static_cast<NTSTATUS>(0);
 
 struct Field {
@@ -67,7 +67,7 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
     view->usage = usage;
     const auto userNameState = usage == CPUS_CREDUI ? CPFS_DISPLAY_IN_SELECTED_TILE : CPFS_HIDDEN;
     const auto newPasswordState = usage == CPUS_CHANGE_PASSWORD ? CPFS_DISPLAY_IN_BOTH : CPFS_HIDDEN;
-    const DWORD submitAdjacentTo = usage == CPUS_CHANGE_PASSWORD ? kNewPasswordField : kPasswordField;
+    const DWORD submitAdjacentTo = usage == CPUS_CHANGE_PASSWORD ? NEW_PASSWORD_FIELD : PASSWORD_FIELD;
 
     const auto addField = [&view](CREDENTIAL_PROVIDER_FIELD_TYPE type, const WCHAR* label,
                                   CREDENTIAL_PROVIDER_FIELD_STATE state, std::variant<std::wstring, DWORD> value)
@@ -243,10 +243,10 @@ HRESULT Credential::SetSelected(BOOL* autoLogon) {
 }
 
 HRESULT Credential::SetDeselected() {
-    if (Field* password = GetField(kPasswordField))
+    if (Field* password = GetField(PASSWORD_FIELD))
         password->value = {};
 
-    if (Field* password = GetField(kNewPasswordField))
+    if (Field* password = GetField(NEW_PASSWORD_FIELD))
         password->value = {};
 
     return S_OK;
@@ -276,7 +276,7 @@ HRESULT Credential::GetStringValue(DWORD fieldId, WCHAR** value) {
 }
 
 HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) {
-    if (fieldId != kTileImageField || !bitmap)
+    if (fieldId != TITLE_IMAGE_FIELD || !bitmap)
         return E_INVALIDARG;
 
     *bitmap = static_cast<HBITMAP>(LoadImageW(ATL::_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCEW(IDB_TILE_ICON),
@@ -285,7 +285,7 @@ HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) {
 }
 
 HRESULT Credential::GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) {
-    if (fieldId != kSubmitButtonField || !adjacentTo)
+    if (fieldId != SUBMIT_BUTTON_FIELD || !adjacentTo)
         return E_INVALIDARG;
 
     Field* field = GetField(fieldId);
@@ -331,8 +331,8 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         if (separator == std::wstring::npos)
             return E_FAIL;
 
-        const std::wstring oldPassword = Reverse(std::get<std::wstring>(GetField(kPasswordField)->value));
-        const std::wstring newPassword = Reverse(std::get<std::wstring>(GetField(kNewPasswordField)->value));
+        const std::wstring oldPassword = Reverse(std::get<std::wstring>(GetField(PASSWORD_FIELD)->value));
+        const std::wstring newPassword = Reverse(std::get<std::wstring>(GetField(NEW_PASSWORD_FIELD)->value));
         const NET_API_STATUS resultCode = NetUserChangePassword(accountName.substr(0, separator).c_str(),
                                                                  accountName.substr(separator + 1).c_str(),
                                                                  oldPassword.c_str(), newPassword.c_str());
@@ -359,11 +359,11 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
 
     std::wstring userName;
     if (view_->usage == CPUS_CREDUI)
-        userName = std::get<std::wstring>(GetField(kUserNameField)->value);
+        userName = std::get<std::wstring>(GetField(USER_NAME_FIELD)->value);
     else if (FAILED(result = GetAccountName(sid_.c_str(), userName)))
         return result;
 
-    const std::wstring password = Reverse(std::get<std::wstring>(GetField(kPasswordField)->value));
+    const std::wstring password = Reverse(std::get<std::wstring>(GetField(PASSWORD_FIELD)->value));
     result = CredPackAuthenticationBufferWrap(userName.c_str(), password.c_str(), &serialization->rgbSerialization,
                              &serialization->cbSerialization);
     if (FAILED(result)) {
