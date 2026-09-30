@@ -512,15 +512,15 @@ HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
     m_users.clear();
     m_credentials.clear();
     DWORD count = 0;
-    HRESULT result = users->GetCount(&count);
-    if (FAILED(result))
-        return result;
+    HRESULT hr = users->GetCount(&count);
+    if (FAILED(hr))
+        return hr;
 
     for (DWORD index = 0; index < count; ++index) {
         CComPtr<ICredentialProviderUser> user;
-        result = users->GetAt(index, &user);
-        if (FAILED(result))
-            return result;
+        hr = users->GetAt(index, &user);
+        if (FAILED(hr))
+            return hr;
         m_users.push_back(std::move(user));
     }
     return S_OK;
