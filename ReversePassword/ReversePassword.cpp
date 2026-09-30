@@ -1,9 +1,7 @@
+#include "ReversePassword.hpp"
 #include "resource.h"
 
-#include <atlbase.h>
-#include <atlcom.h>
 #include <comdef.h> // for _com_error
-#include <credentialprovider.h>
 #include <lm.h>
 #include <ntsecapi.h>
 #include <sddl.h>
@@ -18,9 +16,6 @@
 #pragma comment(lib, "Credui.lib")
 #pragma comment(lib, "Netapi32.lib")
 #pragma comment(lib, "Secur32.lib")
-
-const CLSID CLSID_ReversePassword =
-{ 0xaca40b06, 0x9a9a, 0x4b7b, { 0xa9, 0x2c, 0xf9, 0x7f, 0xed, 0x84, 0x03, 0xb6 } };
 
 class ReversePasswordModule final : public ATL::CAtlDllModuleT<ReversePasswordModule>
 {
