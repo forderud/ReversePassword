@@ -195,7 +195,7 @@ public:
         COM_INTERFACE_ENTRY(ICredentialProviderCredential2)
     END_COM_MAP()
 
-    void Initialize(std::shared_ptr<CredentialView> view, const WCHAR* sid) {
+    void Initialize(std::shared_ptr<CredentialView> view, std::wstring sid) {
         m_view = std::move(view);
         m_sid = sid;
     }
@@ -497,7 +497,7 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
     if (FAILED(hr))
         return hr;
     instance->AddRef();
-    instance->Initialize(m_view, sid.c_str());
+    instance->Initialize(m_view, sid);
     CComPtr<ICredentialProviderCredential> created;
     hr = instance->QueryInterface(&created);
     instance->Release();
