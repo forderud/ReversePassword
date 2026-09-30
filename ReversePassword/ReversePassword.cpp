@@ -143,9 +143,9 @@ HRESULT CredPackAuthenticationBufferWrap(const WCHAR* userName, const WCHAR* pas
 
     auto packed = static_cast<BYTE*>(CoTaskMemAlloc(required));
     if (!CredPackAuthenticationBufferW(0, const_cast<WCHAR*>(userName), const_cast<WCHAR*>(password), packed, &required)) {
-        const HRESULT result = HRESULT_FROM_WIN32(GetLastError());
+        const HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
         CoTaskMemFree(packed);
-        return result;
+        return hr;
     }
     *buffer = packed;
     *size = required;
