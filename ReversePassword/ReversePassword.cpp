@@ -26,7 +26,7 @@ ReversePasswordModule g_module;
 namespace {
 
 constexpr DWORD kNoDefaultCredential = 0xffffffff;
-constexpr DWORD TITLE_IMAGE_FIELD = 0;
+constexpr DWORD ICON_FIELD = 0;
 constexpr DWORD USER_NAME_FIELD = 1;
 constexpr DWORD PASSWORD_FIELD = 2;
 constexpr DWORD NEW_PASSWORD_FIELD = 3;
@@ -276,7 +276,7 @@ HRESULT Credential::GetStringValue(DWORD fieldId, WCHAR** value) {
 }
 
 HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) {
-    if (fieldId != TITLE_IMAGE_FIELD || !bitmap)
+    if (fieldId != ICON_FIELD || !bitmap)
         return E_INVALIDARG;
 
     *bitmap = static_cast<HBITMAP>(LoadImageW(ATL::_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCEW(IDB_TILE_ICON),
