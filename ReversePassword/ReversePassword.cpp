@@ -357,8 +357,8 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         return hr;
     }
 
-    serialization->clsidCredentialProvider = CLSID_ReversePassword;
     serialization->ulAuthenticationPackage = authenticationPackage;
+    serialization->clsidCredentialProvider = CLSID_ReversePassword;
     *response = CPGSR_RETURN_CREDENTIAL_FINISHED;
     *statusIcon = CPSI_SUCCESS;
     return S_OK;
