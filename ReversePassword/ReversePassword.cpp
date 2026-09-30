@@ -69,7 +69,7 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
     const auto newPasswordState = usage == CPUS_CHANGE_PASSWORD ? CPFS_DISPLAY_IN_BOTH : CPFS_HIDDEN;
     const DWORD submitAdjacentTo = usage == CPUS_CHANGE_PASSWORD ? kNewPasswordField : kPasswordField;
 
-    const auto addField = [&view](CREDENTIAL_PROVIDER_FIELD_TYPE type, PCWSTR label,
+    const auto addField = [&view](CREDENTIAL_PROVIDER_FIELD_TYPE type, const WCHAR* label,
                                   CREDENTIAL_PROVIDER_FIELD_STATE state, std::variant<std::wstring, DWORD> value)
     {
         Field field{};
@@ -90,7 +90,7 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
     return view;
 }
 
-WCHAR* DuplicateString(PCWSTR value) {
+WCHAR* DuplicateString(const WCHAR* value) {
     if (!value)
         return nullptr;
 
@@ -100,7 +100,7 @@ WCHAR* DuplicateString(PCWSTR value) {
     return copy;
 }
 
-HRESULT GetAccountName(PCWSTR sidText, std::wstring& accountName) {
+HRESULT GetAccountName(const WCHAR* sidText, std::wstring& accountName) {
     PSID sid = nullptr;
     if (!ConvertStringSidToSidW(sidText, &sid))
         return HRESULT_FROM_WIN32(GetLastError());
@@ -159,7 +159,7 @@ std::wstring Reverse(std::wstring value) {
     return value;
 }
 
-HRESULT CredPackAuthenticationBufferWrap(PCWSTR userName, PCWSTR password, BYTE** buffer, DWORD* size) {
+HRESULT CredPackAuthenticationBufferWrap(const WCHAR* userName, const WCHAR* password, BYTE** buffer, DWORD* size) {
     if (!buffer || !size)
         return E_POINTER;
 
@@ -193,7 +193,7 @@ public:
         COM_INTERFACE_ENTRY(ICredentialProviderCredential2)
     END_COM_MAP()
 
-    HRESULT Initialize(std::shared_ptr<CredentialView> view, PCWSTR sid) {
+    HRESULT Initialize(std::shared_ptr<CredentialView> view, const WCHAR* sid) {
         view_ = std::move(view);
         sid_ = sid;
         return S_OK;
@@ -211,7 +211,7 @@ public:
     HRESULT GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) override;
     HRESULT GetComboBoxValueCount(DWORD, DWORD*, DWORD*) override { return E_NOTIMPL; }
     HRESULT GetComboBoxValueAt(DWORD, DWORD, PWSTR*) override { return E_NOTIMPL; }
-    HRESULT SetStringValue(DWORD fieldId, PCWSTR value) override;
+    HRESULT SetStringValue(DWORD fieldId, const WCHAR* value) override;
     HRESULT SetCheckboxValue(DWORD, BOOL) override { return E_NOTIMPL; }
     HRESULT SetComboBoxSelectedValue(DWORD, DWORD) override { return E_NOTIMPL; }
     HRESULT CommandLinkClicked(DWORD) override { return E_NOTIMPL; }
@@ -294,7 +294,7 @@ HRESULT Credential::GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) {
     return S_OK;
 }
 
-HRESULT Credential::SetStringValue(DWORD fieldId, PCWSTR value) {
+HRESULT Credential::SetStringValue(DWORD fieldId, const WCHAR* value) {
     Field* field = GetField(fieldId);
     if (!field || !value)
         return E_INVALIDARG;
