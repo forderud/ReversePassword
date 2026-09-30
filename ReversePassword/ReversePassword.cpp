@@ -497,9 +497,9 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
     object->AddRef();
     result = object->Initialize(m_view, sidValue.c_str());
     if (SUCCEEDED(result))
-        result = object->QueryInterface(credential);
+        result = object->QueryInterface(credential); // assign output
     if (SUCCEEDED(result))
-        m_credentials.emplace(sidValue, object);
+        m_credentials.emplace(sidValue, object); // store in cache
     object->Release();
     return result;
 }
