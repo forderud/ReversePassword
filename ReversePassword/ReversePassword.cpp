@@ -333,6 +333,16 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     std::wstring userName;
     if (m_view->usage == CPUS_CREDUI) {
         userName = std::get<std::wstring>(GetField(USER_NAME_FIELD)->value); // user entered
+
+        const size_t separator = userName.find(L'\\');
+        if (separator == std::wstring::npos) {
+            // prepend domain name
+            wchar_t domain[MAX_COMPUTERNAME_LENGTH + 1];
+            DWORD size = MAX_COMPUTERNAME_LENGTH;
+            if (GetComputerNameW(domain, &size)) {
+                userName = domain + std::wstring(L"\\") + userName;
+            }
+        }
     } else {
         hr = GetAccountName(m_sid.c_str(), userName); // implicit
         if (FAILED(hr))
