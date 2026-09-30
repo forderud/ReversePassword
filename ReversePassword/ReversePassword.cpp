@@ -477,9 +477,9 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
         return E_INVALIDARG;
 
     WCHAR* sid = nullptr;
-    HRESULT result = m_users[index]->GetSid(&sid);
-    if (FAILED(result))
-        return result;
+    HRESULT hr = m_users[index]->GetSid(&sid);
+    if (FAILED(hr))
+        return hr;
     const std::wstring sidValue(sid);
     CoTaskMemFree(sid);
 
@@ -490,16 +490,16 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
 
     // add credential to cache
     CComObject<Credential>* object = nullptr;
-    result = CComObject<Credential>::CreateInstance(&object);
-    if (FAILED(result))
-        return result;
+    hr = CComObject<Credential>::CreateInstance(&object);
+    if (FAILED(hr))
+        return hr;
     object->AddRef();
     object->Initialize(m_view, sidValue.c_str());
-    result = object->QueryInterface(credential); // assign output
-    if (SUCCEEDED(result))
+    hr = object->QueryInterface(credential); // assign output
+    if (SUCCEEDED(hr))
         m_credentials.emplace(sidValue, object); // store in cache
     object->Release();
-    return result;
+    return hr;
 }
 
 HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
