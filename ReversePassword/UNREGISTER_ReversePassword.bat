@@ -2,5 +2,3 @@
 cd /d "%~dp0"
 
 regsvr32.exe /u /s ReversePassword.dll
-
-reg.exe import uninstall.reg

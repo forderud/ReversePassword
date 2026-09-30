@@ -557,5 +557,5 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE /*instance*/, DWORD reason, LPVOID rese
 
 STDAPI DllCanUnloadNow() { return g_module.DllCanUnloadNow(); }
 STDAPI DllGetClassObject(REFCLSID clsid, REFIID iid, LPVOID* object) { return g_module.DllGetClassObject(clsid, iid, object); }
-STDAPI DllRegisterServer() { return g_module.DllRegisterServer(); }
-STDAPI DllUnregisterServer() { return g_module.DllUnregisterServer(); }
+STDAPI DllRegisterServer() { return g_module.DllRegisterServer(/*typelib*/false); }
+STDAPI DllUnregisterServer() { return g_module.DllUnregisterServer(/*typelib*/false); }
