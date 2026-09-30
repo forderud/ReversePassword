@@ -309,16 +309,16 @@ HRESULT Credential::SetStringValue(DWORD fieldId, PCWSTR value) {
 HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response,
                                            CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization,
                                            PWSTR* statusText,
-                                           CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon)
-{
-    if (!response || !serialization || !statusText || !statusIcon) return E_POINTER;
+                                           CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
+    if (!response || !serialization || !statusText || !statusIcon)
+        return E_POINTER;
+
     *response = CPGSR_NO_CREDENTIAL_NOT_FINISHED;
     *serialization = {};
     *statusText = nullptr;
     *statusIcon = CPSI_NONE;
 
-    if (view_->usage == CPUS_CHANGE_PASSWORD)
-    {
+    if (view_->usage == CPUS_CHANGE_PASSWORD) {
         // pasword change logic
         std::wstring accountName;
         HRESULT result = GetAccountName(sid_.c_str(), accountName);
@@ -360,8 +360,7 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     const std::wstring password = Reverse(std::get<std::wstring>(GetField(kPasswordField)->value));
     result = CredPackAuthenticationBufferWrap(userName.c_str(), password.c_str(), &serialization->rgbSerialization,
                              &serialization->cbSerialization);
-    if (FAILED(result))
-    {
+    if (FAILED(result)) {
         *statusIcon = CPSI_ERROR;
         *statusText = DuplicateString(L"Failed to pack credentials.");
         return result;
@@ -375,13 +374,14 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
 }
 
 HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, PWSTR* statusText,
-                                      CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon)
-{
-    if (!statusText || !statusIcon) return E_POINTER;
+                                      CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
+    if (!statusText || !statusIcon)
+        return E_POINTER;
+
     *statusText = nullptr;
     *statusIcon = CPSI_NONE;
-    if (status != kStatusSuccess)
-    {
+
+    if (status != kStatusSuccess) {
         std::wstring message = L"Logon failed with status: ";
         message += _com_error(status).ErrorMessage();
         message += L", substatus: ";
@@ -395,8 +395,7 @@ class CredentialProvider :
     public ATL::CComObjectRootEx<ATL::CComMultiThreadModel>,
     public ATL::CComCoClass<CredentialProvider, &CLSID_ReversePassword>,
     public ICredentialProvider,
-    public ICredentialProviderSetUserArray
-{
+    public ICredentialProviderSetUserArray {
 public:
     DECLARE_REGISTRY_RESOURCEID(IDR_REVERSEPASSWORD)
 
@@ -422,26 +421,30 @@ private:
     std::map<std::wstring, ATL::CComPtr<ICredentialProviderCredential>> credentials_;
 };
 
-HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/)
-{
+HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
     view_ = CreateView(usage);
     credentials_.clear();
     return view_ ? S_OK : E_NOTIMPL;
 }
 
-HRESULT CredentialProvider::GetFieldDescriptorCount(DWORD* count)
-{
-    if (!count) return E_POINTER;
-    if (!view_) return E_UNEXPECTED;
+HRESULT CredentialProvider::GetFieldDescriptorCount(DWORD* count) {
+    if (!count)
+        return E_POINTER;
+
+    if (!view_)
+        return E_UNEXPECTED;
+
     *count = static_cast<DWORD>(view_->fields.size());
     return S_OK;
 }
 
-HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor)
-{
-    if (!descriptor) return E_POINTER;
+HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor) {
+    if (!descriptor)
+        return E_POINTER;
+
     *descriptor = nullptr;
-    if (!view_ || index >= view_->fields.size()) return E_INVALIDARG;
+    if (!view_ || index >= view_->fields.size())
+        return E_INVALIDARG;
 
     auto copy = static_cast<CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR*>(CoTaskMemAlloc(sizeof(CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR)));
     *copy = view_->fields[index].descriptor;
@@ -450,20 +453,23 @@ HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDE
     return S_OK;
 }
 
-HRESULT CredentialProvider::GetCredentialCount(DWORD* count, DWORD* defaultIndex, BOOL* autoLogonWithDefault)
-{
-    if (!count || !defaultIndex || !autoLogonWithDefault) return E_POINTER;
+HRESULT CredentialProvider::GetCredentialCount(DWORD* count, DWORD* defaultIndex, BOOL* autoLogonWithDefault) {
+    if (!count || !defaultIndex || !autoLogonWithDefault)
+        return E_POINTER;
+
     *count = static_cast<DWORD>(users_.size());
     *defaultIndex = kNoDefaultCredential;
     *autoLogonWithDefault = FALSE;
     return S_OK;
 }
 
-HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCredential** credential)
-{
-    if (!credential) return E_POINTER;
+HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCredential** credential) {
+    if (!credential)
+        return E_POINTER;
+
     *credential = nullptr;
-    if (!view_ || index >= users_.size()) return E_INVALIDARG;
+    if (!view_ || index >= users_.size())
+        return E_INVALIDARG;
 
     PWSTR sid = nullptr;
     HRESULT result = users_[index]->GetSid(&sid);
@@ -473,8 +479,7 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
 
     // cache lookup
     auto existing = credentials_.find(sidValue);
-    if (existing == credentials_.end())
-    {
+    if (existing == credentials_.end()) {
         // add credential to cache
         ATL::CComObject<Credential>* object = nullptr;
         result = ATL::CComObject<Credential>::CreateInstance(&object);
@@ -491,19 +496,22 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
     return existing->second.CopyTo(credential);
 }
 
-HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users)
-{
-    if (!users) return E_POINTER;
+HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
+    if (!users)
+        return E_POINTER;
+
     users_.clear();
     credentials_.clear();
     DWORD count = 0;
     HRESULT result = users->GetCount(&count);
-    if (FAILED(result)) return result;
-    for (DWORD index = 0; index < count; ++index)
-    {
+    if (FAILED(result))
+        return result;
+
+    for (DWORD index = 0; index < count; ++index) {
         ATL::CComPtr<ICredentialProviderUser> user;
         result = users->GetAt(index, &user);
-        if (FAILED(result)) return result;
+        if (FAILED(result))
+            return result;
         users_.push_back(std::move(user));
     }
     return S_OK;
@@ -512,9 +520,7 @@ HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users)
 OBJECT_ENTRY_AUTO(CLSID_ReversePassword, CredentialProvider)
 
 
-extern "C" BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
-{
-    UNREFERENCED_PARAMETER(instance);
+extern "C" BOOL WINAPI DllMain(HINSTANCE /*instance*/, DWORD reason, LPVOID reserved) {
     return g_module.DllMain(reason, reserved);
 }
 
