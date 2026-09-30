@@ -476,25 +476,28 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
     if (!m_view || index >= m_users.size())
         return E_INVALIDARG;
 
-    WCHAR* sid = nullptr;
-    HRESULT hr = m_users[index]->GetSid(&sid);
-    if (FAILED(hr))
-        return hr;
-    const std::wstring sidValue(sid);
-    CoTaskMemFree(sid);
+    std::wstring sid;
+    {
+        WCHAR* sidPtr = nullptr;
+        HRESULT hr = m_users[index]->GetSid(&sidPtr);
+        if (FAILED(hr))
+            return hr;
+        sid = sidPtr;
+        CoTaskMemFree(sidPtr);
+    }
 
     // cache lookup
-    auto existing = m_credentials.find(sidValue);
+    auto existing = m_credentials.find(sid);
     if (existing != m_credentials.end())
         return existing->second.CopyTo(credential);
 
     // add credential to cache
     CComObject<Credential>* instance = nullptr;
-    hr = CComObject<Credential>::CreateInstance(&instance);
+    HRESULT hr = CComObject<Credential>::CreateInstance(&instance);
     if (FAILED(hr))
         return hr;
     instance->AddRef();
-    instance->Initialize(m_view, sidValue.c_str());
+    instance->Initialize(m_view, sid.c_str());
     CComPtr<ICredentialProviderCredential> created;
     hr = instance->QueryInterface(&created);
     instance->Release();
