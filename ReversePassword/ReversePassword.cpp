@@ -75,7 +75,7 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
         Field field{};
         field.descriptor.dwFieldID = static_cast<DWORD>(view->fields.size());
         field.descriptor.cpft = type;
-        field.descriptor.pszLabel = const_cast<PWSTR>(label);
+        field.descriptor.pszLabel = const_cast<WCHAR*>(label);
         field.state = state;
         field.value = value;
         view->fields.push_back(std::move(field));
@@ -95,7 +95,7 @@ WCHAR* DuplicateString(const WCHAR* value) {
         return nullptr;
 
     const size_t bytes = (wcslen(value) + 1) * sizeof(wchar_t);
-    WCHAR* copy = static_cast<PWSTR>(CoTaskMemAlloc(bytes));
+    WCHAR* copy = static_cast<WCHAR*>(CoTaskMemAlloc(bytes));
     memcpy(copy, value, bytes);
     return copy;
 }
@@ -167,12 +167,12 @@ HRESULT CredPackAuthenticationBufferWrap(const WCHAR* userName, const WCHAR* pas
     *size = 0;
 
     DWORD required = 0;
-    CredPackAuthenticationBufferW(0, const_cast<PWSTR>(userName), const_cast<PWSTR>(password), nullptr, &required);
+    CredPackAuthenticationBufferW(0, const_cast<WCHAR*>(userName), const_cast<WCHAR*>(password), nullptr, &required);
     if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
         return HRESULT_FROM_WIN32(GetLastError());
 
     auto packed = static_cast<BYTE*>(CoTaskMemAlloc(required));
-    if (!CredPackAuthenticationBufferW(0, const_cast<PWSTR>(userName), const_cast<PWSTR>(password), packed, &required))
+    if (!CredPackAuthenticationBufferW(0, const_cast<WCHAR*>(userName), const_cast<WCHAR*>(password), packed, &required))
     {
         const HRESULT result = HRESULT_FROM_WIN32(GetLastError());
         CoTaskMemFree(packed);
@@ -205,23 +205,23 @@ public:
     HRESULT SetDeselected() override;
     HRESULT GetFieldState(DWORD fieldId, CREDENTIAL_PROVIDER_FIELD_STATE* state,
                              CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) override;
-    HRESULT GetStringValue(DWORD fieldId, PWSTR* value) override;
+    HRESULT GetStringValue(DWORD fieldId, WCHAR** value) override;
     HRESULT GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) override;
-    HRESULT GetCheckboxValue(DWORD, BOOL* /*checked*/, PWSTR* /*label*/) override { return E_NOTIMPL; }
+    HRESULT GetCheckboxValue(DWORD, BOOL* /*checked*/, WCHAR** /*label*/) override { return E_NOTIMPL; }
     HRESULT GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) override;
     HRESULT GetComboBoxValueCount(DWORD, DWORD*, DWORD*) override { return E_NOTIMPL; }
-    HRESULT GetComboBoxValueAt(DWORD, DWORD, PWSTR*) override { return E_NOTIMPL; }
+    HRESULT GetComboBoxValueAt(DWORD, DWORD, WCHAR**) override { return E_NOTIMPL; }
     HRESULT SetStringValue(DWORD fieldId, const WCHAR* value) override;
     HRESULT SetCheckboxValue(DWORD, BOOL) override { return E_NOTIMPL; }
     HRESULT SetComboBoxSelectedValue(DWORD, DWORD) override { return E_NOTIMPL; }
     HRESULT CommandLinkClicked(DWORD) override { return E_NOTIMPL; }
     HRESULT GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response,
                                 CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization,
-                                PWSTR* statusText,
+                                WCHAR** statusText,
                                 CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
-    HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, PWSTR* statusText,
+    HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText,
                             CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
-    HRESULT GetUserSid(PWSTR* sid) override { *sid = DuplicateString(sid_.c_str()); return *sid ? S_OK : E_POINTER; }
+    HRESULT GetUserSid(WCHAR** sid) override { *sid = DuplicateString(sid_.c_str()); return *sid ? S_OK : E_POINTER; }
 
 private:
     Field* GetField(DWORD fieldId) {
@@ -261,7 +261,7 @@ HRESULT Credential::GetFieldState(DWORD fieldId, CREDENTIAL_PROVIDER_FIELD_STATE
     return S_OK;
 }
 
-HRESULT Credential::GetStringValue(DWORD fieldId, PWSTR* value) {
+HRESULT Credential::GetStringValue(DWORD fieldId, WCHAR** value) {
     Field* field = GetField(fieldId);
     if (!field || !value)
         return E_INVALIDARG;
@@ -308,7 +308,7 @@ HRESULT Credential::SetStringValue(DWORD fieldId, const WCHAR* value) {
 
 HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response,
                                            CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization,
-                                           PWSTR* statusText,
+                                           WCHAR** statusText,
                                            CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
     if (!response || !serialization || !statusText || !statusIcon)
         return E_POINTER;
@@ -377,7 +377,7 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     return S_OK;
 }
 
-HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, PWSTR* statusText,
+HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText,
                                       CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
     if (!statusText || !statusIcon)
         return E_POINTER;
@@ -475,7 +475,7 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
     if (!view_ || index >= users_.size())
         return E_INVALIDARG;
 
-    PWSTR sid = nullptr;
+    WCHAR* sid = nullptr;
     HRESULT result = users_[index]->GetSid(&sid);
     if (FAILED(result))
         return result;
