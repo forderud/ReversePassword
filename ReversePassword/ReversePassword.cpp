@@ -23,8 +23,8 @@ class ReversePasswordModule final : public ATL::CAtlDllModuleT<ReversePasswordMo
 
 ReversePasswordModule g_module;
 
-namespace
-{
+namespace {
+
 constexpr DWORD kNoDefaultCredential = 0xffffffff;
 constexpr DWORD kTileImageField = 0;
 constexpr DWORD kUserNameField = 1;
@@ -33,21 +33,18 @@ constexpr DWORD kNewPasswordField = 3;
 constexpr DWORD kSubmitButtonField = 4;
 constexpr NTSTATUS kStatusSuccess = static_cast<NTSTATUS>(0);
 
-struct Field
-{
+struct Field {
     CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR descriptor{};
     CREDENTIAL_PROVIDER_FIELD_STATE state{};
     std::variant<std::wstring, DWORD> value;
 };
 
-struct CredentialView
-{
+struct CredentialView {
     CREDENTIAL_PROVIDER_USAGE_SCENARIO usage{};
     std::vector<Field> fields;
 };
 
-bool IsSupportedScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage)
-{
+bool IsSupportedScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) {
     switch (usage) {
     case CPUS_LOGON:
     case CPUS_UNLOCK_WORKSTATION:
@@ -62,8 +59,7 @@ bool IsSupportedScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage)
     }
 }
 
-std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage)
-{
+std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) {
     if (!IsSupportedScenario(usage))
         return {};
 
@@ -94,8 +90,7 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
     return view;
 }
 
-WCHAR* DuplicateString(PCWSTR value)
-{
+WCHAR* DuplicateString(PCWSTR value) {
     if (!value)
         return nullptr;
 
@@ -105,8 +100,7 @@ WCHAR* DuplicateString(PCWSTR value)
     return copy;
 }
 
-HRESULT GetAccountName(PCWSTR sidText, std::wstring& accountName)
-{
+HRESULT GetAccountName(PCWSTR sidText, std::wstring& accountName) {
     PSID sid = nullptr;
     if (!ConvertStringSidToSidW(sidText, &sid))
         return HRESULT_FROM_WIN32(GetLastError());
@@ -116,8 +110,7 @@ HRESULT GetAccountName(PCWSTR sidText, std::wstring& accountName)
     SID_NAME_USE use{};
     LookupAccountSidW(nullptr, sid, nullptr, &nameLength, nullptr, &domainLength, &use);
     const DWORD error = GetLastError();
-    if (error != ERROR_INSUFFICIENT_BUFFER)
-    {
+    if (error != ERROR_INSUFFICIENT_BUFFER) {
         LocalFree(sid);
         return HRESULT_FROM_WIN32(error);
     }
@@ -136,8 +129,7 @@ HRESULT GetAccountName(PCWSTR sidText, std::wstring& accountName)
     return S_OK;
 }
 
-HRESULT GetAuthenticationPackage(ULONG* package)
-{
+HRESULT GetAuthenticationPackage(ULONG* package) {
     if (!package)
         return E_POINTER;
 
@@ -162,16 +154,15 @@ HRESULT GetAuthenticationPackage(ULONG* package)
     return status == kStatusSuccess ? S_OK : HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
 }
 
-std::wstring Reverse(std::wstring value)
-{
+std::wstring Reverse(std::wstring value) {
     std::reverse(value.begin(), value.end());
     return value;
 }
 
-HRESULT CredPackAuthenticationBufferWrap(PCWSTR userName, PCWSTR password, BYTE** buffer, DWORD* size)
-{
+HRESULT CredPackAuthenticationBufferWrap(PCWSTR userName, PCWSTR password, BYTE** buffer, DWORD* size) {
     if (!buffer || !size)
         return E_POINTER;
+
     *buffer = nullptr;
     *size = 0;
 
@@ -195,16 +186,14 @@ HRESULT CredPackAuthenticationBufferWrap(PCWSTR userName, PCWSTR password, BYTE*
 
 class Credential :
     public ATL::CComObjectRootEx<ATL::CComMultiThreadModel>,
-    public ICredentialProviderCredential2
-{
+    public ICredentialProviderCredential2 {
 public:
     BEGIN_COM_MAP(Credential)
         COM_INTERFACE_ENTRY(ICredentialProviderCredential)
         COM_INTERFACE_ENTRY(ICredentialProviderCredential2)
     END_COM_MAP()
 
-    HRESULT Initialize(std::shared_ptr<CredentialView> view, PCWSTR sid)
-    {
+    HRESULT Initialize(std::shared_ptr<CredentialView> view, PCWSTR sid) {
         view_ = std::move(view);
         sid_ = sid;
         return S_OK;
@@ -235,8 +224,7 @@ public:
     HRESULT GetUserSid(PWSTR* sid) override { *sid = DuplicateString(sid_.c_str()); return *sid ? S_OK : E_POINTER; }
 
 private:
-    Field* GetField(DWORD fieldId)
-    {
+    Field* GetField(DWORD fieldId) {
         return view_ && fieldId < view_->fields.size() ? &view_->fields[fieldId] : nullptr;
     }
 
@@ -244,65 +232,76 @@ private:
     std::wstring sid_;
 };
 
-HRESULT Credential::SetSelected(BOOL* autoLogon)
-{
-    if (!autoLogon) return E_POINTER;
+HRESULT Credential::SetSelected(BOOL* autoLogon) {
+    if (!autoLogon)
+        return E_POINTER;
+
     *autoLogon = FALSE;
     return S_OK;
 }
 
-HRESULT Credential::SetDeselected()
-{
-    if (Field* password = GetField(kPasswordField)) password->value = {};
-    if (Field* password = GetField(kNewPasswordField)) password->value = {};
+HRESULT Credential::SetDeselected() {
+    if (Field* password = GetField(kPasswordField))
+        password->value = {};
+
+    if (Field* password = GetField(kNewPasswordField))
+        password->value = {};
+
     return S_OK;
 }
 
 HRESULT Credential::GetFieldState(DWORD fieldId, CREDENTIAL_PROVIDER_FIELD_STATE* state,
-                                       CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState)
-{
+                                       CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) {
     Field* field = GetField(fieldId);
-    if (!field || !state || !interactiveState) return E_INVALIDARG;
+    if (!field || !state || !interactiveState)
+        return E_INVALIDARG;
+
     *state = field->state;
     *interactiveState = CPFIS_NONE;
     return S_OK;
 }
 
-HRESULT Credential::GetStringValue(DWORD fieldId, PWSTR* value)
-{
+HRESULT Credential::GetStringValue(DWORD fieldId, PWSTR* value) {
     Field* field = GetField(fieldId);
-    if (!field || !value) return E_INVALIDARG;
+    if (!field || !value)
+        return E_INVALIDARG;
+
     if (field->descriptor.cpft < CPFT_LARGE_TEXT || field->descriptor.cpft > CPFT_PASSWORD_TEXT)
         return E_INVALIDARG;
+
     *value = DuplicateString(std::get<std::wstring>(field->value).c_str());
     return *value ? S_OK : E_POINTER;
 }
 
-HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap)
-{
-    if (fieldId != kTileImageField || !bitmap) return E_INVALIDARG;
+HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) {
+    if (fieldId != kTileImageField || !bitmap)
+        return E_INVALIDARG;
+
     *bitmap = static_cast<HBITMAP>(LoadImageW(ATL::_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCEW(IDB_TILE_ICON),
                                                IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION));
     return *bitmap ? S_OK : HRESULT_FROM_WIN32(GetLastError());
 }
 
-HRESULT Credential::GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo)
-{
-    if (fieldId != kSubmitButtonField || !adjacentTo) return E_INVALIDARG;
+HRESULT Credential::GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) {
+    if (fieldId != kSubmitButtonField || !adjacentTo)
+        return E_INVALIDARG;
 
     Field* field = GetField(fieldId);
-    if (!field) return E_INVALIDARG;
+    if (!field)
+        return E_INVALIDARG;
 
     *adjacentTo = std::get<DWORD>(field->value);
     return S_OK;
 }
 
-HRESULT Credential::SetStringValue(DWORD fieldId, PCWSTR value)
-{
+HRESULT Credential::SetStringValue(DWORD fieldId, PCWSTR value) {
     Field* field = GetField(fieldId);
-    if (!field || !value) return E_INVALIDARG;
+    if (!field || !value) return
+        E_INVALIDARG;
+
     if (field->descriptor.cpft != CPFT_EDIT_TEXT && field->descriptor.cpft != CPFT_PASSWORD_TEXT)
         return E_INVALIDARG;
+
     field->value = value;
     return S_OK;
 }
