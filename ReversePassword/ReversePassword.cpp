@@ -469,7 +469,7 @@ HRESULT CredentialProvider::GetCredentialCount(DWORD* count, DWORD* defaultIndex
         return E_POINTER;
 
     *count = static_cast<DWORD>(m_users.size());
-    *defaultIndex = 0xffffffff; // NoDefaultCredential;
+    *defaultIndex = CREDENTIAL_PROVIDER_NO_DEFAULT;
     *autoLogonWithDefault = FALSE;
     return S_OK;
 }
