@@ -31,7 +31,7 @@ constexpr DWORD USER_NAME_FIELD = 1;
 constexpr DWORD PASSWORD_FIELD = 2;
 constexpr DWORD NEW_PASSWORD_FIELD = 3;
 constexpr DWORD SUBMIT_BUTTON_FIELD = 4;
-constexpr NTSTATUS kStatusSuccess = static_cast<NTSTATUS>(0);
+constexpr NTSTATUS STATUS_SUCCESS = static_cast<NTSTATUS>(0); // instead of <ntstatus.h> include
 
 struct Field {
     CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR descriptor{};
@@ -106,7 +106,7 @@ HRESULT GetAuthenticationPackage(ULONG* package) {
 
     HANDLE lsa = nullptr;
     NTSTATUS status = LsaConnectUntrusted(&lsa);
-    if (status != kStatusSuccess)
+    if (status != STATUS_SUCCESS)
         return HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
 
     const auto lookup = [lsa, package](const char* name)
@@ -119,10 +119,10 @@ HRESULT GetAuthenticationPackage(ULONG* package) {
     };
 
     status = lookup("NoPasswordAuthPkg"); // use NoPasswordAuthPkg if installed
-    if (status != kStatusSuccess)
+    if (status != STATUS_SUCCESS)
         status = lookup("Negotiate"); // falback to Negotiate
     LsaDeregisterLogonProcess(lsa);
-    return status == kStatusSuccess ? S_OK : HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
+    return status == STATUS_SUCCESS ? S_OK : HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
 }
 
 std::wstring Reverse(std::wstring value) {
@@ -361,7 +361,7 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** st
     *statusText = nullptr;
     *statusIcon = CPSI_NONE;
 
-    if (status != kStatusSuccess) {
+    if (status != STATUS_SUCCESS) {
         std::wstring message = L"Logon failed with status: ";
         message += _com_error(status).ErrorMessage();
         message += L", substatus: ";
