@@ -17,7 +17,7 @@
 #pragma comment(lib, "Netapi32.lib")
 #pragma comment(lib, "Secur32.lib")
 
-class ReversePasswordModule final : public ATL::CAtlDllModuleT<ReversePasswordModule>
+class ReversePasswordModule final : public CAtlDllModuleT<ReversePasswordModule>
 {
 };
 
@@ -187,7 +187,7 @@ HRESULT CredPackAuthenticationBufferWrap(const WCHAR* userName, const WCHAR* pas
 }
 
 class Credential :
-    public ATL::CComObjectRootEx<ATL::CComMultiThreadModel>,
+    public CComObjectRootEx<CComMultiThreadModel>,
     public ICredentialProviderCredential2 {
 public:
     BEGIN_COM_MAP(Credential)
@@ -278,7 +278,7 @@ HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) {
     if (fieldId != ICON_FIELD || !bitmap)
         return E_INVALIDARG;
 
-    *bitmap = static_cast<HBITMAP>(LoadImageW(ATL::_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCEW(IDB_TILE_ICON),
+    *bitmap = static_cast<HBITMAP>(LoadImageW(_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCEW(IDB_TILE_ICON),
                                                IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION));
     return *bitmap ? S_OK : HRESULT_FROM_WIN32(GetLastError());
 }
@@ -397,8 +397,8 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** st
 }
 
 class CredentialProvider :
-    public ATL::CComObjectRootEx<ATL::CComMultiThreadModel>,
-    public ATL::CComCoClass<CredentialProvider, &CLSID_ReversePassword>,
+    public CComObjectRootEx<CComMultiThreadModel>,
+    public CComCoClass<CredentialProvider, &CLSID_ReversePassword>,
     public ICredentialProvider,
     public ICredentialProviderSetUserArray {
 public:
@@ -421,9 +421,9 @@ public:
 
 private:
     std::shared_ptr<CredentialView> m_view;
-    ATL::CComPtr<ICredentialProviderEvents> m_events;
-    std::vector<ATL::CComPtr<ICredentialProviderUser>> m_users;
-    std::map<std::wstring, ATL::CComPtr<ICredentialProviderCredential>> m_credentials;
+    CComPtr<ICredentialProviderEvents> m_events;
+    std::vector<CComPtr<ICredentialProviderUser>> m_users;
+    std::map<std::wstring, CComPtr<ICredentialProviderCredential>> m_credentials;
 };
 
 HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
@@ -489,8 +489,8 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
         return existing->second.CopyTo(credential);
 
     // add credential to cache
-    ATL::CComObject<Credential>* object = nullptr;
-    result = ATL::CComObject<Credential>::CreateInstance(&object);
+    CComObject<Credential>* object = nullptr;
+    result = CComObject<Credential>::CreateInstance(&object);
     if (FAILED(result))
         return result;
     object->AddRef();
@@ -514,7 +514,7 @@ HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
         return result;
 
     for (DWORD index = 0; index < count; ++index) {
-        ATL::CComPtr<ICredentialProviderUser> user;
+        CComPtr<ICredentialProviderUser> user;
         result = users->GetAt(index, &user);
         if (FAILED(result))
             return result;
