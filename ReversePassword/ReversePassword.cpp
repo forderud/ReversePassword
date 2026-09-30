@@ -226,7 +226,13 @@ public:
 
 private:
     Field* GetField(DWORD fieldId) {
-        return m_view && fieldId < m_view->fields.size() ? &m_view->fields[fieldId] : nullptr;
+        if (!m_view)
+            return nullptr;
+
+        if (fieldId >= m_view->fields.size())
+            return nullptr;
+
+        return &m_view->fields[fieldId];
     }
 
     std::shared_ptr<CredentialView> m_view;
