@@ -423,11 +423,11 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
             view->fields.push_back(std::move(field));
         };
 
-    addField(CPFT_TILE_IMAGE, L"Icon", CPFS_DISPLAY_IN_BOTH, {});
-    addField(CPFT_EDIT_TEXT, L"Username", userNameState, {});
-    addField(CPFT_PASSWORD_TEXT, L"Password", CPFS_DISPLAY_IN_SELECTED_TILE, {});
-    addField(CPFT_PASSWORD_TEXT, L"New password", newPasswordState, {});
-    addField(CPFT_SUBMIT_BUTTON, L"Submit", CPFS_DISPLAY_IN_SELECTED_TILE, submitAdjacentTo);
+    addField(CPFT_TILE_IMAGE, L"Icon", CPFS_DISPLAY_IN_BOTH, {}); // ICON_FIELD
+    addField(CPFT_EDIT_TEXT, L"Username", userNameState, {}); // USER_NAME_FIELD
+    addField(CPFT_PASSWORD_TEXT, L"Password", CPFS_DISPLAY_IN_SELECTED_TILE, {}); // PASSWORD_FIELD
+    addField(CPFT_PASSWORD_TEXT, L"New password", newPasswordState, {}); // NEW_PASSWORD_FIELD
+    addField(CPFT_SUBMIT_BUTTON, L"Submit", CPFS_DISPLAY_IN_SELECTED_TILE, submitAdjacentTo); // SUBMIT_BUTTON_FIELD
     addField(CPFT_LARGE_TEXT, nullptr, CPFS_DISPLAY_IN_BOTH, L"Reverse Password");
     return view;
 }
