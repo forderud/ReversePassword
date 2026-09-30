@@ -296,8 +296,8 @@ HRESULT Credential::GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) {
 
 HRESULT Credential::SetStringValue(DWORD fieldId, PCWSTR value) {
     Field* field = GetField(fieldId);
-    if (!field || !value) return
-        E_INVALIDARG;
+    if (!field || !value)
+        return E_INVALIDARG;
 
     if (field->descriptor.cpft != CPFT_EDIT_TEXT && field->descriptor.cpft != CPFT_PASSWORD_TEXT)
         return E_INVALIDARG;
@@ -322,9 +322,12 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         // pasword change logic
         std::wstring accountName;
         HRESULT result = GetAccountName(sid_.c_str(), accountName);
-        if (FAILED(result)) return result;
+        if (FAILED(result))
+            return result;
+
         const size_t separator = accountName.find(L'\\');
-        if (separator == std::wstring::npos) return E_FAIL;
+        if (separator == std::wstring::npos)
+            return E_FAIL;
 
         const std::wstring oldPassword = Reverse(std::get<std::wstring>(GetField(kPasswordField)->value));
         const std::wstring newPassword = Reverse(std::get<std::wstring>(GetField(kNewPasswordField)->value));
@@ -349,7 +352,8 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     // CPUS_LOGON, CPUS_UNLOCK_WORKSTATION or CPUS_CREDUI logic
     ULONG authenticationPackage = 0;
     HRESULT result = GetAuthenticationPackage(&authenticationPackage);
-    if (FAILED(result)) return result;
+    if (FAILED(result))
+        return result;
 
     std::wstring userName;
     if (view_->usage == CPUS_CREDUI)
@@ -473,7 +477,8 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
 
     PWSTR sid = nullptr;
     HRESULT result = users_[index]->GetSid(&sid);
-    if (FAILED(result)) return result;
+    if (FAILED(result))
+        return result;
     const std::wstring sidValue(sid);
     CoTaskMemFree(sid);
 
@@ -483,7 +488,8 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
         // add credential to cache
         ATL::CComObject<Credential>* object = nullptr;
         result = ATL::CComObject<Credential>::CreateInstance(&object);
-        if (FAILED(result)) return result;
+        if (FAILED(result))
+            return result;
         object->AddRef();
         result = object->Initialize(view_, sidValue.c_str());
         if (SUCCEEDED(result))
