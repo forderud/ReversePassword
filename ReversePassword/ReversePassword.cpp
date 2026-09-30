@@ -129,7 +129,7 @@ std::wstring Reverse(std::wstring value) {
     return value;
 }
 
-HRESULT CredPackAuthenticationBufferWrap(const WCHAR* userName, const WCHAR* password, BYTE** buffer, DWORD* size) {
+HRESULT CredPackAuthenticationBufferWrap(const WCHAR* userName, const WCHAR* password, /*out*/BYTE** buffer, /*out*/DWORD* size) {
     if (!buffer || !size)
         return E_POINTER;
 
@@ -141,7 +141,7 @@ HRESULT CredPackAuthenticationBufferWrap(const WCHAR* userName, const WCHAR* pas
     if (GetLastError() != ERROR_INSUFFICIENT_BUFFER)
         return HRESULT_FROM_WIN32(GetLastError());
 
-    auto packed = static_cast<BYTE*>(CoTaskMemAlloc(required));
+    BYTE* packed = static_cast<BYTE*>(CoTaskMemAlloc(required));
     if (!CredPackAuthenticationBufferW(0, const_cast<WCHAR*>(userName), const_cast<WCHAR*>(password), packed, &required)) {
         const HRESULT hr = HRESULT_FROM_WIN32(GetLastError());
         CoTaskMemFree(packed);
