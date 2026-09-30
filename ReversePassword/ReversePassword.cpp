@@ -495,11 +495,14 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
         return hr;
     instance->AddRef();
     instance->Initialize(m_view, sidValue.c_str());
-    hr = instance->QueryInterface(credential); // assign output
-    if (SUCCEEDED(hr))
-        m_credentials.emplace(sidValue, instance); // store in cache
+    CComPtr<ICredentialProviderCredential> created;
+    hr = instance->QueryInterface(&created);
     instance->Release();
-    return hr;
+    if (FAILED(hr))
+        return hr;
+
+    m_credentials.emplace(sid, created); // store in cache
+    return created.CopyTo(credential); // assign output
 }
 
 HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
