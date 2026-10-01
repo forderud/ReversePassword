@@ -4,6 +4,7 @@
 #include <atlbase.h>
 #include <atlcom.h>
 
+#include <memory>
 #include <string>
 #include <variant>
 #include <vector>
@@ -23,3 +24,23 @@ struct CredentialView {
     CREDENTIAL_PROVIDER_USAGE_SCENARIO usage{};
     std::vector<Field> fields;
 };
+
+
+constexpr DWORD ICON_FIELD = 0;
+constexpr DWORD USER_NAME_FIELD = 1;
+constexpr DWORD PASSWORD_FIELD = 2;
+constexpr DWORD NEW_PASSWORD_FIELD = 3;
+constexpr DWORD SUBMIT_BUTTON_FIELD = 4;
+constexpr NTSTATUS STATUS_SUCCESS = static_cast<NTSTATUS>(0); // instead of <ntstatus.h> include
+
+inline WCHAR* DuplicateString(const WCHAR* source) {
+    if (!source)
+        return nullptr;
+
+    WCHAR* result = nullptr;
+    HRESULT hr = SHStrDupW(source, &result); // uses CoTaskMemAlloc internally
+    if (FAILED(hr))
+        return nullptr;
+
+    return result;
+}
