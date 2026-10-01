@@ -1,12 +1,10 @@
 #include "ReversePassword.hpp"
-#include "Credential.Hpp"
 
 #pragma comment(lib, "Credui.lib")
 #pragma comment(lib, "Netapi32.lib")
 #pragma comment(lib, "Secur32.lib")
 
-class ReversePasswordModule final : public CAtlDllModuleT<ReversePasswordModule>
-{
+class ReversePasswordModule final : public CAtlDllModuleT<ReversePasswordModule> {
 };
 
 ReversePasswordModule g_module;
