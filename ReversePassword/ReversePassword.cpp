@@ -9,9 +9,6 @@
 
 #include <map>
 #include <memory>
-#include <string>
-#include <variant>
-#include <vector>
 
 #pragma comment(lib, "Credui.lib")
 #pragma comment(lib, "Netapi32.lib")
@@ -32,16 +29,7 @@ constexpr DWORD NEW_PASSWORD_FIELD = 3;
 constexpr DWORD SUBMIT_BUTTON_FIELD = 4;
 constexpr NTSTATUS STATUS_SUCCESS = static_cast<NTSTATUS>(0); // instead of <ntstatus.h> include
 
-struct Field {
-    CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR descriptor{};
-    CREDENTIAL_PROVIDER_FIELD_STATE state{};
-    std::variant<std::wstring, DWORD> value;
-};
 
-struct CredentialView {
-    CREDENTIAL_PROVIDER_USAGE_SCENARIO usage{};
-    std::vector<Field> fields;
-};
 
 bool IsSupportedScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) {
     switch (usage) {
