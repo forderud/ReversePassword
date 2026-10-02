@@ -24,21 +24,21 @@ LanguageNames=(English=0x409:MSG00409)
 MessageIdTypedef=WORD
 
 MessageId=0x1
-SymbolicName=NETWORK_CATEGORY
+SymbolicName=AUTH_CATEGORY
 Language=English
-Network Events
+Authentication
 .
 
 MessageId=0x2
-SymbolicName=DATABASE_CATEGORY
+SymbolicName=CRED_PROVIDER_CATEGORY
 Language=English
-Database Events
+Credential Provider
 .
 
 MessageId=0x3
-SymbolicName=UI_CATEGORY
+SymbolicName=AUTH_PKG_CATEGORY
 Language=English
-UI Events
+Authentication Package
 .
 
 
@@ -46,53 +46,25 @@ UI Events
 MessageIdTypedef=DWORD
 
 MessageId=0x100
-Severity=Error
+Severity=Informational
 Facility=Runtime
-SymbolicName=MSG_INVALID_COMMAND
+SymbolicName=MSG_AUTH_SUCCESS
 Language=English
-The command is not valid.
+User %1 successfully authenticated.
 .
 
 MessageId=0x101
 Severity=Error
-Facility=System
-SymbolicName=MSG_BAD_FILE_CONTENTS
+Facility=Runtime
+SymbolicName=MSG_AUTH_FAILED
 Language=English
-File %1 contains content that is not valid.
+Authentication failed for user %1 (reason: %2).
 .
 
 MessageId=0x102
-Severity=Warning
-Facility=System
-SymbolicName=MSG_RETRIES
+Severity=Error
+Facility=Runtime
+SymbolicName=MSG_INTERNAL
 Language=English
-There have been %1 retries with %2 success! Disconnect from
-the server and try again later.
-.
-
-; // will render as "<str1> <QUARTS_UNITS> = <str2> <GALLONS_UNITS>" 
-MessageId=0x103
-Severity=Informational
-Facility=System
-SymbolicName=MSG_COMPUTE_CONVERSION
-Language=English
-%1 %%4096 = %2 %%4097. 
-.
-
-
-; // The following are the parameter strings
-MessageId=0x1000 ; // same as 4096
-Severity=Success
-Facility=System
-SymbolicName=QUARTS_UNITS
-Language=English
-quarts%0
-.
-
-MessageId=0x1001 ; // same as 4097
-Severity=Success
-Facility=System
-SymbolicName=GALLONS_UNITS
-Language=English
-gallons%0
+Internal error: %1.
 .

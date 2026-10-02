@@ -9,8 +9,18 @@ int wmain(int argc, wchar_t* argv[]) {
 #ifdef TEST_LOGGING
     {
         EventLogger log(L"ReversePassword");
-        const wchar_t* messages[] = { L"somefile.txt" };
-        log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, DATABASE_CATEGORY, MSG_BAD_FILE_CONTENTS, messages);
+        {
+            const wchar_t* messages[] = { L"MyUser" };
+            log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, CRED_PROVIDER_CATEGORY, MSG_AUTH_SUCCESS, messages);
+        }
+        {
+            const wchar_t* messages[] = { L"MyUser", L"Some weird error occured"};
+            log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_AUTH_FAILED, messages);
+        }
+        {
+            const wchar_t* messages[] = { L"NULL argument passed" };
+            log.ReportInsertStrings(EVENTLOG_WARNING_TYPE, CRED_PROVIDER_CATEGORY, MSG_INTERNAL, messages);
+        }
     }
 #endif
     if (argc == 1) {
