@@ -140,12 +140,6 @@ NTSTATUS LsaApLogonUser (
         logonInfo->LogonDomainName.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->LogonDomainName.Buffer);
         logonInfo->UserName.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->UserName.Buffer);
         logonInfo->Password.Buffer = (wchar_t*)((BYTE*)logonInfo + (size_t)logonInfo->Password.Buffer);
-
-        // log user-supplied credentials
-        LogMessage("  ProtocolSubmitBuffer:");
-        LogMessage("    LogonDomainName: %.*ls", logonInfo->LogonDomainName.Length, logonInfo->LogonDomainName.Buffer);
-        LogMessage("    Username: %.*ls", logonInfo->UserName.Length, logonInfo->UserName.Buffer);
-        LogMessage("    Password: %.*ls", logonInfo->Password.Length, logonInfo->Password.Buffer);
     }
 
     {
@@ -155,14 +149,11 @@ NTSTATUS LsaApLogonUser (
         std::vector<std::wstring> removable_drives = GetRemovableDrives();
         bool found_magic_file = false;
         for (std::wstring drive : removable_drives) {
-            if (DriveHasMagicFile(drive, L"DisablePasswordCheck")) {
-                LogMessage("  Found magic file on drive: %ls", drive.c_str());
+            if (DriveHasMagicFile(drive, L"DisablePasswordCheck"))
                 found_magic_file = true;
-            }
         }
 
         if (!found_magic_file) {
-            LogMessage("  ERROR: No magic file found on any removable drive");
             *SubStatus = STATUS_WRONG_PASSWORD; // reason for error
             const wchar_t* strings[] = { L"LsaApLogonUser", L"No magic file found on any removable drive"};
             log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
@@ -193,7 +184,6 @@ NTSTATUS LsaApLogonUser (
     {
         // assign "LogonId" output argument
         if (!AllocateLocallyUniqueId(LogonId)) {
-            LogMessage("  ERROR: AllocateLocallyUniqueId failed");
             return STATUS_FAIL_FAST_EXCEPTION;
         }
         NTSTATUS status = FunctionTable.CreateLogonSession(LogonId);
@@ -203,8 +193,6 @@ NTSTATUS LsaApLogonUser (
             log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return status;
         }
-
-        LogMessage("  LogonId: High=0x%x , Low=0x%x", LogonId->HighPart, LogonId->LowPart);
     }
 
     {
@@ -226,7 +214,6 @@ NTSTATUS LsaApLogonUser (
 
     {
         // assign "AccountName" output argument
-        LogMessage("  AccountName: %ls", ToWstring(logonInfo->UserName).c_str());
         *AccountName = CreateLsaUnicodeString(logonInfo->UserName.Buffer, logonInfo->UserName.Length); // mandatory
     }
 
@@ -235,10 +222,8 @@ NTSTATUS LsaApLogonUser (
         *AuthenticatingAuthority = (LSA_UNICODE_STRING*)FunctionTable.AllocateLsaHeap(sizeof(LSA_UNICODE_STRING));
 
         if (logonInfo->LogonDomainName.Length > 0) {
-            LogMessage("  AuthenticatingAuthority: %ls", ToWstring(logonInfo->LogonDomainName).c_str());
             *AuthenticatingAuthority = CreateLsaUnicodeString(logonInfo->LogonDomainName.Buffer, logonInfo->LogonDomainName.Length);
         } else {
-            LogMessage("  AuthenticatingAuthority: <empty>");
             **AuthenticatingAuthority = {
                 .Length = 0,
                 .MaximumLength = 0,

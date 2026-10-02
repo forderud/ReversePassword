@@ -21,9 +21,6 @@ Alternatively, set the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\
 ## Installation
 Run `Install_NoPasswordAuthPkg.ps1` as admin.
 
-Debug builds log to `C:\NoPasswordAuthPkg_log.txt`.
-
-
 ## External links
 * [Registering SSP/AP DLLs](https://learn.microsoft.com/en-us/windows/win32/secauthn/registering-ssp-ap-dlls) 
 * [LSA Mode Initialization](https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-mode-initialization)

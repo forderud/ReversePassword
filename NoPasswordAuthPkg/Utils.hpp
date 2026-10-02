@@ -5,28 +5,6 @@
 extern LSA_SECPKG_FUNCTION_TABLE FunctionTable;
 
 
-inline void LogMessage(const char* message, ...) {
-#ifdef NDEBUG
-    // don't log to file in release builds
-    message;
-#else
-    // append to log file
-    FILE* file = nullptr;
-    fopen_s(&file, "C:\\NoPasswordAuthPkg_log.txt", "a+");
-    if (!file)
-        return;
-    {
-        // print variadic message
-        va_list args;
-        va_start(args, message);
-        _vfprintf_l(file, message, NULL, args);
-        va_end(args);
-    }
-    fprintf(file, "\n");
-    fclose(file);
-#endif
-}
-
 /** Allocate and create a new LSA_STRING object.
     Assumes that "FunctionTable" is initialized. */
 inline LSA_STRING* CreateLsaString(const std::string& msg) {
