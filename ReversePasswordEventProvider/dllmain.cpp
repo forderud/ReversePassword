@@ -4,7 +4,7 @@
 #include <cassert>
 #include <string>
 
-#include "../ReversePasswordEventProvider/ReversePasswordEventProvider.h" // custom event provider
+#include "ReversePasswordEventProvider.h" // custom event provider
 
 
 /** Return the full path for the current EXE or DLL. */
