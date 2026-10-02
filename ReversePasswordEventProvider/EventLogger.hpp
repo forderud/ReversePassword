@@ -29,8 +29,8 @@ public:
 
     /** Write log entry with insertion strings.
       - type: EVENTLOG_xxx type
-      - category: category (optional)
-      - eventId: app-defined event ID
+      - category: app-defined category
+      - eventId: app-defined event ID with string template
     */
     template <std::size_t STRING_COUNT>
     void ReportInsertStrings(WORD type, WORD category, DWORD eventId, const wchar_t* (&strings)[STRING_COUNT], PSID userSid = nullptr) {
