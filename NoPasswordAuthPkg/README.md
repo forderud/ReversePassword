@@ -21,6 +21,8 @@ Alternatively, set the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\
 ## Installation
 Run `Install_NoPasswordAuthPkg.ps1` as admin.
 
+The module logs to the Windows Event Viewer `Application` log. Log entries show up through the `ReversePassword` event source.
+
 ## External links
 * [Registering SSP/AP DLLs](https://learn.microsoft.com/en-us/windows/win32/secauthn/registering-ssp-ap-dlls) 
 * [LSA Mode Initialization](https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-mode-initialization)
