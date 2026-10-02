@@ -10,7 +10,7 @@ int wmain(int argc, wchar_t* argv[]) {
     {
         EventLogger log(L"ReversePassword");
         const wchar_t* messages[] = { L"somefile.txt" };
-        log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, DATABASE_CATEGORY, MSG_BAD_FILE_CONTENTS, std::size(messages), messages);
+        log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, DATABASE_CATEGORY, MSG_BAD_FILE_CONTENTS, messages);
     }
 #endif
     if (argc == 1) {

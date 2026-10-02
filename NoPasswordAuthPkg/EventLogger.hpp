@@ -32,8 +32,9 @@ public:
       - category: category (optional)
       - eventId: app-defined event ID
     */
-    void ReportInsertStrings(WORD type, WORD category, DWORD eventId, WORD stringCount, const wchar_t* strings[], PSID userSid = nullptr) {
-        BOOL ok = ReportEventW(m_log, type, category, eventId, userSid, stringCount, /*raw data bytes*/0, strings, /*raw data*/NULL);
+    template <std::size_t STRING_COUNT>
+    void ReportInsertStrings(WORD type, WORD category, DWORD eventId, const wchar_t* (&strings)[STRING_COUNT], PSID userSid = nullptr) {
+        BOOL ok = ReportEventW(m_log, type, category, eventId, userSid, STRING_COUNT, /*raw data bytes*/0, strings, /*raw data*/NULL);
         if (!ok) {
             _com_error err(GetLastError());
             wprintf(L"ERROR: ReportEventW failed (%s)\n", err.ErrorMessage());
