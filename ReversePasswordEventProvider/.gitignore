@@ -1,0 +1,6 @@
+/x64
+/*.vcxproj.user
+/*.bin
+/ReversePasswordEventProvider.aps
+/ReversePasswordEventProvider.h
+/ReversePasswordEventProvider.rc
