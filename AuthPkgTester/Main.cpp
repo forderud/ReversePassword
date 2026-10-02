@@ -10,6 +10,14 @@ int wmain(int argc, wchar_t* argv[]) {
     {
         EventLogger log(L"ReversePassword");
         {
+            const wchar_t* messages[] = { L"SomeMethod" };
+            log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, CRED_PROVIDER_CATEGORY, MSG_CALL_SUCCESS, messages);
+        }
+        {
+            const wchar_t* messages[] = { L"SomeMethod", L"Some error"};
+            log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, CRED_PROVIDER_CATEGORY, MSG_CALL_FAILED, messages);
+        }
+        {
             const wchar_t* messages[] = { L"MyUser" };
             log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, CRED_PROVIDER_CATEGORY, MSG_AUTH_SUCCESS, messages);
         }

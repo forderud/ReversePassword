@@ -48,20 +48,36 @@ MessageIdTypedef=DWORD
 MessageId=0x100
 Severity=Informational
 Facility=Runtime
-SymbolicName=MSG_AUTH_SUCCESS
+SymbolicName=MSG_CALL_SUCCESS
 Language=English
-User %1 successfully authenticated.
+Method "%1" succeeded.
 .
 
 MessageId=0x101
 Severity=Error
 Facility=Runtime
-SymbolicName=MSG_AUTH_FAILED
+SymbolicName=MSG_CALL_FAILED
 Language=English
-Authentication failed for user %1 (reason: %2).
+Method "%1" failed, error: %2.
 .
 
 MessageId=0x102
+Severity=Informational
+Facility=Runtime
+SymbolicName=MSG_AUTH_SUCCESS
+Language=English
+User %1 successfully authenticated.
+.
+
+MessageId=0x103
+Severity=Error
+Facility=Runtime
+SymbolicName=MSG_AUTH_FAILED
+Language=English
+Authentication failed for user %1. Reason: %2.
+.
+
+MessageId=0x104
 Severity=Error
 Facility=Runtime
 SymbolicName=MSG_INTERNAL
