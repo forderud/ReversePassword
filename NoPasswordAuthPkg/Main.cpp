@@ -60,14 +60,13 @@ NTSTATUS NTAPI SpInitialize(_In_ ULONG_PTR PackageId, _In_ SECPKG_PARAMETERS* Pa
 }
 
 NTSTATUS NTAPI SpShutDown() {
-    LogMessage("SpShutDown");
-    LogMessage("  return STATUS_SUCCESS");
+    EventLogger log(L"ReversePassword");
+    const wchar_t* strings[] = { L"SpShutDown" };
+    log.ReportInsertStrings(EVENTLOG_SUCCESS, AUTH_PKG_CATEGORY, MSG_CALL_SUCCESS, strings);
     return STATUS_SUCCESS;
 }
 
 NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
-    LogMessage("SpGetInfo");
-
     // return security package metadata
     PackageInfo->fCapabilities = SECPKG_FLAG_LOGON //  supports LsaLogonUser
                                | SECPKG_FLAG_CLIENT_ONLY; // no server auth support
@@ -77,7 +76,9 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
     PackageInfo->Name = (wchar_t*)L"NoPasswordAuthPkg";
     PackageInfo->Comment = (wchar_t*)L"Custom authentication package for testing";
 
-    LogMessage("  return STATUS_SUCCESS");
+    EventLogger log(L"ReversePassword");
+    const wchar_t* strings[] = { L"SpGetInfo" };
+    log.ReportInsertStrings(EVENTLOG_SUCCESS, AUTH_PKG_CATEGORY, MSG_CALL_SUCCESS, strings);
     return STATUS_SUCCESS;
 }
 
@@ -99,7 +100,6 @@ NTSTATUS LsaApLogonUser (
     _Out_ LSA_UNICODE_STRING** AccountName,
     _Out_ LSA_UNICODE_STRING** AuthenticatingAuthority
 ) {
-    LogMessage("LsaApLogonUser");
     EventLogger log(L"ReversePassword");
 
     {
@@ -116,9 +116,7 @@ NTSTATUS LsaApLogonUser (
     }
 
     // input arguments
-    LogMessage("  LogonType: %i", LogonType); // Interactive=2 (local), RemoteInteractive=10 (remote-desktop)
     ClientBufferBase;
-    LogMessage("  ProtocolSubmitBuffer size: %i", SubmitBufferSize);
 
     // deliberately restrict supported logontypes to local and remote-desktop
     if ((LogonType != Interactive) && (LogonType != RemoteInteractive)) {
@@ -254,10 +252,10 @@ NTSTATUS LsaApLogonUser (
     return STATUS_SUCCESS;
 }
 
-void LsaApLogonTerminated(_In_ LUID* LogonId) {
-    LogMessage("LsaApLogonTerminated");
-    LogMessage("  LogonId: High=0x%x , Low=0x%x", LogonId->HighPart, LogonId->LowPart);
-    LogMessage("  return");
+void LsaApLogonTerminated(_In_ LUID* /*LogonId*/) {
+    EventLogger log(L"ReversePassword");
+    const wchar_t* strings[] = { L"LsaApLogonTerminated" };
+    log.ReportInsertStrings(EVENTLOG_SUCCESS, AUTH_PKG_CATEGORY, MSG_CALL_SUCCESS, strings);
 }
 
 SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
@@ -309,18 +307,13 @@ SECPKG_FUNCTION_TABLE SecurityPackageFunctionTable = {
 /** LSA calls SpLsaModeInitialize() when loading SSP/AP DLLs. */
 extern "C"
 NTSTATUS NTAPI SpLsaModeInitialize(
-    _In_ ULONG LsaVersion,
+    _In_ ULONG /*LsaVersion*/,
     _Out_ ULONG* PackageVersion,
     _Out_ SECPKG_FUNCTION_TABLE** ppTables,
     _Out_ ULONG* pcTables
 ) {
-    LogMessage("SpLsaModeInitialize");
-    LogMessage("  LsaVersion %u", LsaVersion);
-
     *PackageVersion = SECPKG_INTERFACE_VERSION;
     *ppTables = &SecurityPackageFunctionTable;
     *pcTables = 1;
-
-    LogMessage("  return STATUS_SUCCESS");
     return STATUS_SUCCESS;
 }
