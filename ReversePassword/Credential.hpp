@@ -28,8 +28,7 @@ public:
     HRESULT UnAdvise() override { return S_OK; }
     HRESULT SetSelected(BOOL* autoLogon) override;
     HRESULT SetDeselected() override;
-    HRESULT GetFieldState(DWORD fieldId, CREDENTIAL_PROVIDER_FIELD_STATE* state,
-        CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) override;
+    HRESULT GetFieldState(DWORD fieldId, CREDENTIAL_PROVIDER_FIELD_STATE* state, CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) override;
     HRESULT GetStringValue(DWORD fieldId, WCHAR** value) override;
     HRESULT GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) override;
     HRESULT GetCheckboxValue(DWORD, BOOL* /*checked*/, WCHAR** /*label*/) override { return E_NOTIMPL; }
@@ -40,12 +39,8 @@ public:
     HRESULT SetCheckboxValue(DWORD, BOOL) override { return E_NOTIMPL; }
     HRESULT SetComboBoxSelectedValue(DWORD, DWORD) override { return E_NOTIMPL; }
     HRESULT CommandLinkClicked(DWORD) override { return E_NOTIMPL; }
-    HRESULT GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response,
-        CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization,
-        WCHAR** statusText,
-        CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
-    HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText,
-        CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
+    HRESULT GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
+    HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
     HRESULT GetUserSid(WCHAR** sid) override { *sid = DuplicateString(m_sid.c_str()); return *sid ? S_OK : E_POINTER; }
 
 private:
