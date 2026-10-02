@@ -53,9 +53,7 @@ NTSTATUS NTAPI SpInitialize(_In_ ULONG_PTR PackageId, _In_ SECPKG_PARAMETERS* Pa
 
     FunctionTable = *functionTable; // copy function pointer table
 
-    EventLogger log(L"ReversePassword");
-    const wchar_t* strings[] = { L"SpInitialize", message.c_str() };
-    log.ReportInsertStrings(EVENTLOG_SUCCESS, AUTH_PKG_CATEGORY, MSG_CALL_SUCCESS2, strings);
+    // NOTICE: Event logging here causes Windows startup problems
     return STATUS_SUCCESS;
 }
 
@@ -76,9 +74,7 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
     PackageInfo->Name = (wchar_t*)L"NoPasswordAuthPkg";
     PackageInfo->Comment = (wchar_t*)L"Custom authentication package for testing";
 
-    EventLogger log(L"ReversePassword");
-    const wchar_t* strings[] = { L"SpGetInfo" };
-    log.ReportInsertStrings(EVENTLOG_SUCCESS, AUTH_PKG_CATEGORY, MSG_CALL_SUCCESS, strings);
+    // NOTICE: Event logging here causes Windows startup problems
     return STATUS_SUCCESS;
 }
 
