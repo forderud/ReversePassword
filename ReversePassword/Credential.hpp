@@ -1,6 +1,6 @@
 #pragma once
 #include "ReversePassword.hpp"
-#include "../NoPasswordAuthPkg/EventLogger.hpp"
+#include "../ReversePasswordEventProvider/EventLogger.hpp"
 #include "../ReversePasswordEventProvider/ReversePasswordEventProvider.h"
 
 
