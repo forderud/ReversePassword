@@ -13,39 +13,38 @@ LSA_SECPKG_FUNCTION_TABLE FunctionTable;
 
 
 NTSTATUS NTAPI SpInitialize(_In_ ULONG_PTR PackageId, _In_ SECPKG_PARAMETERS* Parameters, _In_ LSA_SECPKG_FUNCTION_TABLE* functionTable) {
-    LogMessage("SpInitialize");
-
-    LogMessage("  PackageId: %u", PackageId);
-    LogMessage("  Version: %u", Parameters->Version);
+    std::wstring message;
+    message += std::format(L"  PackageId: {}\n", PackageId);
+    message += std::format(L"  Version: {}\n", Parameters->Version);
     {
         ULONG state = Parameters->MachineState;
-        LogMessage("  MachineState:");
+        message += L"  MachineState:\n";
         if (state & SECPKG_STATE_ENCRYPTION_PERMITTED) {
             state &= ~SECPKG_STATE_ENCRYPTION_PERMITTED;
-            LogMessage("  - ENCRYPTION_PERMITTED");
+            message += L"  - ENCRYPTION_PERMITTED\n";
         }
         if (state & SECPKG_STATE_STRONG_ENCRYPTION_PERMITTED) {
             state &= ~SECPKG_STATE_STRONG_ENCRYPTION_PERMITTED;
-            LogMessage("  - STRONG_ENCRYPTION_PERMITTED");
+            message += L"  - STRONG_ENCRYPTION_PERMITTED\n";
         }
         if (state & SECPKG_STATE_DOMAIN_CONTROLLER) {
             state &= ~SECPKG_STATE_DOMAIN_CONTROLLER;
-            LogMessage("  - DOMAIN_CONTROLLER");
+            message += L"  - DOMAIN_CONTROLLER\n";
         }
         if (state & SECPKG_STATE_WORKSTATION) {
             state &= ~SECPKG_STATE_WORKSTATION;
-            LogMessage("  - WORKSTATION");
+            message += L"  - WORKSTATION\n";
         }
         if (state & SECPKG_STATE_STANDALONE) {
             state &= ~SECPKG_STATE_STANDALONE;
-            LogMessage("  - STANDALONE");
+            message += L"  - STANDALONE\n";
         }
         if (state) {
             // print resudual flags not already covered
-            LogMessage("  * Unknown flags: 0x%X", state);
+            message += std::format(L"  * Unknown flags: 0x{:X}", state);
         }
     }
-    LogMessage("  SetupMode: %u", Parameters->SetupMode);
+    message += std::format(L"  SetupMode: {}\n", Parameters->SetupMode);
     // parameters not logged
     Parameters->DomainSid;
     Parameters->DomainName;
@@ -54,7 +53,9 @@ NTSTATUS NTAPI SpInitialize(_In_ ULONG_PTR PackageId, _In_ SECPKG_PARAMETERS* Pa
 
     FunctionTable = *functionTable; // copy function pointer table
 
-    LogMessage("  return STATUS_SUCCESS");
+    EventLogger log(L"ReversePassword");
+    const wchar_t* strings[] = { L"SpInitialize", message.c_str() };
+    log.ReportInsertStrings(EVENTLOG_SUCCESS, AUTH_PKG_CATEGORY, MSG_CALL_SUCCESS2, strings);
     return STATUS_SUCCESS;
 }
 

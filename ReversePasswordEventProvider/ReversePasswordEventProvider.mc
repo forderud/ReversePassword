@@ -48,6 +48,15 @@ Method "%1" succeeded.
 .
 
 MessageId=0x101
+Severity=Informational
+Facility=Runtime
+SymbolicName=MSG_CALL_SUCCESS2
+Language=English
+Method "%1" succeeded.
+%2
+.
+
+MessageId=0x102
 Severity=Error
 Facility=Runtime
 SymbolicName=MSG_CALL_FAILED
