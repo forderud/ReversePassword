@@ -4,6 +4,7 @@
 #include "MagicFile.hpp"
 #include "../ReversePasswordEventProvider/EventLogger.hpp"
 #include "../ReversePasswordEventProvider/ReversePasswordEventProvider.h"
+#include <format>
 
 // exported symbols
 #pragma comment(linker, "/export:SpLsaModeInitialize")
@@ -120,8 +121,8 @@ NTSTATUS LsaApLogonUser (
 
     // deliberately restrict supported logontypes to local and remote-desktop
     if ((LogonType != Interactive) && (LogonType != RemoteInteractive)) {
-        LogMessage("  return STATUS_NOT_IMPLEMENTED (unsupported LogonType)");
-        const wchar_t* strings[] = { L"LsaApLogonUser", L"unsupported LogonType"};
+        std::wstring description = std::format(L"STATUS_NOT_IMPLEMENTED, unsupported LogonType {}", (int)LogonType);
+        const wchar_t* strings[] = { L"LsaApLogonUser", description.c_str()};
         log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
         return STATUS_NOT_IMPLEMENTED;
     }
@@ -130,8 +131,8 @@ NTSTATUS LsaApLogonUser (
     auto* logonInfo = (MSV1_0_INTERACTIVE_LOGON*)ProtocolSubmitBuffer;
     {
         if (SubmitBufferSize < sizeof(MSV1_0_INTERACTIVE_LOGON)) {
-            LogMessage("  ERROR: SubmitBufferSize too small");
-            const wchar_t* strings[] = { L"LsaApLogonUser", L"SubmitBufferSize too small" };
+            std::wstring description = std::format(L"STATUS_INVALID_PARAMETER, SubmitBufferSize {} smaller than {}", SubmitBufferSize, sizeof(MSV1_0_INTERACTIVE_LOGON));
+            const wchar_t* strings[] = { L"LsaApLogonUser", description.c_str()};
             log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return STATUS_INVALID_PARAMETER;
         }
@@ -176,8 +177,8 @@ NTSTATUS LsaApLogonUser (
         wchar_t computerName[MAX_COMPUTERNAME_LENGTH + 1]{};
         DWORD computerNameSize = std::size(computerName);
         if (!GetComputerNameW(computerName, &computerNameSize)) {
-            LogMessage("  return STATUS_INTERNAL_ERROR (GetComputerNameW failed)");
-            const wchar_t* strings[] = { L"LsaApLogonUser", L"GetComputerNameW failed" };
+            std::wstring description = std::format(L"STATUS_INTERNAL_ERROR, GetComputerNameW failed {}", GetLastError());
+            const wchar_t* strings[] = { L"LsaApLogonUser", description.c_str()};
             log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return STATUS_INTERNAL_ERROR;
         }
@@ -198,8 +199,8 @@ NTSTATUS LsaApLogonUser (
         }
         NTSTATUS status = FunctionTable.CreateLogonSession(LogonId);
         if (status != STATUS_SUCCESS) {
-            LogMessage("  ERROR: CreateLogonSession failed with err: 0x%x", status);
-            const wchar_t* strings[] = { L"LsaApLogonUser", L"CreateLogonSession failed" };
+            std::wstring description = std::format(L"ERROR: CreateLogonSession failed with err {}", status);
+            const wchar_t* strings[] = { L"LsaApLogonUser", description.c_str()};
             log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return status;
         }
@@ -213,9 +214,9 @@ NTSTATUS LsaApLogonUser (
         NTSTATUS subStatus = 0;
         NTSTATUS status = UserNameToToken(&logonInfo->UserName, &tokenInfo, &subStatus);
         if (status != STATUS_SUCCESS) {
-            LogMessage("ERROR: UserNameToToken failed with err: 0x%x", status);
             *SubStatus = subStatus;
-            const wchar_t* strings[] = { L"LsaApLogonUser", L"UserNameToToken failed" };
+            std::wstring description = std::format(L"UserNameToToken failed with err {}", status);
+            const wchar_t* strings[] = { L"LsaApLogonUser", description.c_str()};
             log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return status;
         }
@@ -247,7 +248,6 @@ NTSTATUS LsaApLogonUser (
         }
     }
 
-    LogMessage("  return STATUS_SUCCESS");
     const wchar_t* strings[] = { L"LsaApLogonUser" };
     log.ReportInsertStrings(EVENTLOG_SUCCESS, AUTH_PKG_CATEGORY, MSG_CALL_SUCCESS, strings);
     return STATUS_SUCCESS;
