@@ -16,8 +16,7 @@ Local Security Authority (LSA) protection needs to be disabled in order for the 
 * Turn off "Local Security Authority protection"
 * Reboot
 
-[Configure added LSA protection](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection) also contains instructions for how to disable LSA protection from the windows registry or local policies.
-
+Alternatively, set the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\RunAsPPL` registry value to `00000000` as documented in [Configure added LSA protection](https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection).
 
 ## Installation
 Run `Install_NoPasswordAuthPkg.ps1` as admin.
