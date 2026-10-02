@@ -17,7 +17,7 @@ public:
     END_COM_MAP()
 
     HRESULT SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD flags) override;
-    HRESULT SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION*) override { return S_OK; }
+    HRESULT SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) override { return S_OK; }
     HRESULT Advise(ICredentialProviderEvents* events, UINT_PTR) override { m_events = events; return S_OK; }
     HRESULT UnAdvise() override { m_events.Release(); return S_OK; }
     HRESULT GetFieldDescriptorCount(DWORD* count) override;
