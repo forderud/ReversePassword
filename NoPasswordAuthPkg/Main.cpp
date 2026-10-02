@@ -2,6 +2,8 @@
 #include "PrepareProfile.hpp"
 #include "Utils.hpp"
 #include "MagicFile.hpp"
+#include "../ReversePasswordEventProvider/EventLogger.hpp"
+#include "../ReversePasswordEventProvider/ReversePasswordEventProvider.h"
 
 // exported symbols
 #pragma comment(linker, "/export:SpLsaModeInitialize")
@@ -96,6 +98,7 @@ NTSTATUS LsaApLogonUser (
     _Out_ LSA_UNICODE_STRING** AuthenticatingAuthority
 ) {
     LogMessage("LsaApLogonUser");
+    EventLogger log(L"ReversePassword");
 
     {
         // clear output arguments first in case of failure
@@ -118,6 +121,8 @@ NTSTATUS LsaApLogonUser (
     // deliberately restrict supported logontypes to local and remote-desktop
     if ((LogonType != Interactive) && (LogonType != RemoteInteractive)) {
         LogMessage("  return STATUS_NOT_IMPLEMENTED (unsupported LogonType)");
+        const wchar_t* strings[] = { L"LsaApLogonUser", L"unsupported LogonType"};
+        log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
         return STATUS_NOT_IMPLEMENTED;
     }
 
@@ -126,6 +131,8 @@ NTSTATUS LsaApLogonUser (
     {
         if (SubmitBufferSize < sizeof(MSV1_0_INTERACTIVE_LOGON)) {
             LogMessage("  ERROR: SubmitBufferSize too small");
+            const wchar_t* strings[] = { L"LsaApLogonUser", L"SubmitBufferSize too small" };
+            log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return STATUS_INVALID_PARAMETER;
         }
 
@@ -157,6 +164,8 @@ NTSTATUS LsaApLogonUser (
         if (!found_magic_file) {
             LogMessage("  ERROR: No magic file found on any removable drive");
             *SubStatus = STATUS_WRONG_PASSWORD; // reason for error
+            const wchar_t* strings[] = { L"LsaApLogonUser", L"No magic file found on any removable drive"};
+            log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return STATUS_LOGON_FAILURE;
         }
     }
@@ -168,6 +177,8 @@ NTSTATUS LsaApLogonUser (
         DWORD computerNameSize = std::size(computerName);
         if (!GetComputerNameW(computerName, &computerNameSize)) {
             LogMessage("  return STATUS_INTERNAL_ERROR (GetComputerNameW failed)");
+            const wchar_t* strings[] = { L"LsaApLogonUser", L"GetComputerNameW failed" };
+            log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return STATUS_INTERNAL_ERROR;
         }
 
@@ -188,6 +199,8 @@ NTSTATUS LsaApLogonUser (
         NTSTATUS status = FunctionTable.CreateLogonSession(LogonId);
         if (status != STATUS_SUCCESS) {
             LogMessage("  ERROR: CreateLogonSession failed with err: 0x%x", status);
+            const wchar_t* strings[] = { L"LsaApLogonUser", L"CreateLogonSession failed" };
+            log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return status;
         }
 
@@ -202,6 +215,8 @@ NTSTATUS LsaApLogonUser (
         if (status != STATUS_SUCCESS) {
             LogMessage("ERROR: UserNameToToken failed with err: 0x%x", status);
             *SubStatus = subStatus;
+            const wchar_t* strings[] = { L"LsaApLogonUser", L"UserNameToToken failed" };
+            log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
             return status;
         }
 
@@ -233,6 +248,8 @@ NTSTATUS LsaApLogonUser (
     }
 
     LogMessage("  return STATUS_SUCCESS");
+    const wchar_t* strings[] = { L"LsaApLogonUser" };
+    log.ReportInsertStrings(EVENTLOG_SUCCESS, AUTH_PKG_CATEGORY, MSG_CALL_SUCCESS, strings);
     return STATUS_SUCCESS;
 }
 
