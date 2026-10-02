@@ -1,7 +1,18 @@
 #include "LogonUser.hpp"
-
+//#define TEST_LOGGING
+#ifdef TEST_LOGGING
+#include "../ReversePasswordEventProvider/ReversePasswordEventProvider.h"
+#include "../NoPasswordAuthPkg/EventLogger.hpp"
+#endif
 
 int wmain(int argc, wchar_t* argv[]) {
+#ifdef TEST_LOGGING
+    {
+        EventLogger log(L"ReversePassword");
+        const wchar_t* messages[] = { L"somefile.txt" };
+        log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, DATABASE_CATEGORY, MSG_BAD_FILE_CONTENTS, std::size(messages), messages);
+    }
+#endif
     if (argc == 1) {
         // query installed security packages
         LsaHandle lsa;
