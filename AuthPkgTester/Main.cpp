@@ -19,15 +19,11 @@ int wmain(int argc, wchar_t* argv[]) {
         }
         {
             const wchar_t* messages[] = { L"MyUser" };
-            log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, CRED_PROVIDER_CATEGORY, MSG_AUTH_SUCCESS, messages);
+            log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, CRED_PROVIDER_CATEGORY, MSG_CALL_SUCCESS, messages);
         }
         {
             const wchar_t* messages[] = { L"MyUser", L"Some weird error occured"};
-            log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_AUTH_FAILED, messages);
-        }
-        {
-            const wchar_t* messages[] = { L"NULL argument passed" };
-            log.ReportInsertStrings(EVENTLOG_WARNING_TYPE, CRED_PROVIDER_CATEGORY, MSG_INTERNAL, messages);
+            log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, messages);
         }
     }
 #endif

@@ -24,21 +24,15 @@ LanguageNames=(English=0x409:MSG00409)
 MessageIdTypedef=WORD
 
 MessageId=0x1
-SymbolicName=AUTH_CATEGORY
+SymbolicName=AUTH_PKG_CATEGORY
 Language=English
-Authentication
+Authentication Package
 .
 
 MessageId=0x2
 SymbolicName=CRED_PROVIDER_CATEGORY
 Language=English
 Credential Provider
-.
-
-MessageId=0x3
-SymbolicName=AUTH_PKG_CATEGORY
-Language=English
-Authentication Package
 .
 
 
@@ -59,28 +53,4 @@ Facility=Runtime
 SymbolicName=MSG_CALL_FAILED
 Language=English
 Method "%1" failed, error: %2.
-.
-
-MessageId=0x102
-Severity=Informational
-Facility=Runtime
-SymbolicName=MSG_AUTH_SUCCESS
-Language=English
-User %1 successfully authenticated.
-.
-
-MessageId=0x103
-Severity=Error
-Facility=Runtime
-SymbolicName=MSG_AUTH_FAILED
-Language=English
-Authentication failed for user %1. Reason: %2.
-.
-
-MessageId=0x104
-Severity=Error
-Facility=Runtime
-SymbolicName=MSG_INTERNAL
-Language=English
-Internal error: %1.
 .
