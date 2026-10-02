@@ -4,6 +4,7 @@
 | `CredUITester` | Tool for testing CredUI-based authentication  |
 | [**`NoPasswordAuthPkg`**](NoPasswordAuthPkg/) | Sample authentication package to allow interactive **logon without having to type the password**. |
 | [**`ReversePassword`**](ReversePassword/) | Sample Windows Credential Provider that **requires the password to be typed backwards**. |
+| [**`ReversePasswordEventProvider`**](ReversePasswordEventProvider/) | Event provider for logging to the Windows Event Viewer. |
 | `WebCredMgr` | Read and write to the Windows Credential Manager secure storage. |
 
 
