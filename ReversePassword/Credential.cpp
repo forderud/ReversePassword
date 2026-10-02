@@ -205,6 +205,8 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
             *statusText = DuplicateString(message.c_str());
         }
         *response = CPGSR_NO_CREDENTIAL_FINISHED;
+        const wchar_t* strings[] = { L"GetSerialization" };
+        m_log.ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_SUCCESS, strings);
         return S_OK;
     }
 
@@ -240,6 +242,8 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     if (FAILED(hr)) {
         *statusIcon = CPSI_ERROR;
         *statusText = DuplicateString(L"Failed to pack credentials.");
+        const wchar_t* strings[] = { L"GetSerialization", L"Failed to pack credentials." };
+        m_log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, CRED_PROVIDER_CATEGORY, MSG_CALL_FAILED, strings);
         return hr;
     }
 
@@ -248,6 +252,8 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     // cbSerialization & rgbSerialization fields already assigned above
     *response = CPGSR_RETURN_CREDENTIAL_FINISHED;
     *statusIcon = CPSI_SUCCESS;
+    const wchar_t* strings[] = { L"GetSerialization" };
+    m_log.ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_SUCCESS, strings);
     return S_OK;
 }
 
@@ -265,6 +271,12 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** st
         message += L", substatus: ";
         message += _com_error(substatus).ErrorMessage();
         *statusText = DuplicateString(message.c_str());
+
+        const wchar_t* strings[] = { L"ReportResult", message.c_str() };
+        m_log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, CRED_PROVIDER_CATEGORY, MSG_CALL_FAILED, strings);
+    } else {
+        const wchar_t* strings[] = { L"ReportResult" };
+        m_log.ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_SUCCESS, strings);
     }
     return S_OK;
 }

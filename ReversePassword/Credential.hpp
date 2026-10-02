@@ -1,5 +1,7 @@
 #pragma once
 #include "ReversePassword.hpp"
+#include "../NoPasswordAuthPkg/EventLogger.hpp"
+#include "../ReversePasswordEventProvider/ReversePasswordEventProvider.h"
 
 
 class Credential :
@@ -10,6 +12,12 @@ public:
         COM_INTERFACE_ENTRY(ICredentialProviderCredential)
         COM_INTERFACE_ENTRY(ICredentialProviderCredential2)
     END_COM_MAP()
+
+    Credential() : m_log(L"ReversePassword") {
+    }
+
+    ~Credential() {
+    }
 
     void Initialize(std::shared_ptr<CredentialView> view, std::wstring sid) {
         m_view = std::move(view);
@@ -53,4 +61,5 @@ private:
 
     std::shared_ptr<CredentialView> m_view;
     std::wstring m_sid;
+    EventLogger m_log;
 };
