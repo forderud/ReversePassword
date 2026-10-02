@@ -33,11 +33,11 @@ public:
     HRESULT GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) override;
     HRESULT GetCheckboxValue(DWORD /*fieldId*/, BOOL* /*checked*/, WCHAR** /*label*/) override { return E_NOTIMPL; }
     HRESULT GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) override;
-    HRESULT GetComboBoxValueCount(DWORD, DWORD*, DWORD*) override { return E_NOTIMPL; }
-    HRESULT GetComboBoxValueAt(DWORD /*fieldId*/, DWORD, WCHAR**) override { return E_NOTIMPL; }
+    HRESULT GetComboBoxValueCount(DWORD /*fieldId*/, DWORD* /*itemCount*/, DWORD* /*selectedItem*/) override { return E_NOTIMPL; }
+    HRESULT GetComboBoxValueAt(DWORD /*fieldId*/, DWORD /*item*/, WCHAR** /*value*/) override { return E_NOTIMPL; }
     HRESULT SetStringValue(DWORD fieldId, const WCHAR* value) override;
-    HRESULT SetCheckboxValue(DWORD /*fieldId*/, BOOL) override { return E_NOTIMPL; }
-    HRESULT SetComboBoxSelectedValue(DWORD, DWORD) override { return E_NOTIMPL; }
+    HRESULT SetCheckboxValue(DWORD /*fieldId*/, BOOL /*checked*/) override { return E_NOTIMPL; }
+    HRESULT SetComboBoxSelectedValue(DWORD /*fieldId*/, DWORD /*selectedItem*/) override { return E_NOTIMPL; }
     HRESULT CommandLinkClicked(DWORD /*fieldId*/) override { return E_NOTIMPL; }
     HRESULT GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
     HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
