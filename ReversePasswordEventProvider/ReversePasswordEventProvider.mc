@@ -19,7 +19,7 @@ LanguageNames=(English=0x409:MSG00409)
 
 
 ; // The following are the categories of events.
-; #define PROVIDER_CATEGORY_COUNT 3
+; #define PROVIDER_CATEGORY_COUNT 2
 
 MessageIdTypedef=WORD
 
@@ -52,5 +52,5 @@ Severity=Error
 Facility=Runtime
 SymbolicName=MSG_CALL_FAILED
 Language=English
-Method "%1" failed, error: %2.
+Method "%1" failed. Error: %2.
 .
