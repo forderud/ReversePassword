@@ -44,15 +44,15 @@ Severity=Informational
 Facility=Runtime
 SymbolicName=MSG_CALL_SUCCESS
 Language=English
-Method "%1" succeeded.
+Function "%1" succeeded.
 .
 
 MessageId=0x101
 Severity=Informational
 Facility=Runtime
-SymbolicName=MSG_CALL_SUCCESS2
+SymbolicName=MSG_CALL_INFO
 Language=English
-Method "%1" succeeded.
+Function "%1".
 %2
 .
 
@@ -61,5 +61,5 @@ Severity=Error
 Facility=Runtime
 SymbolicName=MSG_CALL_FAILED
 Language=English
-Method "%1" failed. Error: %2.
+Function "%1" failed. Error: %2.
 .
