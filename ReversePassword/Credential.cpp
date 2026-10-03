@@ -48,7 +48,7 @@ namespace {
         const auto lookup = [lsa, package](const char* name)
             {
                 LSA_STRING packageName{};
-                packageName.Buffer = const_cast<PCHAR>(name);
+                packageName.Buffer = const_cast<char*>(name);
                 packageName.Length = static_cast<USHORT>(strlen(name));
                 packageName.MaximumLength = packageName.Length;
                 return LsaLookupAuthenticationPackage(lsa, &packageName, package);
