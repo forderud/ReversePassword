@@ -9,7 +9,7 @@ Overall class diagram:
 | Class | Description |
 |-------|-------------|
 | `CredentialProvider` <[ICredentialProvider](https://learn.microsoft.com/en-us/windows/win32/api/credentialprovider/nn-credentialprovider-icredentialprovider), [ICredentialProviderSetUserArray](https://learn.microsoft.com/en-us/windows/win32/api/credentialprovider/nn-credentialprovider-icredentialprovidersetuserarray)> | Parent class that's created by Windows. The `_providerUsers` member is similarly initialized on `SetUserArray` calls. |
-| `CredentialView` | Instances are created when `CredentialProvider` initializes its `_view` member when receiving `SetUsageScenario` calls. |
+| `CredentialView` | Instances are created when `CredentialProvider` initializes its `m_view` member when receiving `SetUsageScenario` calls. |
 | `Credential` <[ICredentialProviderCredential](https://learn.microsoft.com/en-us/windows/win32/api/credentialprovider/nn-credentialprovider-icredentialprovidercredential), [ICredentialProviderCredential2](https://learn.microsoft.com/en-us/windows/win32/api/credentialprovider/nn-credentialprovider-icredentialprovidercredential2)>| Instances are created on-demand by `CredentialProvider` when receiving `GetCredentialAt` calls. |
 
 ## Acknowledgement
