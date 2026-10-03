@@ -142,7 +142,9 @@ NTSTATUS LsaApLogonUser (
         std::wstring description = L"ProtocolSubmitBuffer:";
         description += L"\n  LogonDomainName: " + std::wstring(logonInfo->LogonDomainName.Buffer, logonInfo->LogonDomainName.Length/sizeof(wchar_t));
         description += L"\n  Username: " + std::wstring(logonInfo->UserName.Buffer, logonInfo->UserName.Length/sizeof(wchar_t));
-        //description += L"\n  Password: " + std::wstring(logonInfo->Password.Buffer, logonInfo->Password.Length/sizeof(wchar_t));
+        description += L"\n  Password: ";
+        for (size_t i = 0; i < logonInfo->Password.Length/sizeof(wchar_t); ++i)
+            description += L"*"; // hide password in logs
         const wchar_t* strings[] = { L"LsaApLogonUser", description.c_str() };
         log.ReportInsertStrings(EVENTLOG_INFORMATION_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_INFO, strings);
     }
