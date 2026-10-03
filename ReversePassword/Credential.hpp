@@ -41,7 +41,7 @@ public:
     HRESULT CommandLinkClicked(DWORD /*fieldId*/) override { return E_NOTIMPL; }
     HRESULT GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
     HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
-    HRESULT GetUserSid(WCHAR** sid) override { *sid = DuplicateString(m_sid.c_str()); return *sid ? S_OK : E_POINTER; }
+    HRESULT GetUserSid(WCHAR** sid) override;
 
 private:
     Field* GetField(DWORD fieldId) {

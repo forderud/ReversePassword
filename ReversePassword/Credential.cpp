@@ -280,3 +280,11 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** st
     }
     return S_OK;
 }
+
+HRESULT Credential::GetUserSid(WCHAR** sid) {
+    if (!sid)
+        return E_POINTER;
+
+    *sid = DuplicateString(m_sid.c_str());
+    return S_OK;
+}
