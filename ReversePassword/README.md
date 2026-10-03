@@ -3,8 +3,6 @@ Sample Windows Credential Provider that **requires the password to be typed back
 The module logs to the Windows Event Viewer `Application` log. Log entries show up through the `ReversePassword` event source.
 
 ## ReversePassword design
-Overall class diagram:  
-![class diagram](class_diagram.svg)
 
 | Class | Description |
 |-------|-------------|
