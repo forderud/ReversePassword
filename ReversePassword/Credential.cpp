@@ -109,8 +109,7 @@ HRESULT Credential::SetDeselected() {
     return S_OK;
 }
 
-HRESULT Credential::GetFieldState(DWORD fieldId, CREDENTIAL_PROVIDER_FIELD_STATE* state,
-    CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) {
+HRESULT Credential::GetFieldState(DWORD fieldId, CREDENTIAL_PROVIDER_FIELD_STATE* state, CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) {
     Field* field = GetField(fieldId);
     if (!field || !state || !interactiveState)
         return E_INVALIDARG;
@@ -165,10 +164,8 @@ HRESULT Credential::SetStringValue(DWORD fieldId, const WCHAR* value) {
     return S_OK;
 }
 
-HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response,
-    CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization,
-    WCHAR** statusText,
-    CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
+HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization,
+                                     WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
     if (!response || !serialization || !statusText || !statusIcon)
         return E_POINTER;
 
@@ -257,8 +254,7 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     return S_OK;
 }
 
-HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText,
-    CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
+HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
     if (!statusText || !statusIcon)
         return E_POINTER;
 
