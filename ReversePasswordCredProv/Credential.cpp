@@ -45,7 +45,7 @@ namespace {
         if (status != STATUS_SUCCESS)
             return HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
 
-        const auto lookup = [lsa, package](const char* name)
+        const auto lookup = [lsa](const char* name, /*out*/ULONG* package)
             {
                 LSA_STRING packageName{};
                 packageName.Buffer = const_cast<char*>(name);
@@ -54,9 +54,9 @@ namespace {
                 return LsaLookupAuthenticationPackage(lsa, &packageName, package);
             };
 
-        status = lookup("NoPasswordAuthPkg"); // use NoPasswordAuthPkg if installed
+        status = lookup("NoPasswordAuthPkg", /*out*/package); // use NoPasswordAuthPkg if installed
         if (status != STATUS_SUCCESS)
-            status = lookup("Negotiate"); // falback to Negotiate
+            status = lookup("Negotiate", /*out*/package); // falback to Negotiate
         LsaDeregisterLogonProcess(lsa);
         return status == STATUS_SUCCESS ? S_OK : HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
     }
