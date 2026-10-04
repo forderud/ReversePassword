@@ -38,8 +38,6 @@ namespace {
             };
 
         status = lookup("NoPasswordAuthPkg", /*out*/package); // use NoPasswordAuthPkg if installed
-        if (status != STATUS_SUCCESS)
-            status = lookup("Negotiate", /*out*/package); // falback to Negotiate
         LsaDeregisterLogonProcess(lsa);
         return status == STATUS_SUCCESS ? S_OK : HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
     }
@@ -78,10 +76,13 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
 }
 
 HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
-    m_authPkg = 0;
-    HRESULT hr = GetAuthenticationPackage(&m_authPkg);
-    if (FAILED(hr))
-        return hr;
+    m_authPkg = 0; // default auth.pkg.
+    {
+        ULONG authPkg = 0;
+        HRESULT hr = GetAuthenticationPackage(&authPkg);
+        if (SUCCEEDED(hr))
+            m_authPkg = authPkg; // NoPasswordAuthPkg detected
+    }
 
     m_view = CreateView(usage);
     m_credentials.clear();
