@@ -6,6 +6,10 @@
 
 #include "ReversePasswordEventProvider.h" // custom event provider
 
+// exported symbols (in addition to DllMain)
+#pragma comment(linker, "/export:DllRegisterServer,PRIVATE")
+#pragma comment(linker, "/export:DllUnregisterServer,PRIVATE")
+
 
 /** Return the full path for the current EXE or DLL. */
 inline std::wstring GetModuleFolderPath() {
