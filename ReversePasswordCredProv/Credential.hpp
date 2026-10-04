@@ -19,7 +19,8 @@ public:
     ~Credential() {
     }
 
-    void Initialize(std::shared_ptr<CredentialView> view, std::wstring sid) {
+    void Initialize(ULONG authPkg, std::shared_ptr<CredentialView> view, std::wstring sid) {
+        m_authPkg = authPkg;
         m_view = std::move(view);
         m_sid = sid;
     }
@@ -54,6 +55,7 @@ private:
         return &m_view->fields[fieldId];
     }
 
+    ULONG m_authPkg = 0;
     std::shared_ptr<CredentialView> m_view;
     std::wstring m_sid;
     EventLogger m_log;

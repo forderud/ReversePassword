@@ -1,5 +1,6 @@
 #include "CredentialProvider.hpp"
 #include "Credential.hpp"
+#include <ntsecapi.h>
 
 
 namespace {
@@ -16,6 +17,31 @@ namespace {
         default:
             return false;
         }
+    }
+
+    HRESULT GetAuthenticationPackage(ULONG* package) {
+        if (!package)
+            return E_POINTER;
+
+        HANDLE lsa = nullptr;
+        NTSTATUS status = LsaConnectUntrusted(&lsa);
+        if (status != STATUS_SUCCESS)
+            return HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
+
+        const auto lookup = [lsa](const char* name, /*out*/ULONG* package)
+            {
+                LSA_STRING packageName{};
+                packageName.Buffer = const_cast<char*>(name);
+                packageName.Length = static_cast<USHORT>(strlen(name));
+                packageName.MaximumLength = packageName.Length;
+                return LsaLookupAuthenticationPackage(lsa, &packageName, package);
+            };
+
+        status = lookup("NoPasswordAuthPkg", /*out*/package); // use NoPasswordAuthPkg if installed
+        if (status != STATUS_SUCCESS)
+            status = lookup("Negotiate", /*out*/package); // falback to Negotiate
+        LsaDeregisterLogonProcess(lsa);
+        return status == STATUS_SUCCESS ? S_OK : HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
     }
 }
 
@@ -52,6 +78,11 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
 }
 
 HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
+    m_authPkg = 0;
+    HRESULT hr = GetAuthenticationPackage(&m_authPkg);
+    if (FAILED(hr))
+        return hr;
+
     m_view = CreateView(usage);
     m_credentials.clear();
     return m_view ? S_OK : E_NOTIMPL;
@@ -122,7 +153,7 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
     if (FAILED(hr))
         return hr;
     instance->AddRef();
-    instance->Initialize(m_view, sid);
+    instance->Initialize(m_authPkg, m_view, sid);
     CComPtr<ICredentialProviderCredential> created;
     hr = instance->QueryInterface(&created);
     instance->Release();

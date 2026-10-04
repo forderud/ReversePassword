@@ -1,6 +1,5 @@
 #include "Credential.Hpp"
 #include <sddl.h>
-#include <ntsecapi.h>
 #include <lm.h>
 #include <wincred.h>
 #include <comdef.h> // for _com_error
@@ -34,31 +33,6 @@ namespace {
         domain.resize(domainLength);
         accountName = domain.empty() ? name : domain + L"\\" + name;
         return S_OK;
-    }
-
-    HRESULT GetAuthenticationPackage(ULONG* package) {
-        if (!package)
-            return E_POINTER;
-
-        HANDLE lsa = nullptr;
-        NTSTATUS status = LsaConnectUntrusted(&lsa);
-        if (status != STATUS_SUCCESS)
-            return HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
-
-        const auto lookup = [lsa](const char* name, /*out*/ULONG* package)
-            {
-                LSA_STRING packageName{};
-                packageName.Buffer = const_cast<char*>(name);
-                packageName.Length = static_cast<USHORT>(strlen(name));
-                packageName.MaximumLength = packageName.Length;
-                return LsaLookupAuthenticationPackage(lsa, &packageName, package);
-            };
-
-        status = lookup("NoPasswordAuthPkg", /*out*/package); // use NoPasswordAuthPkg if installed
-        if (status != STATUS_SUCCESS)
-            status = lookup("Negotiate", /*out*/package); // falback to Negotiate
-        LsaDeregisterLogonProcess(lsa);
-        return status == STATUS_SUCCESS ? S_OK : HRESULT_FROM_WIN32(LsaNtStatusToWinError(status));
     }
 
     HRESULT CredPackAuthenticationBufferWrap(const WCHAR* userName, const WCHAR* password, /*out*/BYTE** buffer, /*out*/DWORD* size) {
@@ -208,11 +182,6 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     }
 
     // CPUS_LOGON, CPUS_UNLOCK_WORKSTATION or CPUS_CREDUI logic
-    ULONG authenticationPackage = 0;
-    HRESULT hr = GetAuthenticationPackage(&authenticationPackage);
-    if (FAILED(hr))
-        return hr;
-
     std::wstring userName;
     if (m_view->usage == CPUS_CREDUI) {
         userName = std::get<std::wstring>(GetField(USER_NAME_FIELD)->value); // user entered
@@ -228,13 +197,13 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         }
     }
     else {
-        hr = GetAccountName(m_sid.c_str(), userName); // implicit
+        HRESULT hr = GetAccountName(m_sid.c_str(), userName); // implicit
         if (FAILED(hr))
             return hr;
     }
 
     const std::wstring password = Reverse(std::get<std::wstring>(GetField(PASSWORD_FIELD)->value));
-    hr = CredPackAuthenticationBufferWrap(userName.c_str(), password.c_str(), &serialization->rgbSerialization,
+    HRESULT hr = CredPackAuthenticationBufferWrap(userName.c_str(), password.c_str(), &serialization->rgbSerialization,
         &serialization->cbSerialization);
     if (FAILED(hr)) {
         *statusIcon = CPSI_ERROR;
@@ -244,7 +213,7 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
         return hr;
     }
 
-    serialization->ulAuthenticationPackage = authenticationPackage;
+    serialization->ulAuthenticationPackage = m_authPkg;
     serialization->clsidCredentialProvider = CLSID_ReversePasswordCredProv;
     // cbSerialization & rgbSerialization fields already assigned above
     *response = CPGSR_RETURN_CREDENTIAL_FINISHED;

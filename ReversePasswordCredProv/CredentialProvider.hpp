@@ -27,6 +27,7 @@ public:
     HRESULT SetUserArray(ICredentialProviderUserArray* users) override;
 
 private:
+    ULONG m_authPkg = 0;
     std::shared_ptr<CredentialView> m_view;
     CComPtr<ICredentialProviderEvents> m_events;
     std::vector<CComPtr<ICredentialProviderUser>> m_users;
