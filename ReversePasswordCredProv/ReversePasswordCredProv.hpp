@@ -12,7 +12,7 @@
 
 
 constexpr DWORD ICON_FIELD = 0;
-constexpr DWORD USER_NAME_FIELD = 1;
+constexpr DWORD USERNAME_FIELD = 1;
 constexpr DWORD PASSWORD_FIELD = 2;
 constexpr DWORD NEW_PASSWORD_FIELD = 3;
 constexpr DWORD SUBMIT_BUTTON_FIELD = 4;
