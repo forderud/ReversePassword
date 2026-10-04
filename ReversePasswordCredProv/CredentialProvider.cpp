@@ -4,11 +4,15 @@
 
 
 namespace {
-    bool IsSupportedScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) {
+    bool IsSupportedScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, bool showPassword) {
         switch (usage) {
         case CPUS_LOGON:
         case CPUS_UNLOCK_WORKSTATION:
+            return true;
+
         case CPUS_CHANGE_PASSWORD:
+            return showPassword; // disable when using NoPasswordAuthPkg 
+
         case CPUS_CREDUI:
             return true;
 
@@ -45,7 +49,7 @@ namespace {
 
 
 std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, bool showPassword) {
-    if (!IsSupportedScenario(usage))
+    if (!IsSupportedScenario(usage, showPassword))
         return {};
 
     auto view = std::make_shared<CredentialView>();
@@ -66,18 +70,24 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
     addField(CPFT_TILE_IMAGE, L"Icon", CPFS_DISPLAY_IN_BOTH, {}); // ICON_FIELD
 
     addField(CPFT_LARGE_TEXT, nullptr, CPFS_DISPLAY_IN_BOTH, L"Reverse Password");
+    DWORD adjacentField = 1;
 
     const auto usernameState = (usage == CPUS_CREDUI) ? CPFS_DISPLAY_IN_SELECTED_TILE : CPFS_HIDDEN;
-    addField(CPFT_EDIT_TEXT, L"Username", usernameState, {}); // USER_NAME_FIELD
+    addField(CPFT_EDIT_TEXT, L"Username", usernameState, {}); // USERNAME_FIELD
+    if (usernameState != CPFS_HIDDEN)
+        adjacentField = USERNAME_FIELD;
 
-    addField(CPFT_PASSWORD_TEXT, L"Password", CPFS_DISPLAY_IN_SELECTED_TILE, {}); // PASSWORD_FIELD
+    const auto passwordState = showPassword ? CPFS_DISPLAY_IN_SELECTED_TILE : CPFS_HIDDEN;
+    addField(CPFT_PASSWORD_TEXT, L"Password", passwordState, {}); // PASSWORD_FIELD
+    if (passwordState != CPFS_HIDDEN)
+        adjacentField = PASSWORD_FIELD;
 
     const auto newPasswordState = (usage == CPUS_CHANGE_PASSWORD) ? CPFS_DISPLAY_IN_BOTH : CPFS_HIDDEN;
     addField(CPFT_PASSWORD_TEXT, L"New password", newPasswordState, {}); // NEW_PASSWORD_FIELD
+    if (newPasswordState != CPFS_HIDDEN)
+        adjacentField = NEW_PASSWORD_FIELD;
 
-    const DWORD submitAdjacentTo = (usage == CPUS_CHANGE_PASSWORD) ? NEW_PASSWORD_FIELD : PASSWORD_FIELD;
-    addField(CPFT_SUBMIT_BUTTON, L"Submit", CPFS_DISPLAY_IN_SELECTED_TILE, submitAdjacentTo); // SUBMIT_BUTTON_FIELD
-
+    addField(CPFT_SUBMIT_BUTTON, L"Submit", CPFS_DISPLAY_IN_SELECTED_TILE, adjacentField); // SUBMIT_BUTTON_FIELD
     return view;
 }
 
