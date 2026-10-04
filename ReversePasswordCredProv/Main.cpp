@@ -4,6 +4,13 @@
 #pragma comment(lib, "Netapi32.lib")
 #pragma comment(lib, "Secur32.lib")
 
+// exported symbols (in addition to DllMain)
+#pragma comment(linker, "/export:DllCanUnloadNow,PRIVATE")
+#pragma comment(linker, "/export:DllGetClassObject,PRIVATE")
+#pragma comment(linker, "/export:DllRegisterServer,PRIVATE")
+#pragma comment(linker, "/export:DllUnregisterServer,PRIVATE")
+
+
 class ReversePasswordModule final : public CAtlDllModuleT<ReversePasswordModule> {
 };
 
