@@ -245,7 +245,7 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     }
 
     serialization->ulAuthenticationPackage = authenticationPackage;
-    serialization->clsidCredentialProvider = CLSID_ReversePassword;
+    serialization->clsidCredentialProvider = CLSID_ReversePasswordCredProv;
     // cbSerialization & rgbSerialization fields already assigned above
     *response = CPGSR_RETURN_CREDENTIAL_FINISHED;
     *statusIcon = CPSI_SUCCESS;

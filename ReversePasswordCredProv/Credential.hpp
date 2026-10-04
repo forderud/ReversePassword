@@ -1,5 +1,5 @@
 #pragma once
-#include "ReversePassword.hpp"
+#include "ReversePasswordCredProv.hpp"
 #include "../ReversePasswordEventProvider/EventLogger.hpp"
 #include "../ReversePasswordEventProvider/ReversePasswordEventProvider.h"
 

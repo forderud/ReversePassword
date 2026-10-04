@@ -1,4 +1,4 @@
-#include "ReversePassword.hpp"
+#include "ReversePasswordCredProv.hpp"
 
 #pragma comment(lib, "Credui.lib")
 #pragma comment(lib, "Netapi32.lib")

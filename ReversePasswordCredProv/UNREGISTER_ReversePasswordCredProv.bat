@@ -1,6 +1,6 @@
 :: Fix issue with "Run as Administrator" current dir
 cd /d "%~dp0"
 
-regsvr32.exe /u /s ReversePassword.dll
+regsvr32.exe /u /s ReversePasswordCredProv.dll
 
 regsvr32.exe /u /s ReversePasswordEventProvider.dll

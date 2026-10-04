@@ -3,7 +3,7 @@
 | [**`AuthPkgTester`**](AuthPkgTester/) | Tool for testing custom authentication packages. |
 | `CredUITester` | Tool for testing CredUI-based authentication  |
 | [**`NoPasswordAuthPkg`**](NoPasswordAuthPkg/) | Sample authentication package to allow interactive **logon without having to type the password**. |
-| [**`ReversePassword`**](ReversePassword/) | Sample Windows Credential Provider that **requires the password to be typed backwards**. |
+| [**`ReversePasswordCredProv`**](ReversePasswordCredProv/) | Sample Windows Credential Provider that **requires the password to be typed backwards**. |
 | [**`ReversePasswordEventProvider`**](ReversePasswordEventProvider/) | Event provider for logging to the Windows Event Viewer. |
 | `WebCredMgr` | Read and write to the Windows Credential Manager secure storage. |
 
@@ -16,7 +16,7 @@ It's recommended to <mark>**test in a disposable Virtual Machine (VM)**</mark>, 
 
 #### Installation steps
 * Copy the build artifacts to the test environment.
-* Run `REGISTER_ReversePassword.bat` as administrator.
+* Run `REGISTER_ReversePasswordCredProv.bat` as administrator.
 
 #### Test steps
 * Log screen, log out or restart the computer.
@@ -30,7 +30,7 @@ It's recommended to <mark>**test in a disposable Virtual Machine (VM)**</mark>, 
 Password entering can be avoided altogether if `NoPasswordAuthPkg` is also installed and a removable drive with a magic file present. This can be done by running `Install_NoPasswordAuthPkg.ps1` as administrator and restarting afterwards.
 
 #### Uninstallation steps
-* Right click on `UNREGISTER_ReversePassword.bat` and select "Run as administrator".
+* Right click on `UNREGISTER_ReversePasswordCredProv.bat` and select "Run as administrator".
 
 
 ## Authentication and logon documentation

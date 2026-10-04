@@ -1,11 +1,11 @@
 #pragma once
 #include <map>
-#include "ReversePassword.hpp"
+#include "ReversePasswordCredProv.hpp"
 
 
 class CredentialProvider :
     public CComObjectRootEx<CComMultiThreadModel>,
-    public CComCoClass<CredentialProvider, &CLSID_ReversePassword>,
+    public CComCoClass<CredentialProvider, &CLSID_ReversePasswordCredProv>,
     public ICredentialProvider,
     public ICredentialProviderSetUserArray {
 public:
@@ -33,4 +33,4 @@ private:
     std::map<std::wstring, CComPtr<ICredentialProviderCredential>> m_credentials;
 };
 
-OBJECT_ENTRY_AUTO(CLSID_ReversePassword, CredentialProvider)
+OBJECT_ENTRY_AUTO(CLSID_ReversePasswordCredProv, CredentialProvider)
