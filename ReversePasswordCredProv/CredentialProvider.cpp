@@ -50,9 +50,6 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
 
     auto view = std::make_shared<CredentialView>();
     view->usage = usage;
-    const auto userNameState = usage == CPUS_CREDUI ? CPFS_DISPLAY_IN_SELECTED_TILE : CPFS_HIDDEN;
-    const auto newPasswordState = usage == CPUS_CHANGE_PASSWORD ? CPFS_DISPLAY_IN_BOTH : CPFS_HIDDEN;
-    const DWORD submitAdjacentTo = usage == CPUS_CHANGE_PASSWORD ? NEW_PASSWORD_FIELD : PASSWORD_FIELD;
 
     const auto addField = [&view](CREDENTIAL_PROVIDER_FIELD_TYPE type, const WCHAR* label,
         CREDENTIAL_PROVIDER_FIELD_STATE state, std::variant<std::wstring, DWORD> value)
@@ -67,10 +64,18 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
         };
 
     addField(CPFT_TILE_IMAGE, L"Icon", CPFS_DISPLAY_IN_BOTH, {}); // ICON_FIELD
+
+    const auto userNameState = usage == CPUS_CREDUI ? CPFS_DISPLAY_IN_SELECTED_TILE : CPFS_HIDDEN;
     addField(CPFT_EDIT_TEXT, L"Username", userNameState, {}); // USER_NAME_FIELD
+
     addField(CPFT_PASSWORD_TEXT, L"Password", CPFS_DISPLAY_IN_SELECTED_TILE, {}); // PASSWORD_FIELD
+
+    const auto newPasswordState = usage == CPUS_CHANGE_PASSWORD ? CPFS_DISPLAY_IN_BOTH : CPFS_HIDDEN;
     addField(CPFT_PASSWORD_TEXT, L"New password", newPasswordState, {}); // NEW_PASSWORD_FIELD
+
+    const DWORD submitAdjacentTo = usage == CPUS_CHANGE_PASSWORD ? NEW_PASSWORD_FIELD : PASSWORD_FIELD;
     addField(CPFT_SUBMIT_BUTTON, L"Submit", CPFS_DISPLAY_IN_SELECTED_TILE, submitAdjacentTo); // SUBMIT_BUTTON_FIELD
+
     addField(CPFT_LARGE_TEXT, nullptr, CPFS_DISPLAY_IN_BOTH, L"Reverse Password");
     return view;
 }
