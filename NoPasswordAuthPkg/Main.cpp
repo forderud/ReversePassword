@@ -2,8 +2,8 @@
 #include "PrepareProfile.hpp"
 #include "Utils.hpp"
 #include "MagicFile.hpp"
-#include "../ReversePasswordEventProvider/EventLogger.hpp"
-#include "../ReversePasswordEventProvider/ReversePasswordEventProvider.h"
+#include "../ReversePasswordEventProv/EventLogger.hpp"
+#include "../ReversePasswordEventProv/ReversePasswordEventProv.h"
 #include <format>
 
 // exported symbols

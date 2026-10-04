@@ -4,7 +4,7 @@
 #include <cassert>
 #include <string>
 
-#include "ReversePasswordEventProvider.h" // custom event provider
+#include "ReversePasswordEventProv.h" // custom event provider
 
 // exported symbols (in addition to DllMain)
 #pragma comment(linker, "/export:DllRegisterServer,PRIVATE")

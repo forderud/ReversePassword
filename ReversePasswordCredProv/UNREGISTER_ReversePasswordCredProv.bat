@@ -3,4 +3,4 @@ cd /d "%~dp0"
 
 regsvr32.exe /u /s ReversePasswordCredProv.dll
 
-regsvr32.exe /u /s ReversePasswordEventProvider.dll
+regsvr32.exe /u /s ReversePasswordEventProv.dll

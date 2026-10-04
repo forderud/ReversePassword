@@ -1,7 +1,7 @@
 #include "LogonUser.hpp"
 //#define TEST_LOGGING
 #ifdef TEST_LOGGING
-#include "../ReversePasswordEventProvider/ReversePasswordEventProvider.h"
+#include "../ReversePasswordEventProv/ReversePasswordEventProv.h"
 #include "../NoPasswordAuthPkg/EventLogger.hpp"
 #endif
 
