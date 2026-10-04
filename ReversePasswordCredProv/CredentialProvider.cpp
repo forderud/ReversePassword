@@ -44,7 +44,7 @@ namespace {
 }
 
 
-std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage) {
+std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, bool showPassword) {
     if (!IsSupportedScenario(usage))
         return {};
 
@@ -84,7 +84,7 @@ HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO 
             m_authPkg = authPkg; // NoPasswordAuthPkg detected
     }
 
-    m_view = CreateView(usage);
+    m_view = CreateView(usage, (m_authPkg == 0));
     m_credentials.clear();
     return m_view ? S_OK : E_NOTIMPL;
 }
