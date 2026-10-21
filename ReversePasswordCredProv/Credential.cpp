@@ -232,7 +232,7 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** st
 
     if (status != STATUS_SUCCESS) {
         std::wstring message = L"Logon failed with status: ";
-        message += _com_error(status).ErrorMessage();
+        message += _com_error(status).ErrorMessage(); // TODO: _com_error doesn't recognize NTSTATUS codes like STATUS_LOGON_FAILURE (HRESULT_FROM_NT doesn't help)
         if (substatus != STATUS_SUCCESS) {
             message += L", substatus: ";
             message += _com_error(substatus).ErrorMessage();
