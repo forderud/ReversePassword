@@ -5,6 +5,11 @@
 #include <comdef.h> // for _com_error
 
 
+// from ntstatus.h, but we don't want to include the whole file
+#define STATUS_INVALID_LOGON_HOURS       ((NTSTATUS)0xC000006FL)     // ntsubauth
+#define STATUS_INVALID_WORKSTATION       ((NTSTATUS)0xC0000070L)     // ntsubauth
+
+
 namespace {
     HRESULT GetAccountName(const WCHAR* sidText, std::wstring& accountName) {
         PSID sid = nullptr;
@@ -75,8 +80,8 @@ namespace {
         //case STATUS_BAD_VALIDATION_CLASS: return L"BAD VALIDATION CLASS";
         
         // SubStatus codes for MSV1_0
-        //case STATUS_INVALID_LOGON_HOURS: return L"INVALID LOGON HOURS";
-        //case STATUS_INVALID_WORKSTATION: return L"INVALID WORKSTATION";
+        case STATUS_INVALID_LOGON_HOURS: return L"INVALID LOGON HOURS";
+        case STATUS_INVALID_WORKSTATION: return L"INVALID WORKSTATION";
         case STATUS_PASSWORD_EXPIRED: return L"PASSWORD EXPIRED";
         case STATUS_ACCOUNT_DISABLED: return L"ACCOUNT DISABLED";
         default:
