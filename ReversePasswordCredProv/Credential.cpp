@@ -8,6 +8,8 @@
 // from ntstatus.h, but we don't want to include the whole file
 #define STATUS_INVALID_LOGON_HOURS       ((NTSTATUS)0xC000006FL)     // ntsubauth
 #define STATUS_INVALID_WORKSTATION       ((NTSTATUS)0xC0000070L)     // ntsubauth
+#define STATUS_NO_LOGON_SERVERS          ((NTSTATUS)0xC000005EL)
+#define STATUS_BAD_VALIDATION_CLASS      ((NTSTATUS)0xC00000A7L)
 
 
 namespace {
@@ -74,10 +76,10 @@ namespace {
 
         // Status codes for MSV1_0
         case STATUS_NO_MEMORY: return L"NO MEMORY";
-        //case STATUS_NO_LOGON_SERVERS: return L"NO LOGON SERVERS";
+        case STATUS_NO_LOGON_SERVERS: return L"NO LOGON SERVERS";
         case STATUS_LOGON_FAILURE: return L"LOGON FAILURE";
         case STATUS_ACCOUNT_RESTRICTION: return L"ACCOUNT RESTRICTION";
-        //case STATUS_BAD_VALIDATION_CLASS: return L"BAD VALIDATION CLASS";
+        case STATUS_BAD_VALIDATION_CLASS: return L"BAD VALIDATION CLASS";
         
         // SubStatus codes for MSV1_0
         case STATUS_INVALID_LOGON_HOURS: return L"INVALID LOGON HOURS";
