@@ -62,6 +62,27 @@ namespace {
         std::reverse(value.begin(), value.end());
         return value;
     }
+
+    const std::wstring ToString(NTSTATUS status) {
+        switch (status) {
+        case STATUS_SUCCESS: return L"SUCCESS";
+
+        // Status codes for MSV1_0
+        case STATUS_NO_MEMORY: return L"NO MEMORY";
+        //case STATUS_NO_LOGON_SERVERS: return L"NO LOGON SERVERS";
+        case STATUS_LOGON_FAILURE: return L"LOGON FAILURE";
+        case STATUS_ACCOUNT_RESTRICTION: return L"ACCOUNT RESTRICTION";
+        //case STATUS_BAD_VALIDATION_CLASS: return L"BAD VALIDATION CLASS";
+        
+        // SubStatus codes for MSV1_0
+        //case STATUS_INVALID_LOGON_HOURS: return L"INVALID LOGON HOURS";
+        //case STATUS_INVALID_WORKSTATION: return L"INVALID WORKSTATION";
+        case STATUS_PASSWORD_EXPIRED: return L"PASSWORD EXPIRED";
+        case STATUS_ACCOUNT_DISABLED: return L"ACCOUNT DISABLED";
+        default:
+            return _com_error(HRESULT_FROM_NT(status)).ErrorMessage(); // fallback to what will likely be a hex string
+        }
+    }
 }
 
 
@@ -231,11 +252,9 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** st
     *statusIcon = CPSI_NONE;
 
     if (status != STATUS_SUCCESS) {
-        std::wstring message = L"Logon failed with status: ";
-        message += _com_error(status).ErrorMessage(); // TODO: _com_error doesn't recognize NTSTATUS codes like STATUS_LOGON_FAILURE (HRESULT_FROM_NT doesn't help)
+        std::wstring message = L"Logon failed with status: " + ToString(status);
         if (substatus != STATUS_SUCCESS) {
-            message += L", substatus: ";
-            message += _com_error(substatus).ErrorMessage();
+            message += L", substatus: " + ToString(substatus);
         }
         *statusText = DuplicateString(message.c_str());
 

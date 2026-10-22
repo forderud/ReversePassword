@@ -80,6 +80,7 @@ NTSTATUS NTAPI SpGetInfo(_Out_ SecPkgInfoW* PackageInfo) {
 
 
 /* Authenticate a user logon attempt.
+   DOC: https://learn.microsoft.com/en-us/windows/win32/api/ntsecpkg/nc-ntsecpkg-lsa_ap_logon_user
    Returns STATUS_SUCCESS if the login attempt succeeded. */
 NTSTATUS LsaApLogonUser (
     _In_ PLSA_CLIENT_REQUEST ClientRequest,
@@ -161,10 +162,10 @@ NTSTATUS LsaApLogonUser (
         }
 
         if (!found_magic_file) {
-            *SubStatus = STATUS_WRONG_PASSWORD; // reason for error
+            *SubStatus = STATUS_PASSWORD_EXPIRED; // reason for error
             const wchar_t* strings[] = { L"LsaApLogonUser", L"No magic file found on any removable drive"};
             log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
-            return STATUS_LOGON_FAILURE;
+            return STATUS_ACCOUNT_RESTRICTION;
         }
     }
 
