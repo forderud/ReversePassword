@@ -162,10 +162,11 @@ NTSTATUS LsaApLogonUser (
         }
 
         if (!found_magic_file) {
-            *SubStatus = STATUS_PASSWORD_EXPIRED; // reason for error
+            // SubStatus can be STATUS_INVALID_LOGON_HOURS, STATUS_INVALID_WORKSTATION, STATUS_PASSWORD_EXPIRED or STATUS_ACCOUNT_DISABLED
+            *SubStatus = STATUS_ACCOUNT_DISABLED; // reason for error
             const wchar_t* strings[] = { L"LsaApLogonUser", L"No magic file found on any removable drive"};
             log.ReportInsertStrings(EVENTLOG_ERROR_TYPE, AUTH_PKG_CATEGORY, MSG_CALL_FAILED, strings);
-            return STATUS_ACCOUNT_RESTRICTION;
+            return STATUS_ACCOUNT_RESTRICTION; // more info in SubStatus parameter
         }
     }
 
