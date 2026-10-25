@@ -170,7 +170,7 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCred
     if (FAILED(hr))
         return hr;
     instance->AddRef();
-    instance->Initialize(m_authPkg, m_view, sid);
+    instance->Initialize(m_authPkg, m_view, sid, m_log);
     CComPtr<ICredentialProviderCredential> created;
     hr = instance->QueryInterface(&created);
     instance->Release();

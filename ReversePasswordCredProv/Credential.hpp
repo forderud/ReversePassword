@@ -13,16 +13,17 @@ public:
         COM_INTERFACE_ENTRY(ICredentialProviderCredential2)
     END_COM_MAP()
 
-    Credential() : m_log(L"ReversePassword") {
+    Credential() {
     }
 
     ~Credential() {
     }
 
-    void Initialize(ULONG authPkg, std::shared_ptr<CredentialView> view, std::wstring sid) {
+    void Initialize(ULONG authPkg, std::shared_ptr<CredentialView> view, std::wstring sid, std::shared_ptr<EventLogger>& log) {
         m_authPkg = authPkg;
         m_view = std::move(view);
         m_sid = sid;
+        m_log = log;
     }
 
     HRESULT Advise(ICredentialProviderCredentialEvents* /*events*/) override { return S_OK; }
@@ -58,5 +59,5 @@ private:
     ULONG m_authPkg = 0;
     std::shared_ptr<CredentialView> m_view;
     std::wstring m_sid;
-    EventLogger m_log;
+    std::shared_ptr<EventLogger> m_log;
 };

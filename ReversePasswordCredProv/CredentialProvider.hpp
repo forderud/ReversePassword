@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include "ReversePasswordCredProv.hpp"
+#include "../ReversePasswordEventProv/EventLogger.hpp"
 
 
 class CredentialProvider :
@@ -9,6 +10,13 @@ class CredentialProvider :
     public ICredentialProvider,
     public ICredentialProviderSetUserArray {
 public:
+    CredentialProvider() {
+        m_log = std::make_shared<EventLogger>(L"ReversePassword");
+    }
+
+    ~CredentialProvider() {
+     }
+
     HRESULT SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD flags) override;
     HRESULT SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) override { return S_OK; }
     HRESULT Advise(ICredentialProviderEvents* events, UINT_PTR /*adviseContext*/) override { m_events = events; return S_OK; }
@@ -32,6 +40,7 @@ private:
     CComPtr<ICredentialProviderEvents> m_events;
     std::vector<CComPtr<ICredentialProviderUser>> m_users;
     std::map<std::wstring, CComPtr<ICredentialProviderCredential>> m_credentials;
+    std::shared_ptr<EventLogger> m_log;
 };
 
 OBJECT_ENTRY_AUTO(CLSID_ReversePasswordCredProv, CredentialProvider)
