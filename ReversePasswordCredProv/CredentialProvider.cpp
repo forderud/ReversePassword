@@ -94,6 +94,11 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
 }
 
 HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
+#ifdef _DEBUG
+    const wchar_t* strings[] = { L"SetUsageScenario", L""};
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     m_authPkg = 0; // default auth.pkg.
     if (MagicDriveCheck()) {
         ULONG authPkg = 0;
@@ -109,10 +114,20 @@ HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO 
 
 
 HRESULT CredentialProvider::SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) {
+#ifdef _DEBUG
+    const wchar_t* strings[] = { L"SetSerialization", L"" };
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     return S_OK;
 }
 
 HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR adviseContext) {
+#ifdef _DEBUG
+    const wchar_t* strings[] = { L"Advise", L"" };
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     UnAdvise();
 
     m_events = { events, adviseContext };
@@ -120,12 +135,22 @@ HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR a
 }
 
 HRESULT CredentialProvider::UnAdvise() {
+#ifdef _DEBUG
+    const wchar_t* strings[] = { L"UnAdvise", L"" };
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     m_events.context = 0;
     m_events.events.Release();
     return S_OK;
 }
 
 HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
+#ifdef _DEBUG
+    const wchar_t* strings[] = { L"GetFieldDescriptorCount", L"" };
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     if (!count)
         return E_POINTER;
 
@@ -137,6 +162,11 @@ HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
 }
 
 HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, /*out*/CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor) {
+#ifdef _DEBUG
+    const wchar_t* strings[] = { L"GetFieldDescriptorAt", L"" };
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     if (!descriptor)
         return E_POINTER;
 
@@ -152,6 +182,11 @@ HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, /*out*/CREDENTIAL_
 }
 
 HRESULT CredentialProvider::GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD* defaultIndex, /*out*/BOOL* autoLogonWithDefault) {
+#ifdef _DEBUG
+    const wchar_t* strings[] = { L"GetCredentialCount", L"" };
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     if (!count || !defaultIndex || !autoLogonWithDefault)
         return E_POINTER;
 
@@ -162,6 +197,11 @@ HRESULT CredentialProvider::GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD
 }
 
 HRESULT CredentialProvider::GetCredentialAt(DWORD index, /*out*/ICredentialProviderCredential** credential) {
+#ifdef _DEBUG
+    const wchar_t* strings[] = { L"GetCredentialAt", L"" };
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     if (!credential)
         return E_POINTER;
 
@@ -202,6 +242,11 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, /*out*/ICredentialProvi
 }
 
 HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
+#ifdef _DEBUG
+    const wchar_t* strings[] = { L"SetUserArray", L"" };
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     if (!users)
         return E_POINTER;
 
