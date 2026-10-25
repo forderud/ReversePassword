@@ -4,6 +4,16 @@
 #include "../ReversePasswordEventProv/EventLogger.hpp"
 
 
+struct AdviseCtx {
+    CComPtr<ICredentialProviderEvents> events;
+    UINT_PTR context;
+
+    void clear() {
+        events.Release();
+        context = 0;
+    }
+};
+
 class CredentialProvider :
     public CComObjectRootEx<CComMultiThreadModel>,
     public CComCoClass<CredentialProvider, &CLSID_ReversePasswordCredProv>,
@@ -19,7 +29,7 @@ public:
 
     HRESULT SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD flags) override;
     HRESULT SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) override { return S_OK; }
-    HRESULT Advise(ICredentialProviderEvents* events, UINT_PTR /*adviseContext*/) override;
+    HRESULT Advise(ICredentialProviderEvents* events, UINT_PTR adviseContext) override;
     HRESULT UnAdvise() override;
     HRESULT GetFieldDescriptorCount(DWORD* count) override;
     HRESULT GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor) override;
@@ -37,7 +47,7 @@ public:
 private:
     ULONG m_authPkg = 0;
     std::shared_ptr<CredentialView> m_view;
-    CComPtr<ICredentialProviderEvents> m_events;
+    AdviseCtx m_events;
     std::vector<CComPtr<ICredentialProviderUser>> m_users;
     std::map<std::wstring, CComPtr<ICredentialProviderCredential>> m_credentials;
     std::shared_ptr<EventLogger> m_log;
