@@ -27,9 +27,9 @@ public:
     HRESULT GetFieldState(DWORD fieldId, /*out*/CREDENTIAL_PROVIDER_FIELD_STATE* state, /*out*/CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) override;
     HRESULT GetStringValue(DWORD fieldId, /*out*/WCHAR** value) override;
     HRESULT GetBitmapValue(DWORD fieldId, /*out*/HBITMAP* bitmap) override;
-    HRESULT GetCheckboxValue(DWORD /*fieldId*/, BOOL* /*checked*/, WCHAR** /*label*/) override { return E_NOTIMPL; }
-    HRESULT GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) override;
-    HRESULT GetComboBoxValueCount(DWORD /*fieldId*/, DWORD* /*itemCount*/, DWORD* /*selectedItem*/) override { return E_NOTIMPL; }
+    HRESULT GetCheckboxValue(DWORD /*fieldId*/, /*out*/BOOL* /*checked*/, /*out*/WCHAR** /*label*/) override { return E_NOTIMPL; }
+    HRESULT GetSubmitButtonValue(DWORD fieldId, /*out*/DWORD* adjacentTo) override;
+    HRESULT GetComboBoxValueCount(DWORD /*fieldId*/, /*out*/DWORD* /*itemCount*/, /*out*/DWORD* /*selectedItem*/) override { return E_NOTIMPL; }
     HRESULT GetComboBoxValueAt(DWORD /*fieldId*/, DWORD /*item*/, WCHAR** /*value*/) override { return E_NOTIMPL; }
     HRESULT SetStringValue(DWORD fieldId, const WCHAR* value) override;
     HRESULT SetCheckboxValue(DWORD /*fieldId*/, BOOL /*checked*/) override { return E_NOTIMPL; }

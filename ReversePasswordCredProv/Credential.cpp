@@ -143,7 +143,7 @@ HRESULT Credential::GetBitmapValue(DWORD fieldId, /*out*/HBITMAP* bitmap) {
     return *bitmap ? S_OK : HRESULT_FROM_WIN32(GetLastError());
 }
 
-HRESULT Credential::GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) {
+HRESULT Credential::GetSubmitButtonValue(DWORD fieldId, /*out*/DWORD* adjacentTo) {
     if (fieldId != SUBMIT_BUTTON_FIELD || !adjacentTo)
         return E_INVALIDARG;
 
