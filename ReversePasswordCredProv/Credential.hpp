@@ -25,8 +25,8 @@ public:
     HRESULT SetSelected(/*out*/BOOL* autoLogon) override;
     HRESULT SetDeselected() override;
     HRESULT GetFieldState(DWORD fieldId, /*out*/CREDENTIAL_PROVIDER_FIELD_STATE* state, /*out*/CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) override;
-    HRESULT GetStringValue(DWORD fieldId, WCHAR** value) override;
-    HRESULT GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) override;
+    HRESULT GetStringValue(DWORD fieldId, /*out*/WCHAR** value) override;
+    HRESULT GetBitmapValue(DWORD fieldId, /*out*/HBITMAP* bitmap) override;
     HRESULT GetCheckboxValue(DWORD /*fieldId*/, BOOL* /*checked*/, WCHAR** /*label*/) override { return E_NOTIMPL; }
     HRESULT GetSubmitButtonValue(DWORD fieldId, DWORD* adjacentTo) override;
     HRESULT GetComboBoxValueCount(DWORD /*fieldId*/, DWORD* /*itemCount*/, DWORD* /*selectedItem*/) override { return E_NOTIMPL; }

@@ -122,7 +122,7 @@ HRESULT Credential::GetFieldState(DWORD fieldId, /*out*/CREDENTIAL_PROVIDER_FIEL
     return S_OK;
 }
 
-HRESULT Credential::GetStringValue(DWORD fieldId, WCHAR** value) {
+HRESULT Credential::GetStringValue(DWORD fieldId, /*out*/WCHAR** value) {
     Field* field = GetField(fieldId);
     if (!field || !value)
         return E_INVALIDARG;
@@ -134,7 +134,7 @@ HRESULT Credential::GetStringValue(DWORD fieldId, WCHAR** value) {
     return *value ? S_OK : E_POINTER;
 }
 
-HRESULT Credential::GetBitmapValue(DWORD fieldId, HBITMAP* bitmap) {
+HRESULT Credential::GetBitmapValue(DWORD fieldId, /*out*/HBITMAP* bitmap) {
     if (fieldId != ICON_FIELD || !bitmap)
         return E_INVALIDARG;
 
