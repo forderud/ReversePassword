@@ -11,6 +11,7 @@
 #define STATUS_INVALID_WORKSTATION       ((NTSTATUS)0xC0000070L)     // ntsubauth
 #define STATUS_NO_LOGON_SERVERS          ((NTSTATUS)0xC000005EL)
 #define STATUS_BAD_VALIDATION_CLASS      ((NTSTATUS)0xC00000A7L)
+#define STATUS_INTERNAL_ERROR            ((NTSTATUS)0xC00000E5L)
 
 
 namespace {
@@ -87,9 +88,9 @@ namespace {
         case STATUS_INVALID_WORKSTATION: return L"INVALID WORKSTATION";
         case STATUS_PASSWORD_EXPIRED: return L"PASSWORD EXPIRED";
         case STATUS_ACCOUNT_DISABLED: return L"ACCOUNT DISABLED";
-        // TODO: Figure out what 0xD00000E5 means
+        case STATUS_INTERNAL_ERROR: return L"INTERNAL ERROR";
         default:
-            return _com_error(HRESULT_FROM_NT(status)).ErrorMessage(); // fallback to what will likely be a hex string
+            return _com_error(status).ErrorMessage(); // fallback to what will likely be a hex string
         }
     }
 }
