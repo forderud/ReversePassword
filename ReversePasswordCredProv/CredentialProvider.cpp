@@ -160,7 +160,6 @@ HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
     }
 
     m_view = CreateView(m_usage, (m_authPkg == 0));
-    m_credentials.clear();
 
     if (!m_view)
         return E_UNEXPECTED;
