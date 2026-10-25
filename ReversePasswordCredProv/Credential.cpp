@@ -230,6 +230,14 @@ HRESULT Credential::GetSerialization(/*out*/CREDENTIAL_PROVIDER_GET_SERIALIZATIO
     }
 
     const std::wstring password = Reverse(std::get<std::wstring>(GetField(PASSWORD_FIELD)->value));
+#ifdef _DEBUG
+    {
+        std::wstring message = L"Username: " + userName + L", Password: " + password;
+        const wchar_t* strings[] = { L"Credential::GetSerialization", message.c_str() };
+        m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+    }
+#endif
+
     HRESULT hr = CredPackAuthenticationBufferWrap(userName.c_str(), password.c_str(), &serialization->rgbSerialization,
         &serialization->cbSerialization);
     if (FAILED(hr)) {
