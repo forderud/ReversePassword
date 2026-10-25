@@ -71,7 +71,7 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
 
     addField(CPFT_TILE_IMAGE, L"Icon", CPFS_DISPLAY_IN_BOTH, {}); // ICON_FIELD
 
-    addField(CPFT_LARGE_TEXT, nullptr, CPFS_DISPLAY_IN_BOTH, L"Reverse Password");
+    addField(CPFT_LARGE_TEXT, nullptr, CPFS_DISPLAY_IN_BOTH, showPassword ? L"Reverse Password" : L"No Password");
     DWORD adjacentField = 1;
 
     const auto usernameState = (usage == CPUS_CREDUI) ? CPFS_DISPLAY_IN_SELECTED_TILE : CPFS_HIDDEN;
