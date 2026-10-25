@@ -198,15 +198,13 @@ HRESULT Credential::GetSerialization(/*out*/CREDENTIAL_PROVIDER_GET_SERIALIZATIO
         {
             *statusIcon = CPSI_SUCCESS;
             *statusText = DuplicateString(L"Password changed.");
-        }
-        else
-        {
+        } else {
             *statusIcon = CPSI_ERROR;
             const std::wstring message = L"Password change failed with error: " + std::to_wstring(resultCode);
             *statusText = DuplicateString(message.c_str());
         }
         *response = CPGSR_NO_CREDENTIAL_FINISHED;
-        const wchar_t* strings[] = { L"GetSerialization" };
+        const wchar_t* strings[] = { L"Credential::GetSerialization" };
         m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_SUCCESS, strings);
         return S_OK;
     }
@@ -225,8 +223,7 @@ HRESULT Credential::GetSerialization(/*out*/CREDENTIAL_PROVIDER_GET_SERIALIZATIO
                 userName = domain + std::wstring(L"\\") + userName;
             }
         }
-    }
-    else {
+    } else {
         HRESULT hr = GetAccountName(m_sid.c_str(), userName); // implicit
         if (FAILED(hr))
             return hr;
@@ -238,7 +235,7 @@ HRESULT Credential::GetSerialization(/*out*/CREDENTIAL_PROVIDER_GET_SERIALIZATIO
     if (FAILED(hr)) {
         *statusIcon = CPSI_ERROR;
         *statusText = DuplicateString(L"Failed to pack credentials.");
-        const wchar_t* strings[] = { L"GetSerialization", L"Failed to pack credentials." };
+        const wchar_t* strings[] = { L"Credential::GetSerialization", L"Failed to pack credentials." };
         m_log->ReportInsertStrings(EVENTLOG_ERROR_TYPE, CRED_PROVIDER_CATEGORY, MSG_CALL_FAILED, strings);
         return hr;
     }
@@ -248,7 +245,7 @@ HRESULT Credential::GetSerialization(/*out*/CREDENTIAL_PROVIDER_GET_SERIALIZATIO
     // cbSerialization & rgbSerialization fields already assigned above
     *response = CPGSR_RETURN_CREDENTIAL_FINISHED;
     *statusIcon = CPSI_SUCCESS;
-    const wchar_t* strings[] = { L"GetSerialization" };
+    const wchar_t* strings[] = { L"Credential::GetSerialization" };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_SUCCESS, strings);
     return S_OK;
 }
@@ -267,10 +264,10 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, /*out*/WCH
         }
         *statusText = DuplicateString(message.c_str());
 
-        const wchar_t* strings[] = { L"ReportResult", message.c_str() };
+        const wchar_t* strings[] = { L"Credential::ReportResult", message.c_str() };
         m_log->ReportInsertStrings(EVENTLOG_ERROR_TYPE, CRED_PROVIDER_CATEGORY, MSG_CALL_FAILED, strings);
     } else {
-        const wchar_t* strings[] = { L"ReportResult" };
+        const wchar_t* strings[] = { L"Credential::ReportResult" };
         m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_SUCCESS, strings);
     }
     return S_OK;
