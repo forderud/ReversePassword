@@ -2,7 +2,8 @@
 #include <sddl.h>
 #include <lm.h>
 #include <wincred.h>
-#include <comdef.h> // for _com_error
+#include <iomanip>
+#include <sstream>
 #include "../ReversePasswordEventProv/ReversePasswordEventProv.h"
 
 
@@ -72,6 +73,12 @@ namespace {
         return value;
     }
 
+    inline std::wstring ToHexStr(int value, int width = 8) {
+        std::wstringstream ss;
+        ss << L"0x" << std::hex << std::setfill(L'0') << std::setw(width) << value;
+        return ss.str();
+    }
+
     const std::wstring ToString(NTSTATUS status) {
         switch (status) {
         case STATUS_SUCCESS: return L"SUCCESS";
@@ -90,7 +97,7 @@ namespace {
         case STATUS_ACCOUNT_DISABLED: return L"ACCOUNT DISABLED";
         case STATUS_INTERNAL_ERROR: return L"INTERNAL ERROR";
         default:
-            return _com_error(status).ErrorMessage(); // fallback to what will likely be a hex string
+            return ToHexStr(status); // fallback to hex
         }
     }
 }
