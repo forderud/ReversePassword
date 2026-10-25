@@ -141,13 +141,13 @@ HRESULT CredentialProvider::UnAdvise() {
 }
 
 HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
+    if (!count)
+        return E_POINTER;
+
 #ifdef _DEBUG
     const wchar_t* strings[] = { L"GetFieldDescriptorCount", L"" };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
-
-    if (!count)
-        return E_POINTER;
 
     if (!m_view)
         return E_UNEXPECTED;
@@ -157,13 +157,13 @@ HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
 }
 
 HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, /*out*/CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor) {
+    if (!descriptor)
+        return E_POINTER;
+
 #ifdef _DEBUG
     const wchar_t* strings[] = { L"GetFieldDescriptorAt", L"" };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
-
-    if (!descriptor)
-        return E_POINTER;
 
     *descriptor = nullptr;
     if (!m_view || index >= m_view->fields.size())
@@ -204,13 +204,13 @@ HRESULT CredentialProvider::GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD
 }
 
 HRESULT CredentialProvider::GetCredentialAt(DWORD index, /*out*/ICredentialProviderCredential** credential) {
+    if (!credential)
+        return E_POINTER;
+
 #ifdef _DEBUG
     const wchar_t* strings[] = { L"GetCredentialAt", L"" };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
-
-    if (!credential)
-        return E_POINTER;
 
     *credential = nullptr;
     if (!m_view || index >= m_users.size())
