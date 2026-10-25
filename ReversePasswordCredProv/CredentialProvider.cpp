@@ -113,9 +113,13 @@ HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO 
 }
 
 
-HRESULT CredentialProvider::SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) {
+HRESULT CredentialProvider::SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* sc) {
+    if (!sc)
+        return E_POINTER;
+
 #ifdef _DEBUG
-    const wchar_t* strings[] = { L"SetSerialization", L"" };
+    std::wstring message = L"AuthPackage: " + std::to_wstring(sc->ulAuthenticationPackage);
+    const wchar_t* strings[] = { L"SetSerialization", message.c_str() };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
