@@ -41,6 +41,7 @@ public:
     END_COM_MAP()
 
 private:
+    CREDENTIAL_PROVIDER_USAGE_SCENARIO m_usage = CPUS_INVALID;
     ULONG m_authPkg = 0;
     std::shared_ptr<CredentialView> m_view;
     AdviseCtx m_events;

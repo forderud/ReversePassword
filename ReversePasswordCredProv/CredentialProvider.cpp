@@ -99,17 +99,8 @@ HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO 
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
-    m_authPkg = 0; // default auth.pkg.
-    if (MagicDriveCheck()) {
-        ULONG authPkg = 0;
-        HRESULT hr = GetAuthenticationPackage(&authPkg);
-        if (SUCCEEDED(hr))
-            m_authPkg = authPkg; // NoPasswordAuthPkg detected
-    }
-
-    m_view = CreateView(usage, (m_authPkg == 0));
-    m_credentials.clear();
-    return m_view ? S_OK : E_NOTIMPL;
+    m_usage = usage;
+    return IsSupportedScenario(usage, true) ? S_OK : E_NOTIMPL;
 }
 
 
@@ -157,6 +148,19 @@ HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
 
     if (!count)
         return E_POINTER;
+
+    // Deferred initialization of most members.
+    // Unable to do this in SetUsageScenario since it's not re-called after ICredentialProviderEvents::CredentialsChanged
+    m_authPkg = 0; // default auth.pkg.
+    if (MagicDriveCheck()) {
+        ULONG authPkg = 0;
+        HRESULT hr = GetAuthenticationPackage(&authPkg);
+        if (SUCCEEDED(hr))
+            m_authPkg = authPkg; // NoPasswordAuthPkg detected
+    }
+
+    m_view = CreateView(m_usage, (m_authPkg == 0));
+    m_credentials.clear();
 
     if (!m_view)
         return E_UNEXPECTED;
