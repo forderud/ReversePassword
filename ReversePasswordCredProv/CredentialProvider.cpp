@@ -1,6 +1,7 @@
 #include "CredentialProvider.hpp"
 #include "Credential.hpp"
 #include <ntsecapi.h>
+#include <objidl.h>
 #include "../NoPasswordAuthPkg/MagicFile.hpp"
 #include "../ReversePasswordEventProv/ReversePasswordEventProv.h"
 
@@ -93,6 +94,33 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
     return view;
 }
 
+static void MagicDriveCheckThread(IStream* eventStream, std::atomic<UINT_PTR>* context, EventLogger* log) {
+    CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    {
+        CComPtr<ICredentialProviderEvents> events;
+        HRESULT hr = CoGetInterfaceAndReleaseStream(eventStream, __uuidof(ICredentialProviderEvents), reinterpret_cast<void**>(&events));
+        if (FAILED(hr)) {
+            CoUninitialize();
+            return;
+        }
+
+        bool prev_found_magic_file = MagicDriveCheck();
+        while (*context) {
+            bool found_magic_file = MagicDriveCheck();
+            if (found_magic_file != prev_found_magic_file) {
+                const wchar_t* strings[] = { L"CredentialsChanged", L"" };
+                log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+
+                events->CredentialsChanged(*context); // trigger credential reenumeration
+            }
+
+            prev_found_magic_file = found_magic_file;
+            Sleep(1000); // wait 1 second
+        }
+    }
+    CoUninitialize();
+}
+
 HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
 #ifdef _DEBUG
     std::wstring message = L"Scenario: " + std::to_wstring(usage);
@@ -128,6 +156,16 @@ HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR a
 
     m_events.events = events;
     m_events.context = adviseContext;
+
+    if (m_events.events) {
+        // marshal COM interface pointer to allow thread access
+        CComPtr<IStream> eventStream;
+        HRESULT hr = CoMarshalInterThreadInterfaceInStream(__uuidof(ICredentialProviderEvents), events, &eventStream);
+        if (FAILED(hr))
+            return hr;
+        m_listener = std::thread(MagicDriveCheckThread, eventStream.Detach(), &m_events.context, m_log.get());
+    }
+
     return S_OK;
 }
 
@@ -137,8 +175,13 @@ HRESULT CredentialProvider::UnAdvise() {
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
-    m_events.context = 0;
-    m_events.events.Release();
+    if (m_events.events) {
+        // clear context first to inform thread to stop
+        m_events.context = 0;
+        m_listener.join();
+        m_events.events.Release();
+    }
+
     return S_OK;
 }
 

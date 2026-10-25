@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <thread>
 #include "ReversePasswordCredProv.hpp"
 #include "../ReversePasswordEventProv/EventLogger.hpp"
 
@@ -48,6 +49,7 @@ private:
     std::vector<CComPtr<ICredentialProviderUser>> m_users;
     std::map<std::wstring, CComPtr<ICredentialProviderCredential>> m_credentials; // cache
     std::shared_ptr<EventLogger> m_log;
+    std::thread                  m_listener;
 };
 
 OBJECT_ENTRY_AUTO(CLSID_ReversePasswordCredProv, CredentialProvider)
