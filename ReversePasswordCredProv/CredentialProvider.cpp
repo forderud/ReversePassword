@@ -105,6 +105,16 @@ HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO 
     return m_view ? S_OK : E_NOTIMPL;
 }
 
+HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR /*adviseContext*/) {
+    m_events = events;
+    return S_OK;
+}
+
+HRESULT CredentialProvider::UnAdvise() {
+    m_events.Release();
+    return S_OK;
+}
+
 HRESULT CredentialProvider::GetFieldDescriptorCount(DWORD* count) {
     if (!count)
         return E_POINTER;
