@@ -3,6 +3,7 @@
 #include <lm.h>
 #include <wincred.h>
 #include <comdef.h> // for _com_error
+#include "../ReversePasswordEventProv/ReversePasswordEventProv.h"
 
 
 // from ntstatus.h, but we don't want to include the whole file

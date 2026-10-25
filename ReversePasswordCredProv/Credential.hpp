@@ -1,7 +1,6 @@
 #pragma once
 #include "ReversePasswordCredProv.hpp"
 #include "../ReversePasswordEventProv/EventLogger.hpp"
-#include "../ReversePasswordEventProv/ReversePasswordEventProv.h"
 
 
 class Credential :
