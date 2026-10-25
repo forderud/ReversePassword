@@ -96,7 +96,7 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
 HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
 #ifdef _DEBUG
     std::wstring message = L"Scenario: " + std::to_wstring(usage);
-    const wchar_t* strings[] = { L"SetUsageScenario", message.c_str()};
+    const wchar_t* strings[] = { L"CredentialProvider::SetUsageScenario", message.c_str()};
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
@@ -111,7 +111,7 @@ HRESULT CredentialProvider::SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIA
 
 #ifdef _DEBUG
     std::wstring message = L"AuthPackage: " + std::to_wstring(sc->ulAuthenticationPackage);
-    const wchar_t* strings[] = { L"SetSerialization", message.c_str() };
+    const wchar_t* strings[] = { L"CredentialProvider::SetSerialization", message.c_str() };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
@@ -120,7 +120,7 @@ HRESULT CredentialProvider::SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIA
 
 HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR adviseContext) {
 #ifdef _DEBUG
-    const wchar_t* strings[] = { L"Advise", L"" };
+    const wchar_t* strings[] = { L"CredentialProvider::Advise", L"" };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
@@ -132,7 +132,7 @@ HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR a
 
 HRESULT CredentialProvider::UnAdvise() {
 #ifdef _DEBUG
-    const wchar_t* strings[] = { L"UnAdvise", L"" };
+    const wchar_t* strings[] = { L"CredentialProvider::UnAdvise", L"" };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
@@ -152,7 +152,7 @@ HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
 
 #ifdef _DEBUG
     std::wstring message = std::to_wstring(*count) + L" fields";
-    const wchar_t* strings[] = { L"GetFieldDescriptorCount", message.c_str()};
+    const wchar_t* strings[] = { L"CredentialProvider::GetFieldDescriptorCount", message.c_str()};
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
     return S_OK;
@@ -164,7 +164,7 @@ HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, /*out*/CREDENTIAL_
 
 #ifdef _DEBUG
     std::wstring message = L"Index: " + std::to_wstring(index);
-    const wchar_t* strings[] = { L"GetFieldDescriptorAt", message.c_str() };
+    const wchar_t* strings[] = { L"CredentialProvider::GetFieldDescriptorAt", message.c_str() };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
@@ -205,7 +205,7 @@ HRESULT CredentialProvider::GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD
         message += L"shown.";
     else
         message += L"hidden.";
-    const wchar_t* strings[] = { L"GetCredentialCount", message.c_str()};
+    const wchar_t* strings[] = { L"CredentialProvider::GetCredentialCount", message.c_str()};
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
     return S_OK;
@@ -216,7 +216,7 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, /*out*/ICredentialProvi
         return E_POINTER;
 
 #ifdef _DEBUG
-    const wchar_t* strings[] = { L"GetCredentialAt", L"" };
+    const wchar_t* strings[] = { L"CredentialProvider::GetCredentialAt", L"" };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
@@ -277,7 +277,7 @@ HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
 
 #ifdef _DEBUG
     std::wstring message = std::to_wstring(m_users.size()) + L" users";
-    const wchar_t* strings[] = { L"SetUserArray", message.c_str()};
+    const wchar_t* strings[] = { L"CredentialProvider::SetUserArray", message.c_str()};
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
