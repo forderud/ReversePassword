@@ -7,11 +7,6 @@
 struct AdviseCtx {
     CComPtr<ICredentialProviderEvents> events;
     UINT_PTR context;
-
-    void clear() {
-        events.Release();
-        context = 0;
-    }
 };
 
 class CredentialProvider :
@@ -25,6 +20,7 @@ public:
     }
 
     ~CredentialProvider() {
+        UnAdvise();
      }
 
     HRESULT SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD flags) override;

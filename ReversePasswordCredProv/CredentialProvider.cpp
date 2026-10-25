@@ -107,12 +107,15 @@ HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO 
 }
 
 HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR adviseContext) {
+    UnAdvise();
+
     m_events = { events, adviseContext };
     return S_OK;
 }
 
 HRESULT CredentialProvider::UnAdvise() {
-    m_events.clear();
+    m_events.context = 0;
+    m_events.events.Release();
     return S_OK;
 }
 
