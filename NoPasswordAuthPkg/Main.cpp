@@ -153,14 +153,7 @@ NTSTATUS LsaApLogonUser (
     {
         // Authentication check:
         // Check for magic file on removable drive _instead_ of checking username/password.
-
-        std::vector<std::wstring> removable_drives = GetRemovableDrives();
-        bool found_magic_file = false;
-        for (std::wstring drive : removable_drives) {
-            if (DriveHasMagicFile(drive, L"DisablePasswordCheck"))
-                found_magic_file = true;
-        }
-
+        bool found_magic_file = MagicDriveCheck();
         if (!found_magic_file) {
             // SubStatus can be STATUS_INVALID_LOGON_HOURS, STATUS_INVALID_WORKSTATION, STATUS_PASSWORD_EXPIRED or STATUS_ACCOUNT_DISABLED
             *SubStatus = STATUS_ACCOUNT_DISABLED; // reason for error

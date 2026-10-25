@@ -64,3 +64,14 @@ static bool DriveHasMagicFile(std::wstring drive, std::wstring filename) {
     FindClose(search);
     return false;
 }
+
+
+static bool MagicDriveCheck() {
+    std::vector<std::wstring> removable_drives = GetRemovableDrives();
+    for (std::wstring drive : removable_drives) {
+        if (DriveHasMagicFile(drive, L"DisablePasswordCheck"))
+            return true;
+    }
+
+    return false;
+}
