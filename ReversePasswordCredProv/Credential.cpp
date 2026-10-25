@@ -7,9 +7,9 @@
 
 
 // from ntstatus.h, but we don't want to include the whole file
+#define STATUS_NO_LOGON_SERVERS          ((NTSTATUS)0xC000005EL)
 #define STATUS_INVALID_LOGON_HOURS       ((NTSTATUS)0xC000006FL)     // ntsubauth
 #define STATUS_INVALID_WORKSTATION       ((NTSTATUS)0xC0000070L)     // ntsubauth
-#define STATUS_NO_LOGON_SERVERS          ((NTSTATUS)0xC000005EL)
 #define STATUS_BAD_VALIDATION_CLASS      ((NTSTATUS)0xC00000A7L)
 #define STATUS_INTERNAL_ERROR            ((NTSTATUS)0xC00000E5L)
 
