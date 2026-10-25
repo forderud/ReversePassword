@@ -1,6 +1,7 @@
 #include "CredentialProvider.hpp"
 #include "Credential.hpp"
 #include <ntsecapi.h>
+#include "../NoPasswordAuthPkg/MagicFile.hpp"
 #include "../ReversePasswordEventProv/ReversePasswordEventProv.h"
 
 
@@ -94,7 +95,7 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
 
 HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
     m_authPkg = 0; // default auth.pkg.
-    {
+    if (MagicDriveCheck()) {
         ULONG authPkg = 0;
         HRESULT hr = GetAuthenticationPackage(&authPkg);
         if (SUCCEEDED(hr))
