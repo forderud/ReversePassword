@@ -24,7 +24,7 @@ public:
      }
 
     HRESULT SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD flags) override;
-    HRESULT SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) override { return S_OK; }
+    HRESULT SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) override;
     HRESULT Advise(ICredentialProviderEvents* events, UINT_PTR adviseContext) override;
     HRESULT UnAdvise() override;
     HRESULT GetFieldDescriptorCount(/*out*/DWORD* count) override;

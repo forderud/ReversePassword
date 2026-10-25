@@ -107,6 +107,11 @@ HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO 
     return m_view ? S_OK : E_NOTIMPL;
 }
 
+
+HRESULT CredentialProvider::SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) {
+    return S_OK;
+}
+
 HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR adviseContext) {
     UnAdvise();
 
