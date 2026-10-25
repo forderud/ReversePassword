@@ -6,7 +6,7 @@
 
 struct AdviseCtx {
     CComPtr<ICredentialProviderEvents> events;
-    UINT_PTR context;
+    std::atomic<UINT_PTR> context;
 };
 
 class CredentialProvider :

@@ -126,7 +126,8 @@ HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR a
 
     UnAdvise();
 
-    m_events = { events, adviseContext };
+    m_events.events = events;
+    m_events.context = adviseContext;
     return S_OK;
 }
 
