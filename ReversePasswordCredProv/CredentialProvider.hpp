@@ -9,13 +9,6 @@ class CredentialProvider :
     public ICredentialProvider,
     public ICredentialProviderSetUserArray {
 public:
-    DECLARE_REGISTRY_RESOURCEID(IDR_REVERSEPASSWORD)
-
-    BEGIN_COM_MAP(CredentialProvider)
-        COM_INTERFACE_ENTRY(ICredentialProvider)
-        COM_INTERFACE_ENTRY(ICredentialProviderSetUserArray)
-    END_COM_MAP()
-
     HRESULT SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD flags) override;
     HRESULT SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) override { return S_OK; }
     HRESULT Advise(ICredentialProviderEvents* events, UINT_PTR /*adviseContext*/) override { m_events = events; return S_OK; }
@@ -25,6 +18,13 @@ public:
     HRESULT GetCredentialCount(DWORD* count, DWORD* defaultIndex, BOOL* autoLogonWithDefault) override;
     HRESULT GetCredentialAt(DWORD index, ICredentialProviderCredential** credential) override;
     HRESULT SetUserArray(ICredentialProviderUserArray* users) override;
+
+    DECLARE_REGISTRY_RESOURCEID(IDR_REVERSEPASSWORD)
+
+    BEGIN_COM_MAP(CredentialProvider)
+        COM_INTERFACE_ENTRY(ICredentialProvider)
+        COM_INTERFACE_ENTRY(ICredentialProviderSetUserArray)
+    END_COM_MAP()
 
 private:
     ULONG m_authPkg = 0;
