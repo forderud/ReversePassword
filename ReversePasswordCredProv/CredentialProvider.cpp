@@ -149,18 +149,6 @@ HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
     if (!count)
         return E_POINTER;
 
-    // Deferred initialization of most members.
-    // Unable to do this in SetUsageScenario since it's not re-called after ICredentialProviderEvents::CredentialsChanged
-    m_authPkg = 0; // default auth.pkg.
-    if (MagicDriveCheck()) {
-        ULONG authPkg = 0;
-        HRESULT hr = GetAuthenticationPackage(&authPkg);
-        if (SUCCEEDED(hr))
-            m_authPkg = authPkg; // NoPasswordAuthPkg detected
-    }
-
-    m_view = CreateView(m_usage, (m_authPkg == 0));
-
     if (!m_view)
         return E_UNEXPECTED;
 
@@ -189,13 +177,25 @@ HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, /*out*/CREDENTIAL_
 }
 
 HRESULT CredentialProvider::GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD* defaultIndex, /*out*/BOOL* autoLogonWithDefault) {
+    if (!count || !defaultIndex || !autoLogonWithDefault)
+        return E_POINTER;
+
 #ifdef _DEBUG
     const wchar_t* strings[] = { L"GetCredentialCount", L"" };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
-    if (!count || !defaultIndex || !autoLogonWithDefault)
-        return E_POINTER;
+    // Deferred initialization of m_authPkg & m_view.
+    // Unable to do this in SetUsageScenario since it's not re-called after ICredentialProviderEvents::CredentialsChanged
+    m_authPkg = 0; // default auth.pkg.
+    if (MagicDriveCheck()) {
+        ULONG authPkg = 0;
+        HRESULT hr = GetAuthenticationPackage(&authPkg);
+        if (SUCCEEDED(hr))
+            m_authPkg = authPkg; // NoPasswordAuthPkg detected
+    }
+
+    m_view = CreateView(m_usage, (m_authPkg == 0));
 
     *count = static_cast<DWORD>(m_users.size());
     *defaultIndex = CREDENTIAL_PROVIDER_NO_DEFAULT;
