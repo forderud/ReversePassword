@@ -1,6 +1,7 @@
 #include "CredentialProvider.hpp"
 #include "Credential.hpp"
 #include <ntsecapi.h>
+#include "../ReversePasswordEventProv/ReversePasswordEventProv.h"
 
 
 namespace {
