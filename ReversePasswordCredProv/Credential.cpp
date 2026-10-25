@@ -94,7 +94,7 @@ namespace {
 }
 
 
-HRESULT Credential::SetSelected(BOOL* autoLogon) {
+HRESULT Credential::SetSelected(/*out*/BOOL* autoLogon) {
     if (!autoLogon)
         return E_POINTER;
 

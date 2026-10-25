@@ -22,7 +22,7 @@ public:
 
     HRESULT Advise(ICredentialProviderCredentialEvents* /*events*/) override { return S_OK; }
     HRESULT UnAdvise() override { return S_OK; }
-    HRESULT SetSelected(BOOL* autoLogon) override;
+    HRESULT SetSelected(/*out*/BOOL* autoLogon) override;
     HRESULT SetDeselected() override;
     HRESULT GetFieldState(DWORD fieldId, CREDENTIAL_PROVIDER_FIELD_STATE* state, CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) override;
     HRESULT GetStringValue(DWORD fieldId, WCHAR** value) override;
