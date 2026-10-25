@@ -120,7 +120,7 @@ HRESULT CredentialProvider::UnAdvise() {
     return S_OK;
 }
 
-HRESULT CredentialProvider::GetFieldDescriptorCount(DWORD* count) {
+HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
     if (!count)
         return E_POINTER;
 
@@ -131,7 +131,7 @@ HRESULT CredentialProvider::GetFieldDescriptorCount(DWORD* count) {
     return S_OK;
 }
 
-HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor) {
+HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, /*out*/CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor) {
     if (!descriptor)
         return E_POINTER;
 
@@ -146,7 +146,7 @@ HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDE
     return S_OK;
 }
 
-HRESULT CredentialProvider::GetCredentialCount(DWORD* count, DWORD* defaultIndex, BOOL* autoLogonWithDefault) {
+HRESULT CredentialProvider::GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD* defaultIndex, /*out*/BOOL* autoLogonWithDefault) {
     if (!count || !defaultIndex || !autoLogonWithDefault)
         return E_POINTER;
 
@@ -156,7 +156,7 @@ HRESULT CredentialProvider::GetCredentialCount(DWORD* count, DWORD* defaultIndex
     return S_OK;
 }
 
-HRESULT CredentialProvider::GetCredentialAt(DWORD index, ICredentialProviderCredential** credential) {
+HRESULT CredentialProvider::GetCredentialAt(DWORD index, /*out*/ICredentialProviderCredential** credential) {
     if (!credential)
         return E_POINTER;
 

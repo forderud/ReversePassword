@@ -27,10 +27,10 @@ public:
     HRESULT SetSerialization(const CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* /*sc*/) override { return S_OK; }
     HRESULT Advise(ICredentialProviderEvents* events, UINT_PTR adviseContext) override;
     HRESULT UnAdvise() override;
-    HRESULT GetFieldDescriptorCount(DWORD* count) override;
-    HRESULT GetFieldDescriptorAt(DWORD index, CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor) override;
-    HRESULT GetCredentialCount(DWORD* count, DWORD* defaultIndex, BOOL* autoLogonWithDefault) override;
-    HRESULT GetCredentialAt(DWORD index, ICredentialProviderCredential** credential) override;
+    HRESULT GetFieldDescriptorCount(/*out*/DWORD* count) override;
+    HRESULT GetFieldDescriptorAt(DWORD index, /*out*/CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** descriptor) override;
+    HRESULT GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD* defaultIndex, /*out*/BOOL* autoLogonWithDefault) override;
+    HRESULT GetCredentialAt(DWORD index, /*out*/ICredentialProviderCredential** credential) override;
     HRESULT SetUserArray(ICredentialProviderUserArray* users) override;
 
     DECLARE_REGISTRY_RESOURCEID(IDR_REVERSEPASSWORD)
