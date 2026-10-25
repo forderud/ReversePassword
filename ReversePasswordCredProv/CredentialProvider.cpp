@@ -95,7 +95,8 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
 
 HRESULT CredentialProvider::SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO usage, DWORD /*flags*/) {
 #ifdef _DEBUG
-    const wchar_t* strings[] = { L"SetUsageScenario", L""};
+    std::wstring message = L"Scenario: " + std::to_wstring(usage);
+    const wchar_t* strings[] = { L"SetUsageScenario", message.c_str()};
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
@@ -144,15 +145,16 @@ HRESULT CredentialProvider::GetFieldDescriptorCount(/*out*/DWORD* count) {
     if (!count)
         return E_POINTER;
 
-#ifdef _DEBUG
-    const wchar_t* strings[] = { L"GetFieldDescriptorCount", L"" };
-    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
-#endif
-
     if (!m_view)
         return E_UNEXPECTED;
 
     *count = static_cast<DWORD>(m_view->fields.size());
+
+#ifdef _DEBUG
+    std::wstring message = std::to_wstring(*count) + L" fields";
+    const wchar_t* strings[] = { L"GetFieldDescriptorCount", message.c_str()};
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
     return S_OK;
 }
 
