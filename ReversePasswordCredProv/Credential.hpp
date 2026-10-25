@@ -7,11 +7,6 @@ class Credential :
     public CComObjectRootEx<CComMultiThreadModel>,
     public ICredentialProviderCredential2 {
 public:
-    BEGIN_COM_MAP(Credential)
-        COM_INTERFACE_ENTRY(ICredentialProviderCredential)
-        COM_INTERFACE_ENTRY(ICredentialProviderCredential2)
-    END_COM_MAP()
-
     Credential() {
     }
 
@@ -44,6 +39,10 @@ public:
     HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
     HRESULT GetUserSid(/*out*/WCHAR** sid) override;
 
+    BEGIN_COM_MAP(Credential)
+        COM_INTERFACE_ENTRY(ICredentialProviderCredential)
+        COM_INTERFACE_ENTRY(ICredentialProviderCredential2)
+    END_COM_MAP()
 private:
     Field* GetField(DWORD fieldId) {
         if (!m_view)
