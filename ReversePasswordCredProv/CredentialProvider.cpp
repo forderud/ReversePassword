@@ -216,7 +216,8 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, /*out*/ICredentialProvi
         return E_POINTER;
 
 #ifdef _DEBUG
-    const wchar_t* strings[] = { L"CredentialProvider::GetCredentialAt", L"" };
+    std::wstring message = L"Index: " + std::to_wstring(index);
+    const wchar_t* strings[] = { L"CredentialProvider::GetCredentialAt", message.c_str()};
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
