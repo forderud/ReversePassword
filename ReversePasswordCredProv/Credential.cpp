@@ -167,8 +167,8 @@ HRESULT Credential::SetStringValue(DWORD fieldId, const WCHAR* value) {
     return S_OK;
 }
 
-HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization,
-                                     WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
+HRESULT Credential::GetSerialization(/*out*/CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response, /*out*/CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization,
+                                     /*out*/WCHAR** statusText, /*out*/CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
     if (!response || !serialization || !statusText || !statusIcon)
         return E_POINTER;
 
@@ -252,7 +252,7 @@ HRESULT Credential::GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPO
     return S_OK;
 }
 
-HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
+HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, /*out*/WCHAR** statusText, /*out*/CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) {
     if (!statusText || !statusIcon)
         return E_POINTER;
 

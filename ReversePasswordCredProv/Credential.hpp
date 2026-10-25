@@ -30,13 +30,13 @@ public:
     HRESULT GetCheckboxValue(DWORD /*fieldId*/, /*out*/BOOL* /*checked*/, /*out*/WCHAR** /*label*/) override { return E_NOTIMPL; }
     HRESULT GetSubmitButtonValue(DWORD fieldId, /*out*/DWORD* adjacentTo) override;
     HRESULT GetComboBoxValueCount(DWORD /*fieldId*/, /*out*/DWORD* /*itemCount*/, /*out*/DWORD* /*selectedItem*/) override { return E_NOTIMPL; }
-    HRESULT GetComboBoxValueAt(DWORD /*fieldId*/, DWORD /*item*/, WCHAR** /*value*/) override { return E_NOTIMPL; }
+    HRESULT GetComboBoxValueAt(DWORD /*fieldId*/, DWORD /*item*/, /*out*/WCHAR** /*value*/) override { return E_NOTIMPL; }
     HRESULT SetStringValue(DWORD fieldId, const WCHAR* value) override;
     HRESULT SetCheckboxValue(DWORD /*fieldId*/, BOOL /*checked*/) override { return E_NOTIMPL; }
     HRESULT SetComboBoxSelectedValue(DWORD /*fieldId*/, DWORD /*selectedItem*/) override { return E_NOTIMPL; }
     HRESULT CommandLinkClicked(DWORD /*fieldId*/) override { return E_NOTIMPL; }
-    HRESULT GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
-    HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** statusText, CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
+    HRESULT GetSerialization(/*out*/CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* response, /*out*/CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* serialization, /*out*/WCHAR** statusText, /*out*/CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
+    HRESULT ReportResult(NTSTATUS status, NTSTATUS substatus, /*out*/WCHAR** statusText, /*out*/CREDENTIAL_PROVIDER_STATUS_ICON* statusIcon) override;
     HRESULT GetUserSid(/*out*/WCHAR** sid) override;
 
     BEGIN_COM_MAP(Credential)
