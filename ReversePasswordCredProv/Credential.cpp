@@ -275,7 +275,7 @@ HRESULT Credential::ReportResult(NTSTATUS status, NTSTATUS substatus, WCHAR** st
     return S_OK;
 }
 
-HRESULT Credential::GetUserSid(WCHAR** sid) {
+HRESULT Credential::GetUserSid(/*out*/WCHAR** sid) {
     if (!sid)
         return E_POINTER;
 
