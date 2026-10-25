@@ -182,11 +182,6 @@ HRESULT CredentialProvider::GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD
     if (!count || !defaultIndex || !autoLogonWithDefault)
         return E_POINTER;
 
-#ifdef _DEBUG
-    const wchar_t* strings[] = { L"GetCredentialCount", L"" };
-    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
-#endif
-
     // Deferred initialization of m_authPkg & m_view.
     // Unable to do this in SetUsageScenario since it's not re-called after ICredentialProviderEvents::CredentialsChanged
     m_authPkg = 0; // default auth.pkg.
@@ -202,6 +197,16 @@ HRESULT CredentialProvider::GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD
     *count = static_cast<DWORD>(m_users.size());
     *defaultIndex = CREDENTIAL_PROVIDER_NO_DEFAULT;
     *autoLogonWithDefault = FALSE;
+
+#ifdef _DEBUG
+    std::wstring message = std::to_wstring(*count) + L" users. Password ";
+    if (m_authPkg == 0)
+        message += L"shown.";
+    else
+        message += L"hidden.";
+    const wchar_t* strings[] = { L"GetCredentialCount", message.c_str()};
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
     return S_OK;
 }
 
