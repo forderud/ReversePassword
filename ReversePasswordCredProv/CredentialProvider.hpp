@@ -46,7 +46,7 @@ private:
     std::shared_ptr<CredentialView> m_view;
     AdviseCtx m_events;
     std::vector<CComPtr<ICredentialProviderUser>> m_users;
-    std::map<std::wstring, CComPtr<ICredentialProviderCredential>> m_credentials;
+    std::map<std::wstring, CComPtr<ICredentialProviderCredential>> m_credentials; // cache
     std::shared_ptr<EventLogger> m_log;
 };
 

@@ -195,6 +195,9 @@ HRESULT CredentialProvider::GetCredentialCount(/*out*/DWORD* count, /*out*/DWORD
 
     m_view = CreateView(m_usage, (m_authPkg == 0));
 
+    // invalidate credentials cache after updating m_view
+    m_credentials.clear();
+
     *count = static_cast<DWORD>(m_users.size());
     *defaultIndex = CREDENTIAL_PROVIDER_NO_DEFAULT;
     *autoLogonWithDefault = FALSE;
