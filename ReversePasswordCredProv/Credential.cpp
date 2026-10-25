@@ -112,7 +112,7 @@ HRESULT Credential::SetDeselected() {
     return S_OK;
 }
 
-HRESULT Credential::GetFieldState(DWORD fieldId, CREDENTIAL_PROVIDER_FIELD_STATE* state, CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) {
+HRESULT Credential::GetFieldState(DWORD fieldId, /*out*/CREDENTIAL_PROVIDER_FIELD_STATE* state, /*out*/CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* interactiveState) {
     Field* field = GetField(fieldId);
     if (!field || !state || !interactiveState)
         return E_INVALIDARG;
