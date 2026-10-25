@@ -240,19 +240,21 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, /*out*/ICredentialProvi
     if (existing != m_credentials.end())
         return existing->second.CopyTo(credential);
 
-    // add credential to cache
-    CComObject<Credential>* instance = nullptr;
-    HRESULT hr = CComObject<Credential>::CreateInstance(&instance);
-    if (FAILED(hr))
-        return hr;
-    instance->AddRef();
-    instance->Initialize(m_authPkg, m_view, sid, m_log);
     CComPtr<ICredentialProviderCredential> created;
-    hr = instance->QueryInterface(&created);
-    instance->Release();
-    if (FAILED(hr))
-        return hr;
+    {
+        CComObject<Credential>* instance = nullptr;
+        HRESULT hr = CComObject<Credential>::CreateInstance(&instance);
+        if (FAILED(hr))
+            return hr;
+        instance->AddRef();
+        instance->Initialize(m_authPkg, m_view, sid, m_log);
+        hr = instance->QueryInterface(&created);
+        instance->Release();
+        if (FAILED(hr))
+            return hr;
+    }
 
+    // add credential to cache
     m_credentials.emplace(sid, created); // store in cache
     return created.CopyTo(credential); // assign output
 }
