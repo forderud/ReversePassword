@@ -163,7 +163,8 @@ HRESULT CredentialProvider::GetFieldDescriptorAt(DWORD index, /*out*/CREDENTIAL_
         return E_POINTER;
 
 #ifdef _DEBUG
-    const wchar_t* strings[] = { L"GetFieldDescriptorAt", L"" };
+    std::wstring message = L"Index: " + std::to_wstring(index);
+    const wchar_t* strings[] = { L"GetFieldDescriptorAt", message.c_str() };
     m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 #endif
 
