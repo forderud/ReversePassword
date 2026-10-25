@@ -87,6 +87,7 @@ namespace {
         case STATUS_INVALID_WORKSTATION: return L"INVALID WORKSTATION";
         case STATUS_PASSWORD_EXPIRED: return L"PASSWORD EXPIRED";
         case STATUS_ACCOUNT_DISABLED: return L"ACCOUNT DISABLED";
+        // TODO: Figure out what 0xD00000E5 means
         default:
             return _com_error(HRESULT_FROM_NT(status)).ErrorMessage(); // fallback to what will likely be a hex string
         }
