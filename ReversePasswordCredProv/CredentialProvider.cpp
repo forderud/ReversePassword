@@ -249,11 +249,6 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, /*out*/ICredentialProvi
 }
 
 HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
-#ifdef _DEBUG
-    const wchar_t* strings[] = { L"SetUserArray", L"" };
-    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
-#endif
-
     if (!users)
         return E_POINTER;
 
@@ -271,5 +266,12 @@ HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
             return hr;
         m_users.push_back(std::move(user));
     }
+
+#ifdef _DEBUG
+    std::wstring message = std::to_wstring(m_users.size()) + L" users";
+    const wchar_t* strings[] = { L"SetUserArray", message.c_str()};
+    m_log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
+#endif
+
     return S_OK;
 }
