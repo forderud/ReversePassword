@@ -27,7 +27,7 @@ It's recommended to <mark>**test in a disposable Virtual Machine (VM)**</mark>, 
 ![UACPrompt](UACPrompt.png)  
 
 #### Password avoidance
-Password entering can be avoided altogether if `NoPasswordAuthPkg` is also installed and a removable drive with a magic file present. This can be done by running `Install_NoPasswordAuthPkg.ps1` as administrator and restarting afterwards.
+Password entering can be avoided altogether if `NoPasswordAuthPkg` is also installed and a removable drive with a magic file present. This can be done by running `Install_NoPasswordAuthPkg.ps1` as administrator and restarting afterwards.  
 ![NoPassword_logon](NoPassword_logon.png)  
 
 #### Uninstallation steps
