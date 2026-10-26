@@ -5,7 +5,7 @@
 
 
 /** Return a listing of drives that are either removable (USB sticks) or CD-ROM'ish. */
-static std::vector<std::wstring> GetRemovableDrives() {
+inline std::vector<std::wstring> GetRemovableDrives() {
     std::vector<wchar_t> buffer;
     {
         // Determine buffer size.
@@ -40,7 +40,7 @@ static std::vector<std::wstring> GetRemovableDrives() {
 
 
 /** Check is the drive contains a magic file. */
-static bool DriveHasMagicFile(std::wstring drive, std::wstring filename) {
+inline bool DriveHasMagicFile(std::wstring drive, std::wstring filename) {
     drive += L"\\*"; // add search suffix
 
     WIN32_FIND_DATAW match{};
@@ -66,7 +66,7 @@ static bool DriveHasMagicFile(std::wstring drive, std::wstring filename) {
 }
 
 
-static bool MagicDriveCheck() {
+inline bool MagicDriveCheck() {
     std::vector<std::wstring> removable_drives = GetRemovableDrives();
     for (std::wstring drive : removable_drives) {
         if (DriveHasMagicFile(drive, L"DisablePasswordCheck"))
