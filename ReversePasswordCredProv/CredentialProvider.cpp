@@ -99,10 +99,8 @@ static void MagicDriveCheckThread(IStream* eventStream, std::atomic<UINT_PTR>* c
     {
         CComPtr<ICredentialProviderEvents> events;
         HRESULT hr = CoGetInterfaceAndReleaseStream(eventStream, __uuidof(ICredentialProviderEvents), reinterpret_cast<void**>(&events));
-        if (FAILED(hr)) {
-            CoUninitialize();
-            return;
-        }
+        if (FAILED(hr))
+            abort(); // not worth recovering from
 
         bool prev_found_magic_file = MagicDriveCheck();
         while (*context) {
@@ -162,7 +160,7 @@ HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR a
         CComPtr<IStream> eventStream;
         HRESULT hr = CoMarshalInterThreadInterfaceInStream(__uuidof(ICredentialProviderEvents), events, &eventStream);
         if (FAILED(hr))
-            return hr;
+            abort(); // not worth recovering from
         m_listener = std::thread(MagicDriveCheckThread, eventStream.Detach(), &m_events.context, m_log.get());
     }
 
