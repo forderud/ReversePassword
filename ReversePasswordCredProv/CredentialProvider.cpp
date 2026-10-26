@@ -108,7 +108,7 @@ static void MagicDriveCheckThread(IStream* eventStream, std::atomic<UINT_PTR>* c
         while (*context) {
             bool found_magic_file = MagicDriveCheck();
             if (found_magic_file != prev_found_magic_file) {
-                const wchar_t* strings[] = { L"CredentialsChanged", L"" };
+                const wchar_t* strings[] = { L"CredentialsChanged", found_magic_file ? L"Magic drive inserted" : L"Magic drive removed" };
                 log->ReportInsertStrings(EVENTLOG_SUCCESS, CRED_PROVIDER_CATEGORY, MSG_CALL_INFO, strings);
 
                 events->CredentialsChanged(*context); // trigger credential reenumeration
