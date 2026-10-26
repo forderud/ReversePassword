@@ -21,13 +21,14 @@ It's recommended to <mark>**test in a disposable Virtual Machine (VM)**</mark>, 
 #### Test steps
 * Log screen, log out or restart the computer.
 * Observe that there's now a new "RP" sign-in option that requires the password to be typed backwards:  
-![screenshot](Screenshot.png)  
+![ReversePassword_logon](ReversePassword_logon.png)  
 
 * It's also possible to test the "RP" credential provider by either right-clicking on an application in the Windows start menu, and selecting "_Run as administrator_", or run `Start-Process cmd.exe -Verb RunAs` from PowerShell:  
 ![UACPrompt](UACPrompt.png)  
 
 #### Password avoidance
 Password entering can be avoided altogether if `NoPasswordAuthPkg` is also installed and a removable drive with a magic file present. This can be done by running `Install_NoPasswordAuthPkg.ps1` as administrator and restarting afterwards.
+![NoPassword_logon](NoPassword_logon.png)  
 
 #### Uninstallation steps
 * Right click on `UNREGISTER_ReversePasswordCredProv.bat` and select "Run as administrator".
