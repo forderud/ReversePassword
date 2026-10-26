@@ -15,7 +15,7 @@ It's recommended to <mark>**test in a disposable Virtual Machine (VM)**</mark>, 
 * Open solution in Visual Studio and build the projects in release or debug mode.
 
 #### Installation steps
-* Copy the build artifacts to the test environment.
+* Copy the build artifacts to the test environment. Copy to a folder that all users have read access to, or else logging might not work properly.
 * Run `REGISTER_ReversePasswordCredProv.bat` as administrator.
 
 #### Test steps
