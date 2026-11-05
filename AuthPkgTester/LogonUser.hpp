@@ -180,17 +180,18 @@ std::tuple< HANDLE, PSID> LsaLogonUserInteractive(ULONG authPkg, const std::vect
             wprintf(L"LsaLogonUser failed (%s, %s)\n", ToString(ret).c_str(), ToString(subStatus).c_str());
             abort();
         }
-        wprintf(L"SUCCESS: LsaLogonUser succeeded.\n");
 
         logonSid = GetLogonSID(token);
     }
 
+#if 0
     {
         wchar_t* sidStr = nullptr;
         ConvertSidToStringSidW(logonSid, &sidStr);
         wprintf(L"Logon session SID: %s\n", sidStr);
         LocalFree(sidStr);
     }
+#endif
 
 #if 0
     wprintf(L"profileBufferLen: %u\n", profileBufferLen);
