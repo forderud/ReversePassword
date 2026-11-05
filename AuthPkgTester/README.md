@@ -36,7 +36,7 @@ Doc quote:
 > you must change the discretionary access control list (DACL) of both the default interactive window station and the default desktop. The DACLs for the window station and desktop must grant access to the user or the logon session represented by the hToken parameter.
 
 ### Open issues
-* [issue #25](../../../issues/25) UI theme settings not applied
+* [issue #25](../../../issues/25) UI theme settings not applied in created processes
 
 ### Related projects
 | Project | Limitation |
