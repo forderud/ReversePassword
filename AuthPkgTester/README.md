@@ -45,6 +45,8 @@ Doc quote:
 | [antonioCoco/RunasCs](https://github.com/antonioCoco/RunasCs) | issue: [UI theme not applied](https://github.com/antonioCoco/RunasCs/issues/20) |
 | [JetBrains.runAs](https://github.com/JetBrains/runAs) | issue: [GUI applications doesn't show on screen](https://github.com/JetBrains/runAs/issues/9) |
 
+Please contact the author if you're aware of better alternatives than the ones listed above.
+
 ### Links
 * Microsoft: [Starting an Interactive Client Process in C++](https://learn.microsoft.com/en-us/previous-versions/aa379608(v=vs.85))
 * Microsoft: [Getting the Logon SID in C++](https://learn.microsoft.com/en-us/previous-versions/aa446670(v=vs.85))
