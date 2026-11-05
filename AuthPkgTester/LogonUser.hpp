@@ -81,7 +81,7 @@ NTSTATUS GetAuthPackage(const wchar_t* name, /*out*/ULONG* authPkg) {
 }
 
 
-DWORD CreateProcessWithTokenW(HANDLE token, std::wstring cmdLine, const std::wstring& username, PSID logonSid) {
+DWORD CreateProcessWithTokenW(HANDLE token, std::wstring cmdLine, const std::wstring& /*username*/, PSID logonSid) {
     wprintf(L"\n");
     wprintf(L"Attempting to start cmd.exe through the logged-in user...\n");
 
