@@ -97,8 +97,8 @@ std::shared_ptr<CredentialView> CreateView(CREDENTIAL_PROVIDER_USAGE_SCENARIO us
 static void MagicDriveCheckThread(IStream* eventStream, std::atomic<UINT_PTR>* context, EventLogger* log) {
     CoInitializeEx(nullptr, COINIT_MULTITHREADED);
     {
-        CComPtr<ICredentialProviderEvents> events;
-        HRESULT hr = CoGetInterfaceAndReleaseStream(eventStream, __uuidof(ICredentialProviderEvents), reinterpret_cast<void**>(&events));
+        winrt::com_ptr<ICredentialProviderEvents> events;
+        HRESULT hr = CoGetInterfaceAndReleaseStream(eventStream, __uuidof(ICredentialProviderEvents), events.put_void());
         if (FAILED(hr))
             abort(); // not worth recovering from
 
@@ -152,16 +152,16 @@ HRESULT CredentialProvider::Advise(ICredentialProviderEvents* events, UINT_PTR a
 
     UnAdvise();
 
-    m_events.events = events;
+    m_events.events.copy_from(events);
     m_events.context = adviseContext;
 
     if (m_events.events) {
         // marshal COM interface pointer to allow thread access
-        CComPtr<IStream> eventStream;
-        HRESULT hr = CoMarshalInterThreadInterfaceInStream(__uuidof(ICredentialProviderEvents), events, &eventStream);
+        winrt::com_ptr<IStream> eventStream;
+        HRESULT hr = CoMarshalInterThreadInterfaceInStream(__uuidof(ICredentialProviderEvents), events, eventStream.put());
         if (FAILED(hr))
             abort(); // not worth recovering from
-        m_listener = std::thread(MagicDriveCheckThread, eventStream.Detach(), &m_events.context, m_log.get());
+        m_listener = std::thread(MagicDriveCheckThread, eventStream.detach(), &m_events.context, m_log.get());
     }
 
     return S_OK;
@@ -177,7 +177,7 @@ HRESULT CredentialProvider::UnAdvise() {
         // clear context first to inform thread to stop
         m_events.context = 0;
         m_listener.join();
-        m_events.events.Release();
+        m_events.events = nullptr;
     }
 
     return S_OK;
@@ -283,25 +283,18 @@ HRESULT CredentialProvider::GetCredentialAt(DWORD index, /*out*/ICredentialProvi
     // cache lookup
     auto existing = m_credentials.find(sid);
     if (existing != m_credentials.end())
-        return existing->second.CopyTo(credential);
+        return existing->second.copy_to(credential);
 
-    CComPtr<ICredentialProviderCredential> created;
+    winrt::com_ptr<ICredentialProviderCredential> created;
     {
-        CComObject<Credential>* instance = nullptr;
-        HRESULT hr = CComObject<Credential>::CreateInstance(&instance);
-        if (FAILED(hr))
-            return hr;
-        instance->AddRef();
+        auto instance = winrt::make_self<Credential>();
         instance->Initialize(m_authPkg, m_view, sid, m_log);
-        hr = instance->QueryInterface(&created);
-        instance->Release();
-        if (FAILED(hr))
-            return hr;
+        created.copy_from(static_cast<ICredentialProviderCredential*>(instance.get()));
     }
 
     // add credential to cache
     m_credentials.emplace(sid, created); // store in cache
-    return created.CopyTo(credential); // assign output
+    return created.copy_to(credential); // assign output
 }
 
 HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
@@ -316,8 +309,8 @@ HRESULT CredentialProvider::SetUserArray(ICredentialProviderUserArray* users) {
         return hr;
 
     for (DWORD index = 0; index < count; ++index) {
-        CComPtr<ICredentialProviderUser> user;
-        hr = users->GetAt(index, &user);
+        winrt::com_ptr<ICredentialProviderUser> user;
+        hr = users->GetAt(index, user.put());
         if (FAILED(hr))
             return hr;
         m_users.push_back(std::move(user));

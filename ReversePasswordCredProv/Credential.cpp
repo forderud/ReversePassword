@@ -147,7 +147,7 @@ HRESULT Credential::GetBitmapValue(DWORD fieldId, /*out*/HBITMAP* bitmap) {
     if (fieldId != ICON_FIELD || !bitmap)
         return E_INVALIDARG;
 
-    *bitmap = static_cast<HBITMAP>(LoadImageW(_AtlBaseModule.GetModuleInstance(), MAKEINTRESOURCEW(IDB_TILE_ICON),
+    *bitmap = static_cast<HBITMAP>(LoadImageW(g_moduleInstance, MAKEINTRESOURCEW(IDB_TILE_ICON),
         IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION));
     return *bitmap ? S_OK : HRESULT_FROM_WIN32(GetLastError());
 }

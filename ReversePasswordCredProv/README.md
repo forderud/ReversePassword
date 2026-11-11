@@ -1,4 +1,4 @@
-Sample Windows Credential Provider that **requires the password to be typed backwards**. Written in C++ with ATL COM classes.
+Sample Windows Credential Provider that **requires the password to be typed backwards**. Written in C++ with C++/WinRT COM classes.
 
 The module logs to the Windows Event Viewer `Application` log. Log entries show up through the `ReversePassword` event source.
 
