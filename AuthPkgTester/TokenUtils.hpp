@@ -3,6 +3,7 @@
 #include <aclapi.h>
 #include <stdio.h>
 #include <string>
+#include <format>
 #include <vector>
 
 
@@ -31,7 +32,7 @@ const std::wstring ToString(DWORD err) {
     case STATUS_FAIL_FAST_EXCEPTION: return L"STATUS_FAIL_FAST_EXCEPTION";
     case STATUS_WRONG_PASSWORD: return L"STATUS_WRONG_PASSWORD";
     case STATUS_PASSWORD_EXPIRED: return L"STATUS_PASSWORD_EXPIRED";
-    default: return L"error " + std::to_wstring(err);
+    default: return L"ERROR " + std::format(L"{:#x}", err);
     }
 }
 
