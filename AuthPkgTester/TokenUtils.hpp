@@ -30,6 +30,7 @@ const std::wstring ToString(DWORD err) {
     case STATUS_CONTROL_C_EXIT: return L"STATUS_CONTROL_C_EXIT";
     case STATUS_FAIL_FAST_EXCEPTION: return L"STATUS_FAIL_FAST_EXCEPTION";
     case STATUS_WRONG_PASSWORD: return L"STATUS_WRONG_PASSWORD";
+    case STATUS_PASSWORD_EXPIRED: return L"STATUS_PASSWORD_EXPIRED";
     default: return L"error " + std::to_wstring(err);
     }
 }
